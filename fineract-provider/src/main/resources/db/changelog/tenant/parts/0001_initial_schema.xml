@@ -1498,7 +1498,7 @@
             <column defaultValueNumeric="0" name="from_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            <column name="to_id" type="BIGINT UNSIGNED">
+            <column name="to_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
             <column defaultValueComputed="NULL" name="start_date" type="date"/>
@@ -4690,7 +4690,7 @@
     </changeSet>
     <changeSet author="fineract" id="191">
         <createTable tableName="mix_taxonomy">
-            <column autoIncrement="true" name="id" type="INT UNSIGNED">
+            <column autoIncrement="true" name="id" type="INT">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
             <column name="name" type="VARCHAR(100)"/>
@@ -4703,7 +4703,7 @@
     </changeSet>
     <changeSet author="fineract" id="192">
         <createTable tableName="mix_taxonomy_mapping">
-            <column autoIncrement="true" name="id" type="INT UNSIGNED">
+            <column autoIncrement="true" name="id" type="INT">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
             <column defaultValue="" name="identifier" type="VARCHAR(50)">
@@ -4716,7 +4716,7 @@
     </changeSet>
     <changeSet author="fineract" id="193">
         <createTable tableName="mix_xbrl_namespace">
-            <column autoIncrement="true" name="id" type="INT UNSIGNED">
+            <column autoIncrement="true" name="id" type="INT">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
             <column defaultValue="" name="prefix" type="VARCHAR(20)">
@@ -5274,7 +5274,7 @@
         <addUniqueConstraint columnNames="display_name, level_id" constraintName="name" tableName="m_group"/>
     </changeSet>
     <changeSet author="fineract" id="237">
-        <addUniqueConstraint columnNames="name, app_user_id, is_active" constraintName="name"
+        <addUniqueConstraint columnNames="name, app_user_id, is_active" constraintName="uk_m_selfservice_beneficiaries_tpt_name"
                              tableName="m_selfservice_beneficiaries_tpt"/>
     </changeSet>
     <changeSet author="fineract" id="238">
@@ -6549,7 +6549,7 @@
         </createIndex>
     </changeSet>
     <changeSet author="fineract" id="488">
-        <createIndex indexName="category_id" tableName="m_provisioning_criteria_definition">
+        <createIndex indexName="fk_provisioning_criteria_definition_category" tableName="m_provisioning_criteria_definition">
             <column name="category_id"/>
         </createIndex>
     </changeSet>
@@ -6569,22 +6569,22 @@
         </createIndex>
     </changeSet>
     <changeSet author="fineract" id="492">
-        <createIndex indexName="charge_id" tableName="m_product_loan_charge">
+        <createIndex indexName="fk_product_loan_charge_charge" tableName="m_product_loan_charge">
             <column name="charge_id"/>
         </createIndex>
     </changeSet>
     <changeSet author="fineract" id="493">
-        <createIndex indexName="charge_id" tableName="m_savings_account_charge">
+        <createIndex indexName="fk_savings_account_charge_charge" tableName="m_savings_account_charge">
             <column name="charge_id"/>
         </createIndex>
     </changeSet>
     <changeSet author="fineract" id="494">
-        <createIndex indexName="charge_id" tableName="m_savings_product_charge">
+        <createIndex indexName="fk_savings_product_charge_charge" tableName="m_savings_product_charge">
             <column name="charge_id"/>
         </createIndex>
     </changeSet>
     <changeSet author="fineract" id="495">
-        <createIndex indexName="charge_id" tableName="m_share_account_charge">
+        <createIndex indexName="fk_share_account_charge_charge" tableName="m_share_account_charge">
             <column name="charge_id"/>
         </createIndex>
     </changeSet>
@@ -6599,7 +6599,7 @@
         </createIndex>
     </changeSet>
     <changeSet author="fineract" id="498">
-        <createIndex indexName="client_id" tableName="m_survey_scorecards">
+        <createIndex indexName="fk_survey_scorecards_client" tableName="m_survey_scorecards">
             <column name="client_id"/>
         </createIndex>
     </changeSet>
@@ -6619,32 +6619,32 @@
         </createIndex>
     </changeSet>
     <changeSet author="fineract" id="502">
-        <createIndex indexName="createdby_id" tableName="m_provisioning_criteria">
+        <createIndex indexName="fk_provisioning_criteria_createdby" tableName="m_provisioning_criteria">
             <column defaultValueComputed="NULL" name="createdby_id"/>
         </createIndex>
     </changeSet>
     <changeSet author="fineract" id="503">
-        <createIndex indexName="createdby_id" tableName="m_provisioning_history">
+        <createIndex indexName="fk_provisioning_history_createdby" tableName="m_provisioning_history">
             <column defaultValueComputed="NULL" name="createdby_id"/>
         </createIndex>
     </changeSet>
     <changeSet author="fineract" id="504">
-        <createIndex indexName="createdby_id" tableName="m_report_mailing_job">
+        <createIndex indexName="fk_report_mailing_job_createdby" tableName="m_report_mailing_job">
             <column name="createdby_id"/>
         </createIndex>
     </changeSet>
     <changeSet author="fineract" id="505">
-        <createIndex indexName="criteria_id" tableName="m_loanproduct_provisioning_entry">
+        <createIndex indexName="fk_loanproduct_provisioning_entry_criteria" tableName="m_loanproduct_provisioning_entry">
             <column name="criteria_id"/>
         </createIndex>
     </changeSet>
     <changeSet author="fineract" id="506">
-        <createIndex indexName="criteria_id" tableName="m_loanproduct_provisioning_mapping">
+        <createIndex indexName="fk_loanproduct_provisioning_mapping_criteria" tableName="m_loanproduct_provisioning_mapping">
             <column name="criteria_id"/>
         </createIndex>
     </changeSet>
     <changeSet author="fineract" id="507">
-        <createIndex indexName="criteria_id" tableName="m_provisioning_criteria_definition">
+        <createIndex indexName="fk_loanproduct_criteria_definition_criteria" tableName="m_provisioning_criteria_definition">
             <column name="criteria_id"/>
         </createIndex>
     </changeSet>
@@ -6660,7 +6660,7 @@
         </createIndex>
     </changeSet>
     <changeSet author="fineract" id="510">
-        <createIndex indexName="expense_account" tableName="m_provisioning_criteria_definition">
+        <createIndex indexName="fk_provisioning_criteria_definition_expense_account" tableName="m_provisioning_criteria_definition">
             <column defaultValueComputed="NULL" name="expense_account"/>
         </createIndex>
     </changeSet>
@@ -6700,7 +6700,7 @@
         </createIndex>
     </changeSet>
     <changeSet author="fineract" id="518">
-        <createIndex indexName="fk_hook_id_idx" tableName="m_hook_configuration">
+        <createIndex indexName="fk_hook_configuration_hook" tableName="m_hook_configuration">
             <column defaultValueComputed="NULL" name="hook_id"/>
         </createIndex>
     </changeSet>
@@ -6841,27 +6841,27 @@
         </createIndex>
     </changeSet>
     <changeSet author="fineract" id="545">
-        <createIndex indexName="lastmodifiedby_id" tableName="m_provisioning_criteria">
+        <createIndex indexName="provisioning_criteria_lastmodifiedby_id" tableName="m_provisioning_criteria">
             <column defaultValueComputed="NULL" name="lastmodifiedby_id"/>
         </createIndex>
     </changeSet>
     <changeSet author="fineract" id="546">
-        <createIndex indexName="lastmodifiedby_id" tableName="m_provisioning_history">
+        <createIndex indexName="provisioning_history_lastmodifiedby_id" tableName="m_provisioning_history">
             <column defaultValueComputed="NULL" name="lastmodifiedby_id"/>
         </createIndex>
     </changeSet>
     <changeSet author="fineract" id="547">
-        <createIndex indexName="lastmodifiedby_id" tableName="m_report_mailing_job">
+        <createIndex indexName="report_mailing_job_lastmodifiedby_id" tableName="m_report_mailing_job">
             <column defaultValueComputed="NULL" name="lastmodifiedby_id"/>
         </createIndex>
     </changeSet>
     <changeSet author="fineract" id="548">
-        <createIndex indexName="liability_account" tableName="m_loanproduct_provisioning_entry">
+        <createIndex indexName="loanproduct_provisioning_entry_liability_account" tableName="m_loanproduct_provisioning_entry">
             <column defaultValueComputed="NULL" name="liability_account"/>
         </createIndex>
     </changeSet>
     <changeSet author="fineract" id="549">
-        <createIndex indexName="liability_account" tableName="m_provisioning_criteria_definition">
+        <createIndex indexName="provisioning_criteria_definition_liability_account" tableName="m_provisioning_criteria_definition">
             <column defaultValueComputed="NULL" name="liability_account"/>
         </createIndex>
     </changeSet>
@@ -6881,7 +6881,7 @@
         </createIndex>
     </changeSet>
     <changeSet author="fineract" id="553">
-        <createIndex indexName="loan_id" tableName="m_loan_reschedule_request">
+        <createIndex indexName="loan_reschedule_request_loan_id" tableName="m_loan_reschedule_request">
             <column name="loan_id"/>
         </createIndex>
     </changeSet>
@@ -7028,22 +7028,22 @@
         </createIndex>
     </changeSet>
     <changeSet author="fineract" id="582">
-        <createIndex indexName="notification_mapper" tableName="notification_mapper">
+        <createIndex indexName="notification_mapper_user" tableName="notification_mapper">
             <column defaultValueComputed="NULL" name="user_id"/>
         </createIndex>
     </changeSet>
     <changeSet author="fineract" id="583">
-        <createIndex indexName="office_id" tableName="m_group">
+        <createIndex indexName="group_office_id" tableName="m_group">
             <column name="office_id"/>
         </createIndex>
     </changeSet>
     <changeSet author="fineract" id="584">
-        <createIndex indexName="office_id" tableName="m_loanproduct_provisioning_entry">
+        <createIndex indexName="loanproduct_provisioning_entry_office_id" tableName="m_loanproduct_provisioning_entry">
             <column name="office_id"/>
         </createIndex>
     </changeSet>
     <changeSet author="fineract" id="585">
-        <createIndex indexName="office_id" tableName="m_portfolio_command_source">
+        <createIndex indexName="portfolio_command_source_office_id" tableName="m_portfolio_command_source">
             <column defaultValueComputed="NULL" name="office_id"/>
         </createIndex>
     </changeSet>
@@ -7063,17 +7063,17 @@
         </createIndex>
     </changeSet>
     <changeSet author="fineract" id="589">
-        <createIndex indexName="product_id" tableName="m_loanproduct_provisioning_entry">
+        <createIndex indexName="loanproduct_provisioning_entry_product_id" tableName="m_loanproduct_provisioning_entry">
             <column name="product_id"/>
         </createIndex>
     </changeSet>
     <changeSet author="fineract" id="590">
-        <createIndex indexName="question_id" tableName="m_survey_responses">
+        <createIndex indexName="survey_responses_question_id" tableName="m_survey_responses">
             <column name="question_id"/>
         </createIndex>
     </changeSet>
     <changeSet author="fineract" id="591">
-        <createIndex indexName="question_id" tableName="m_survey_scorecards">
+        <createIndex indexName="survey_scorecards_question_id" tableName="m_survey_scorecards">
             <column name="question_id"/>
         </createIndex>
     </changeSet>
@@ -7138,17 +7138,17 @@
         </createIndex>
     </changeSet>
     <changeSet author="fineract" id="605">
-        <createIndex indexName="survey_id" tableName="m_survey_lookup_tables">
+        <createIndex indexName="survey_lookup_tables_survey_id" tableName="m_survey_lookup_tables">
             <column name="survey_id"/>
         </createIndex>
     </changeSet>
     <changeSet author="fineract" id="606">
-        <createIndex indexName="survey_id" tableName="m_survey_questions">
+        <createIndex indexName="survey_questions_survey_id" tableName="m_survey_questions">
             <column name="survey_id"/>
         </createIndex>
     </changeSet>
     <changeSet author="fineract" id="607">
-        <createIndex indexName="survey_id" tableName="m_survey_scorecards">
+        <createIndex indexName="survey_scorecards_survey_id" tableName="m_survey_scorecards">
             <column name="survey_id"/>
         </createIndex>
     </changeSet>
@@ -7178,7 +7178,7 @@
         </createIndex>
     </changeSet>
     <changeSet author="fineract" id="613">
-        <createIndex indexName="user_id" tableName="m_survey_scorecards">
+        <createIndex indexName="survey_scorecards_user_id" tableName="m_survey_scorecards">
             <column name="user_id"/>
         </createIndex>
     </changeSet>

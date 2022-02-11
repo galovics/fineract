@@ -31,16 +31,21 @@ public class ExtendedSpringLiquibaseFactory {
     private final LiquibaseProperties liquibaseProperties;
     private final ResourceLoader resourceLoader;
     private final Environment environment;
+    private final DatabaseAwareMigrationContextProvider databaseAwareMigrationContextProvider;
 
     @Autowired
-    public ExtendedSpringLiquibaseFactory(LiquibaseProperties liquibaseProperties, ResourceLoader resourceLoader, Environment environment) {
+    public ExtendedSpringLiquibaseFactory(LiquibaseProperties liquibaseProperties, ResourceLoader resourceLoader,
+                                          Environment environment,
+                                          DatabaseAwareMigrationContextProvider databaseAwareMigrationContextProvider) {
         this.liquibaseProperties = liquibaseProperties;
         this.resourceLoader = resourceLoader;
         this.environment = environment;
+        this.databaseAwareMigrationContextProvider = databaseAwareMigrationContextProvider;
     }
 
     public ExtendedSpringLiquibase create(DataSource dataSource, String... contexts) {
+        String databaseContext = databaseAwareMigrationContextProvider.provide(dataSource);
         return new ExtendedSpringLiquibaseBuilder(liquibaseProperties).withDataSource(dataSource).withResourceLoader(resourceLoader)
-                .withContexts(contexts).withContexts(environment.getActiveProfiles()).build();
+                .withContexts(contexts).withContexts(environment.getActiveProfiles()).withContext(databaseContext).build();
     }
 }

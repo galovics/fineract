@@ -21,11 +21,10 @@ package org.apache.fineract.infrastructure.core.service.migration;
 import java.util.Map;
 import java.util.Objects;
 import javax.sql.DataSource;
+import org.apache.fineract.infrastructure.core.database.DatabaseIndependentQueryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.liquibase.LiquibaseProperties;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -39,24 +38,21 @@ public class TenantDatabaseStateVerifier {
     private static final int TENANT_LATEST_FLYWAY_SCRIPT_CHECKSUM = 364931011;
 
     private final LiquibaseProperties liquibaseProperties;
+    private final DatabaseIndependentQueryService dbQueryService;
 
     @Autowired
-    public TenantDatabaseStateVerifier(LiquibaseProperties liquibaseProperties) {
+    public TenantDatabaseStateVerifier(LiquibaseProperties liquibaseProperties, DatabaseIndependentQueryService dbQueryService) {
         this.liquibaseProperties = liquibaseProperties;
+        this.dbQueryService = dbQueryService;
     }
 
     public boolean isFirstLiquibaseMigration(DataSource dataSource) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-        SqlRowSet rs = jdbcTemplate.queryForRowSet("SHOW TABLES LIKE 'DATABASECHANGELOG'");
-        boolean databaseChangelogTableExists = rs.next();
+        boolean databaseChangelogTableExists = dbQueryService.isTablePresent(dataSource, "DATABASECHANGELOG");
         return !databaseChangelogTableExists;
     }
 
     public boolean isFlywayPresent(DataSource dataSource) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-        SqlRowSet rs = jdbcTemplate.queryForRowSet("SHOW TABLES LIKE 'schema_version'");
-        boolean flywayPresent = rs.next();
-        return flywayPresent;
+        return dbQueryService.isTablePresent(dataSource, "schema_version");
     }
 
     public boolean isLiquibaseDisabled() {

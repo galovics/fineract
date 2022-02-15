@@ -29,6 +29,7 @@ import org.apache.fineract.infrastructure.core.service.Page;
 import org.apache.fineract.infrastructure.core.service.PaginationHelper;
 import org.apache.fineract.infrastructure.core.service.RoutingDataSource;
 import org.apache.fineract.infrastructure.core.service.SearchParameters;
+import org.apache.fineract.infrastructure.core.service.database.DatabaseSpecificSQLGenerator;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.organisation.monetary.data.CurrencyData;
 import org.apache.fineract.portfolio.charge.data.ChargeData;
@@ -45,16 +46,19 @@ import org.springframework.stereotype.Service;
 @Service
 public class ClientChargeReadPlatformServiceImpl implements ClientChargeReadPlatformService {
 
-    private final PaginationHelper<ClientChargeData> paginationHelper = new PaginationHelper<>();
+    private final PaginationHelper<ClientChargeData> paginationHelper;
     private final JdbcTemplate jdbcTemplate;
+    private final DatabaseSpecificSQLGenerator sqlGenerator;
     private final PlatformSecurityContext context;
     private final ClientChargeMapper clientChargeMapper;
 
     @Autowired
-    public ClientChargeReadPlatformServiceImpl(final PlatformSecurityContext context, final RoutingDataSource dataSource) {
+    public ClientChargeReadPlatformServiceImpl(final PlatformSecurityContext context, final RoutingDataSource dataSource, DatabaseSpecificSQLGenerator sqlGenerator) {
         this.context = context;
         this.jdbcTemplate = new JdbcTemplate(dataSource);
+        this.sqlGenerator = sqlGenerator;
         this.clientChargeMapper = new ClientChargeMapper();
+        this.paginationHelper = new PaginationHelper<>(sqlGenerator);
     }
 
     public static final class ClientChargeMapper implements RowMapper<ClientChargeData> {
@@ -135,20 +139,20 @@ public class ClientChargeReadPlatformServiceImpl implements ClientChargeReadPlat
             SearchParameters searchParameters) {
         final ClientChargeMapper rm = new ClientChargeMapper();
         final StringBuilder sqlBuilder = new StringBuilder();
-        sqlBuilder.append("select SQL_CALC_FOUND_ROWS ").append(rm.schema()).append(" where cc.client_id=? ");
+        sqlBuilder.append("select " + sqlGenerator.calcFoundRows() + " ").append(rm.schema()).append(" where cc.client_id=? ");
 
         // filter for active charges
         if (status.equalsIgnoreCase(ClientApiConstants.CLIENT_CHARGE_QUERY_PARAM_STATUS_VALUE_ACTIVE)) {
-            sqlBuilder.append(" and cc.is_active = 1 ");
+            sqlBuilder.append(" and cc.is_active = true ");
         } else if (status.equalsIgnoreCase(ClientApiConstants.CLIENT_CHARGE_QUERY_PARAM_STATUS_VALUE_INACTIVE)) {
-            sqlBuilder.append(" and cc.is_active = 0 ");
+            sqlBuilder.append(" and cc.is_active = false ");
         }
 
         // filter for paid charges
         if (pendingPayment != null && pendingPayment) {
-            sqlBuilder.append(" and ( cc.is_paid_derived = 0 and cc.waived = 0) ");
+            sqlBuilder.append(" and ( cc.is_paid_derived = false and cc.waived = false) ");
         } else if (pendingPayment != null && !pendingPayment) {
-            sqlBuilder.append(" and (cc.is_paid_derived = 1 or cc.waived = 1) ");
+            sqlBuilder.append(" and (cc.is_paid_derived = true or cc.waived = true) ");
         }
 
         sqlBuilder.append(" order by cc.charge_time_enum ASC, cc.charge_due_date DESC, cc.is_penalty ASC ");
@@ -161,8 +165,7 @@ public class ClientChargeReadPlatformServiceImpl implements ClientChargeReadPlat
             }
         }
 
-        final String sqlCountRows = "SELECT FOUND_ROWS()";
-        return this.paginationHelper.fetchPage(this.jdbcTemplate, sqlCountRows, sqlBuilder.toString(), new Object[] { clientId },
+        return this.paginationHelper.fetchPage(this.jdbcTemplate, sqlBuilder.toString(), new Object[] { clientId },
                 this.clientChargeMapper);
     }
 

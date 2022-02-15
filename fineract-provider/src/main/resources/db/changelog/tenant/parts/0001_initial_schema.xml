@@ -32,15 +32,15 @@
             </column>
             <column defaultValueComputed="NULL" name="office_id" type="BIGINT"/>
             <column defaultValueComputed="NULL" name="debit_account_id" type="BIGINT"/>
-            <column defaultValueNumeric="0" name="allow_multiple_debits" type="TINYINT">
+            <column defaultValueBoolean="false" name="allow_multiple_debits" type="boolean">
                 <constraints nullable="false"/>
             </column>
             <column defaultValueComputed="NULL" name="credit_account_id" type="BIGINT"/>
-            <column defaultValueNumeric="0" name="allow_multiple_credits" type="TINYINT">
+            <column defaultValueBoolean="false" name="allow_multiple_credits" type="boolean">
                 <constraints nullable="false"/>
             </column>
             <column name="description" type="VARCHAR(500)"/>
-            <column defaultValueNumeric="0" name="system_defined" type="TINYINT">
+            <column defaultValueBoolean="false" name="system_defined" type="boolean">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -58,10 +58,10 @@
             <column name="gl_code" type="VARCHAR(45)">
                 <constraints nullable="false" unique="true"/>
             </column>
-            <column defaultValueNumeric="0" name="disabled" type="TINYINT">
+            <column defaultValueBoolean="false" name="disabled" type="boolean">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueNumeric="1" name="manual_journal_entries_allowed" type="TINYINT">
+            <column defaultValueBoolean="true" name="manual_journal_entries_allowed" type="boolean">
                 <constraints nullable="false"/>
             </column>
             <column defaultValueNumeric="2" name="account_usage" type="TINYINT">
@@ -85,7 +85,7 @@
             <column name="closing_date" type="date">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueNumeric="0" name="is_deleted" type="INT">
+            <column defaultValueBoolean="false" name="is_deleted" type="boolean">
                 <constraints nullable="false"/>
             </column>
             <column defaultValueComputed="NULL" name="createdby_id" type="BIGINT"/>
@@ -129,11 +129,11 @@
             <column defaultValueComputed="NULL" name="loan_transaction_id" type="BIGINT"/>
             <column defaultValueComputed="NULL" name="savings_transaction_id" type="BIGINT"/>
             <column defaultValueComputed="NULL" name="client_transaction_id" type="BIGINT"/>
-            <column defaultValueNumeric="0" name="reversed" type="TINYINT">
+            <column defaultValueBoolean="false" name="reversed" type="boolean">
                 <constraints nullable="false"/>
             </column>
             <column name="ref_num" type="VARCHAR(100)"/>
-            <column defaultValueNumeric="0" name="manual_entry" type="TINYINT">
+            <column defaultValueBoolean="false" name="manual_entry" type="boolean">
                 <constraints nullable="false"/>
             </column>
             <column name="entry_date" type="date">
@@ -160,7 +160,7 @@
             <column name="lastmodified_date" type="datetime">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueNumeric="0" name="is_running_balance_calculated" type="TINYINT">
+            <column defaultValueBoolean="false" name="is_running_balance_calculated" type="boolean">
                 <constraints nullable="false"/>
             </column>
             <column defaultValueNumeric="0.000000" name="office_running_balance" type="DECIMAL(19, 6)">
@@ -236,7 +236,7 @@
             <column defaultValueComputed="NULL" name="value" type="INT"/>
             <column defaultValueComputed="NULL" name="date_value" type="date"/>
             <column name="string_value" type="VARCHAR(100)"/>
-            <column defaultValueNumeric="0" name="enabled" type="TINYINT">
+            <column defaultValueBoolean="false" name="enabled" type="boolean">
                 <constraints nullable="false"/>
             </column>
             <column defaultValueBoolean="false" name="is_trap_door" type="boolean">
@@ -299,7 +299,7 @@
             <column name="child_accounts_count" type="INT">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueNumeric="0" name="accepting_child" type="TINYINT">
+            <column defaultValueBoolean="false" name="accepting_child" type="boolean">
                 <constraints nullable="false"/>
             </column>
             <column defaultValueNumeric="0" name="loan_status_id" type="SMALLINT">
@@ -325,7 +325,7 @@
             <column name="child_accounts_count" type="INT">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueNumeric="0" name="accepting_child" type="TINYINT">
+            <column defaultValueBoolean="false" name="accepting_child" type="boolean">
                 <constraints nullable="false"/>
             </column>
             <column defaultValueNumeric="0" name="savings_status_id" type="SMALLINT">
@@ -384,19 +384,19 @@
             <column defaultValueComputed="NULL" name="next_run_time" type="datetime"/>
             <column name="job_key" type="VARCHAR(500)"/>
             <column name="initializing_errorlog" type="TEXT"/>
-            <column defaultValueNumeric="1" name="is_active" type="TINYINT">
+            <column defaultValueBoolean="true" name="is_active" type="boolean">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueNumeric="0" name="currently_running" type="TINYINT">
+            <column defaultValueBoolean="false" name="currently_running" type="boolean">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueNumeric="1" name="updates_allowed" type="TINYINT">
+            <column defaultValueBoolean="true" name="updates_allowed" type="boolean">
                 <constraints nullable="false"/>
             </column>
             <column defaultValueNumeric="0" name="scheduler_group" type="SMALLINT">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueNumeric="0" name="is_misfired" type="TINYINT">
+            <column defaultValueBoolean="false" name="is_misfired" type="boolean">
                 <constraints nullable="false"/>
             </column>
             <column defaultValueComputed="NULL" name="node_id" type="INT"/>
@@ -533,7 +533,7 @@
             <column defaultValueComputed="NULL" name="from_loan_transaction_id" type="BIGINT"/>
             <column defaultValueComputed="NULL" name="to_savings_transaction_id" type="BIGINT"/>
             <column defaultValueComputed="NULL" name="to_loan_transaction_id" type="BIGINT"/>
-            <column name="is_reversed" type="TINYINT">
+            <column name="is_reversed" type="boolean">
                 <constraints nullable="false"/>
             </column>
             <column name="transaction_date" type="date">
@@ -587,7 +587,7 @@
             <column name="table_name" type="VARCHAR(100)"/>
             <column name="table_fields" type="VARCHAR(1000)"/>
             <column name="email" type="VARCHAR(500)"/>
-            <column defaultValueNumeric="0" name="IsActive" type="TINYINT">
+            <column defaultValueBoolean="false" name="IsActive" type="boolean">
                 <constraints nullable="false"/>
             </column>
             <column defaultValueComputed="NULL" name="created_date" type="datetime"/>
@@ -608,7 +608,7 @@
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
-            <column defaultValueNumeric="0" name="is_deleted" type="TINYINT">
+            <column defaultValueBoolean="false" name="is_deleted" type="boolean">
                 <constraints nullable="false"/>
             </column>
             <column defaultValueComputed="NULL" name="office_id" type="BIGINT"/>
@@ -647,7 +647,7 @@
                 <constraints nullable="false"/>
             </column>
             <column defaultValueNumeric="0" name="password_never_expires"
-                    remarks="define if the password, should be check for validity period or not" type="TINYINT">
+                    remarks="define if the password, should be check for validity period or not" type="boolean">
                 <constraints nullable="false"/>
             </column>
             <column defaultValueBoolean="false" name="is_self_service_user" type="boolean">
@@ -701,7 +701,7 @@
             <column name="calendar_type_enum" type="SMALLINT">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueNumeric="0" name="repeating" type="TINYINT">
+            <column defaultValueBoolean="false" name="repeating" type="boolean">
                 <constraints nullable="false"/>
             </column>
             <column name="recurrence" type="VARCHAR(100)"/>
@@ -736,7 +736,7 @@
             <column name="calendar_type_enum" type="SMALLINT">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueNumeric="0" name="repeating" type="TINYINT">
+            <column defaultValueBoolean="false" name="repeating" type="boolean">
                 <constraints nullable="false"/>
             </column>
             <column name="recurrence" type="VARCHAR(100)"/>
@@ -799,7 +799,7 @@
             <column defaultValueComputed="NULL" name="end_date" type="date"/>
             <column name="start_time" type="VARCHAR(10)"/>
             <column name="end_time" type="VARCHAR(10)"/>
-            <column defaultValueComputed="NULL" name="full_day" type="TINYINT"/>
+            <column defaultValueComputed="NULL" name="full_day" type="boolean"/>
         </createTable>
     </changeSet>
     <changeSet author="fineract" id="34">
@@ -829,25 +829,25 @@
             <column defaultValueComputed="NULL" name="fee_on_day" type="SMALLINT"/>
             <column defaultValueComputed="NULL" name="fee_interval" type="SMALLINT"/>
             <column defaultValueComputed="NULL" name="fee_on_month" type="SMALLINT"/>
-            <column defaultValueNumeric="0" name="is_penalty" type="TINYINT">
+            <column defaultValueBoolean="false" name="is_penalty" type="boolean">
                 <constraints nullable="false"/>
             </column>
-            <column name="is_active" type="TINYINT">
+            <column name="is_active" type="boolean">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueNumeric="0" name="is_deleted" type="TINYINT">
+            <column defaultValueBoolean="false" name="is_deleted" type="boolean">
                 <constraints nullable="false"/>
             </column>
             <column defaultValueComputed="NULL" name="min_cap" type="DECIMAL(19, 6)"/>
             <column defaultValueComputed="NULL" name="max_cap" type="DECIMAL(19, 6)"/>
             <column defaultValueComputed="NULL" name="fee_frequency" type="SMALLINT"/>
-            <column defaultValueNumeric="0" name="is_free_withdrawal" type="INT">
+            <column defaultValueBoolean="false" name="is_free_withdrawal" type="boolean">
                 <constraints nullable="false"/>
             </column>
             <column defaultValueNumeric="0" name="free_withdrawal_charge_frequency" type="INT"/>
             <column defaultValueNumeric="0" name="restart_frequency" type="INT"/>
             <column defaultValueNumeric="0" name="restart_frequency_enum" type="INT"/>
-            <column defaultValueNumeric="0" name="is_payment_type" type="INT"/>
+            <column defaultValueBoolean="false" name="is_payment_type" type="boolean"/>
             <column defaultValueComputed="NULL" name="payment_type_id" type="INT"/>
             <column defaultValueComputed="NULL" name="income_or_liability_account_id" type="BIGINT"/>
             <column defaultValueComputed="NULL" name="tax_group_id" type="BIGINT"/>
@@ -885,7 +885,7 @@
             <column name="mobile_no" type="VARCHAR(50)">
                 <constraints unique="true"/>
             </column>
-            <column defaultValueNumeric="0" name="is_staff" type="TINYINT">
+            <column defaultValueBoolean="false" name="is_staff" type="boolean">
                 <constraints nullable="false"/>
             </column>
             <column defaultValueComputed="NULL" name="gender_cv_id" type="INT"/>
@@ -932,7 +932,7 @@
             <column defaultValueNumeric="0" name="address_type_id" type="INT">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueNumeric="0" name="is_active" type="TINYINT">
+            <column defaultValueBoolean="false" name="is_active" type="boolean">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -964,7 +964,7 @@
             <column name="charge_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            <column name="is_penalty" type="TINYINT">
+            <column name="is_penalty" type="boolean">
                 <constraints nullable="false"/>
             </column>
             <column name="charge_time_enum" type="SMALLINT">
@@ -983,9 +983,9 @@
             <column name="amount_outstanding_derived" type="DECIMAL(19, 6)">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueComputed="NULL" name="is_paid_derived" type="TINYINT"/>
-            <column defaultValueComputed="NULL" name="waived" type="TINYINT"/>
-            <column defaultValueComputed="NULL" name="is_active" type="TINYINT"/>
+            <column defaultValueComputed="NULL" name="is_paid_derived" type="boolean"/>
+            <column defaultValueComputed="NULL" name="waived" type="boolean"/>
+            <column defaultValueComputed="NULL" name="is_active" type="boolean"/>
             <column defaultValueComputed="NULL" name="inactivated_on_date" type="date"/>
         </createTable>
     </changeSet>
@@ -1074,7 +1074,7 @@
                 <constraints nullable="false"/>
             </column>
             <column defaultValueComputed="NULL" name="payment_detail_id" type="BIGINT"/>
-            <column name="is_reversed" type="TINYINT">
+            <column name="is_reversed" type="boolean">
                 <constraints nullable="false"/>
             </column>
             <column name="external_id" type="VARCHAR(50)">
@@ -1131,7 +1131,7 @@
             <column name="code_name" type="VARCHAR(100)">
                 <constraints unique="true"/>
             </column>
-            <column defaultValueNumeric="0" name="is_system_defined" type="TINYINT">
+            <column defaultValueBoolean="false" name="is_system_defined" type="boolean">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -1150,10 +1150,10 @@
                 <constraints nullable="false"/>
             </column>
             <column defaultValueComputed="NULL" name="code_score" type="INT"/>
-            <column defaultValueNumeric="1" name="is_active" type="TINYINT">
+            <column defaultValueBoolean="true" name="is_active" type="boolean">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueNumeric="0" name="is_mandatory" type="TINYINT">
+            <column defaultValueBoolean="false" name="is_mandatory" type="boolean">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -1222,10 +1222,10 @@
             <column name="loan_product_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueComputed="NULL" name="is_creditcheck_mandatory" type="TINYINT"/>
-            <column defaultValueComputed="NULL" name="skip_creditcheck_in_failure" type="TINYINT"/>
+            <column defaultValueComputed="NULL" name="is_creditcheck_mandatory" type="boolean"/>
+            <column defaultValueComputed="NULL" name="skip_creditcheck_in_failure" type="boolean"/>
             <column defaultValueComputed="NULL" name="stale_period" type="INT"/>
-            <column defaultValueComputed="NULL" name="isActive" type="TINYINT"/>
+            <column defaultValueComputed="NULL" name="isActive" type="boolean"/>
         </createTable>
     </changeSet>
     <changeSet author="fineract" id="51">
@@ -1289,7 +1289,7 @@
             <column name="transaction_date" type="date">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueNumeric="0" name="is_reversed" type="TINYINT">
+            <column defaultValueBoolean="false" name="is_reversed" type="boolean">
                 <constraints nullable="false"/>
             </column>
             <column name="created_date" type="datetime">
@@ -1306,16 +1306,16 @@
                 <constraints nullable="false"/>
             </column>
             <column defaultValueComputed="NULL" name="mandatory_recommended_deposit_amount" type="DECIMAL(19, 6)"/>
-            <column defaultValueNumeric="0" name="is_mandatory" type="TINYINT">
+            <column defaultValueBoolean="false" name="is_mandatory" type="boolean">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueNumeric="0" name="allow_withdrawal" type="TINYINT">
+            <column defaultValueBoolean="false" name="allow_withdrawal" type="boolean">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueNumeric="1" name="adjust_advance_towards_future_payments" type="TINYINT">
+            <column defaultValueBoolean="true" name="adjust_advance_towards_future_payments" type="boolean">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueNumeric="0" name="is_calendar_inherited" type="TINYINT">
+            <column defaultValueBoolean="false" name="is_calendar_inherited" type="boolean">
                 <constraints nullable="false"/>
             </column>
             <column defaultValueComputed="NULL" name="total_overdue_amount" type="DECIMAL(19, 6)"/>
@@ -1336,7 +1336,7 @@
             <column defaultValueComputed="NULL" name="max_deposit_term_type_enum" type="SMALLINT"/>
             <column defaultValueComputed="NULL" name="in_multiples_of_deposit_term" type="INT"/>
             <column defaultValueComputed="NULL" name="in_multiples_of_deposit_term_type_enum" type="SMALLINT"/>
-            <column defaultValueComputed="NULL" name="pre_closure_penal_applicable" type="SMALLINT"/>
+            <column defaultValueComputed="NULL" name="pre_closure_penal_applicable" type="boolean"/>
             <column defaultValueComputed="NULL" name="pre_closure_penal_interest" type="DECIMAL(19, 6)"/>
             <column defaultValueComputed="NULL" name="pre_closure_penal_interest_on_enum" type="SMALLINT"/>
             <column defaultValueComputed="NULL" name="deposit_period" type="INT"/>
@@ -1346,7 +1346,7 @@
             <column defaultValueComputed="NULL" name="maturity_date" type="date"/>
             <column defaultValueComputed="NULL" name="on_account_closure_enum" type="SMALLINT"/>
             <column defaultValueComputed="NULL" name="expected_firstdepositon_date" type="date"/>
-            <column defaultValueNumeric="0" name="transfer_interest_to_linked_account" type="TINYINT">
+            <column defaultValueBoolean="false" name="transfer_interest_to_linked_account" type="boolean">
                 <constraints nullable="false"/>
             </column>
             <column defaultValueComputed="NULL" name="transfer_to_savings_account_id" type="BIGINT"/>
@@ -1370,13 +1370,13 @@
             <column defaultValueNumeric="0" name="savings_product_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueNumeric="1" name="is_mandatory" type="TINYINT">
+            <column defaultValueBoolean="true" name="is_mandatory" type="boolean">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueNumeric="0" name="allow_withdrawal" type="TINYINT">
+            <column defaultValueBoolean="false" name="allow_withdrawal" type="boolean">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueNumeric="1" name="adjust_advance_towards_future_payments" type="TINYINT">
+            <column defaultValueBoolean="true" name="adjust_advance_towards_future_payments" type="boolean">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -1395,7 +1395,7 @@
             <column defaultValueComputed="NULL" name="max_deposit_term_type_enum" type="SMALLINT"/>
             <column defaultValueComputed="NULL" name="in_multiples_of_deposit_term" type="INT"/>
             <column defaultValueComputed="NULL" name="in_multiples_of_deposit_term_type_enum" type="SMALLINT"/>
-            <column defaultValueComputed="NULL" name="pre_closure_penal_applicable" type="SMALLINT"/>
+            <column defaultValueComputed="NULL" name="pre_closure_penal_applicable" type="boolean"/>
             <column defaultValueComputed="NULL" name="pre_closure_penal_interest" type="DECIMAL(19, 6)"/>
             <column defaultValueComputed="NULL" name="pre_closure_penal_interest_on_enum" type="SMALLINT"/>
             <column defaultValueComputed="NULL" name="min_deposit_amount" type="DECIMAL(19, 6)"/>
@@ -1443,7 +1443,7 @@
             <column name="status_enum" type="INT">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueNumeric="0" name="system_defined" type="TINYINT">
+            <column defaultValueBoolean="false" name="system_defined" type="boolean">
                 <constraints nullable="false"/>
             </column>
             <column defaultValueComputed="NULL" name="product_id" type="BIGINT"/>
@@ -1528,7 +1528,7 @@
             <column defaultValueComputed="NULL" name="age" type="INT"/>
             <column defaultValueComputed="NULL" name="profession_cv_id" type="INT"/>
             <column name="mobile_number" type="VARCHAR(50)"/>
-            <column defaultValueComputed="NULL" name="is_dependent" type="TINYINT"/>
+            <column defaultValueComputed="NULL" name="is_dependent" type="boolean"/>
         </createTable>
     </changeSet>
     <changeSet author="fineract" id="66">
@@ -1545,10 +1545,10 @@
             <column name="field" type="VARCHAR(100)">
                 <constraints nullable="false"/>
             </column>
-            <column name="is_enabled" type="TINYINT">
+            <column name="is_enabled" type="boolean">
                 <constraints nullable="false"/>
             </column>
-            <column name="is_mandatory" type="TINYINT">
+            <column name="is_mandatory" type="boolean">
                 <constraints nullable="false"/>
             </column>
             <column name="validation_regex" type="VARCHAR(50)"/>
@@ -1680,16 +1680,16 @@
                 <constraints nullable="false" primaryKey="true"/>
             </column>
             <column defaultValueComputed="NULL" name="parent_id" type="INT"/>
-            <column name="super_parent" type="TINYINT">
+            <column name="super_parent" type="boolean">
                 <constraints nullable="false"/>
             </column>
             <column name="level_name" type="VARCHAR(100)">
                 <constraints nullable="false"/>
             </column>
-            <column name="recursable" type="TINYINT">
+            <column name="recursable" type="boolean">
                 <constraints nullable="false"/>
             </column>
-            <column name="can_have_clients" type="TINYINT">
+            <column name="can_have_clients" type="boolean">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -1729,7 +1729,7 @@
             <column name="house_phone_number" type="VARCHAR(20)"/>
             <column name="mobile_number" type="VARCHAR(20)"/>
             <column name="comment" type="VARCHAR(500)"/>
-            <column defaultValueNumeric="1" name="is_active" type="TINYINT">
+            <column defaultValueBoolean="true" name="is_active" type="boolean">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -1768,7 +1768,7 @@
             <column name="deposit_on_hold_transaction_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueNumeric="0" name="is_reversed" type="TINYINT">
+            <column defaultValueBoolean="false" name="is_reversed" type="boolean">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -1791,7 +1791,7 @@
             <column defaultValueNumeric="100" name="status_enum" type="INT">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueNumeric="0" name="processed" type="TINYINT">
+            <column defaultValueBoolean="false" name="processed" type="boolean">
                 <constraints nullable="false"/>
             </column>
             <column name="description" type="VARCHAR(100)"/>
@@ -1818,7 +1818,7 @@
             <column name="template_id" type="SMALLINT">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueNumeric="1" name="is_active" type="SMALLINT">
+            <column defaultValueBoolean="true" name="is_active" type="boolean">
                 <constraints nullable="false"/>
             </column>
             <column name="name" type="VARCHAR(45)">
@@ -1879,7 +1879,7 @@
                 <constraints nullable="false"/>
             </column>
             <column name="placeholder" type="VARCHAR(100)"/>
-            <column defaultValueNumeric="0" name="optional" type="TINYINT">
+            <column defaultValueBoolean="false" name="optional" type="boolean">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -1918,7 +1918,7 @@
             <column name="entity_type" type="TINYINT">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueNumeric="0" name="completed" type="TINYINT"/>
+            <column defaultValueBoolean="false" name="completed" type="boolean"/>
             <column defaultValueNumeric="0" name="total_records" type="BIGINT"/>
             <column defaultValueNumeric="0" name="success_count" type="BIGINT"/>
             <column defaultValueNumeric="0" name="failure_count" type="BIGINT"/>
@@ -1964,7 +1964,7 @@
                 <constraints nullable="false"/>
             </column>
             <column defaultValueComputed="NULL" name="end_date" type="date"/>
-            <column defaultValueNumeric="0" name="is_primary_grouping_by_amount" type="TINYINT">
+            <column defaultValueBoolean="false" name="is_primary_grouping_by_amount" type="boolean">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -2046,7 +2046,7 @@
             <column defaultValueNumeric="1" name="interest_calculated_in_period_enum" type="SMALLINT">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueNumeric="0" name="allow_partial_period_interest_calcualtion" type="TINYINT">
+            <column defaultValueBoolean="false" name="allow_partial_period_interest_calcualtion" type="boolean">
                 <constraints nullable="false"/>
             </column>
             <column defaultValueNumeric="0" name="term_frequency" type="SMALLINT">
@@ -2172,13 +2172,13 @@
             <column defaultValueComputed="NULL" name="withdrawnon_userid" type="BIGINT"/>
             <column defaultValueComputed="NULL" name="writtenoffon_date" type="date"/>
             <column defaultValueComputed="NULL" name="loan_transaction_strategy_id" type="BIGINT"/>
-            <column defaultValueComputed="NULL" name="sync_disbursement_with_meeting" type="TINYINT"/>
+            <column defaultValueComputed="NULL" name="sync_disbursement_with_meeting" type="boolean"/>
             <column defaultValueComputed="NULL" name="loan_counter" type="SMALLINT"/>
             <column defaultValueComputed="NULL" name="loan_product_counter" type="SMALLINT"/>
             <column defaultValueComputed="NULL" name="fixed_emi_amount" type="DECIMAL(19, 6)"/>
             <column defaultValueComputed="NULL" name="max_outstanding_loan_balance" type="DECIMAL(19, 6)"/>
             <column defaultValueComputed="NULL" name="grace_on_arrears_ageing" type="SMALLINT"/>
-            <column defaultValueNumeric="0" name="is_npa" type="TINYINT">
+            <column defaultValueBoolean="false" name="is_npa" type="boolean">
                 <constraints nullable="false"/>
             </column>
             <column defaultValueComputed="NULL" name="total_recovered_derived" type="DECIMAL(19, 6)"/>
@@ -2190,20 +2190,20 @@
             <column defaultValueNumeric="1" name="days_in_year_enum" type="SMALLINT">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueNumeric="0" name="interest_recalculation_enabled" type="TINYINT">
+            <column defaultValueBoolean="false" name="interest_recalculation_enabled" type="boolean">
                 <constraints nullable="false"/>
             </column>
             <column defaultValueComputed="NULL" name="guarantee_amount_derived" type="DECIMAL(19, 6)"/>
-            <column defaultValueComputed="NULL" name="create_standing_instruction_at_disbursement" type="TINYINT"/>
+            <column defaultValueComputed="NULL" name="create_standing_instruction_at_disbursement" type="boolean"/>
             <column defaultValueNumeric="1" name="version" type="INT">
                 <constraints nullable="false"/>
             </column>
             <column defaultValueComputed="NULL" name="writeoff_reason_cv_id" type="INT"/>
             <column defaultValueComputed="NULL" name="loan_sub_status_id" type="SMALLINT"/>
-            <column defaultValueNumeric="0" name="is_topup" type="TINYINT">
+            <column defaultValueBoolean="false" name="is_topup" type="boolean">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueNumeric="0" name="is_equal_amortization" type="TINYINT">
+            <column defaultValueBoolean="false" name="is_equal_amortization" type="boolean">
                 <constraints nullable="false"/>
             </column>
             <column defaultValueComputed="NULL" name="fixed_principal_percentage_per_installment" type="DECIMAL(5, 2)"/>
@@ -2243,7 +2243,7 @@
             <column name="charge_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueNumeric="0" name="is_penalty" type="TINYINT">
+            <column defaultValueBoolean="false" name="is_penalty" type="boolean">
                 <constraints nullable="false"/>
             </column>
             <column name="charge_time_enum" type="SMALLINT">
@@ -2268,15 +2268,15 @@
             <column defaultValueNumeric="0.000000" name="amount_outstanding_derived" type="DECIMAL(19, 6)">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueNumeric="0" name="is_paid_derived" type="TINYINT">
+            <column defaultValueBoolean="false" name="is_paid_derived" type="boolean">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueNumeric="0" name="waived" type="TINYINT">
+            <column defaultValueBoolean="false" name="waived" type="boolean">
                 <constraints nullable="false"/>
             </column>
             <column defaultValueComputed="NULL" name="min_cap" type="DECIMAL(19, 6)"/>
             <column defaultValueComputed="NULL" name="max_cap" type="DECIMAL(19, 6)"/>
-            <column defaultValueNumeric="1" name="is_active" type="TINYINT">
+            <column defaultValueBoolean="true" name="is_active" type="boolean">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -2323,7 +2323,7 @@
             </column>
             <column defaultValueComputed="NULL" name="loan_id" type="BIGINT"/>
             <column defaultValueComputed="NULL" name="client_collateral_id" type="BIGINT"/>
-            <column defaultValueNumeric="0" name="is_released" type="TINYINT"/>
+            <column defaultValueBoolean="false" name="is_released" type="boolean"/>
             <column defaultValueComputed="NULL" name="transaction_id" type="BIGINT"/>
         </createTable>
     </changeSet>
@@ -2366,10 +2366,10 @@
             <column defaultValueNumeric="0.000000" name="amount_outstanding_derived" type="DECIMAL(19, 6)">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueNumeric="0" name="is_paid_derived" type="TINYINT">
+            <column defaultValueBoolean="false" name="is_paid_derived" type="boolean">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueNumeric="0" name="waived" type="TINYINT">
+            <column defaultValueBoolean="false" name="waived" type="boolean">
                 <constraints nullable="false"/>
             </column>
             <column defaultValueComputed="NULL" name="amount_through_charge_payment" type="DECIMAL(19, 6)"/>
@@ -2485,11 +2485,11 @@
             <column defaultValueComputed="NULL" name="rest_frequency_weekday_enum" type="INT"/>
             <column defaultValueComputed="NULL" name="compounding_frequency_nth_day_enum" type="INT"/>
             <column defaultValueComputed="NULL" name="compounding_frequency_on_day" type="INT"/>
-            <column defaultValueNumeric="0" name="is_compounding_to_be_posted_as_transaction" type="TINYINT">
+            <column defaultValueBoolean="false" name="is_compounding_to_be_posted_as_transaction" type="boolean">
                 <constraints nullable="false"/>
             </column>
             <column defaultValueComputed="NULL" name="compounding_frequency_weekday_enum" type="INT"/>
-            <column defaultValueNumeric="0" name="allow_compounding_on_eod" type="TINYINT">
+            <column defaultValueBoolean="false" name="allow_compounding_on_eod" type="boolean">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -2538,7 +2538,7 @@
             <column defaultValueComputed="NULL" name="created_date" type="datetime"/>
             <column defaultValueComputed="NULL" name="lastmodified_date" type="datetime"/>
             <column defaultValueComputed="NULL" name="lastmodifiedby_id" type="BIGINT"/>
-            <column defaultValueNumeric="0" name="recalculated_interest_component" type="TINYINT">
+            <column defaultValueBoolean="false" name="recalculated_interest_component" type="boolean">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -2594,7 +2594,7 @@
             </column>
             <column defaultValueComputed="NULL" name="recalculate_interest"
                     remarks="If set to 1, interest will be recalculated starting from the reschedule period."
-                    type="TINYINT"/>
+                    type="boolean"/>
             <column defaultValueComputed="NULL" name="reschedule_reason_cv_id"
                     remarks="ID of code value of reason for rescheduling" type="INT"/>
             <column name="reschedule_reason_comment" remarks="Text provided in addition to the reason code value"
@@ -2640,13 +2640,13 @@
             </column>
             <column defaultValueComputed="NULL" name="decimal_value" type="DECIMAL(19, 6)"/>
             <column defaultValueComputed="NULL" name="date_value" type="date"/>
-            <column defaultValueNumeric="0" name="is_specific_to_installment" type="TINYINT">
+            <column defaultValueBoolean="false" name="is_specific_to_installment" type="boolean">
                 <constraints nullable="false"/>
             </column>
             <column name="applied_on_loan_status" type="SMALLINT">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueNumeric="1" name="is_active" type="TINYINT">
+            <column defaultValueBoolean="true" name="is_active" type="boolean">
                 <constraints nullable="false"/>
             </column>
             <column defaultValueComputed="NULL" name="parent_id" type="BIGINT"/>
@@ -2703,7 +2703,7 @@
                 <constraints nullable="false"/>
             </column>
             <column defaultValueComputed="NULL" name="payment_detail_id" type="BIGINT"/>
-            <column name="is_reversed" type="TINYINT">
+            <column name="is_reversed" type="boolean">
                 <constraints nullable="false"/>
             </column>
             <column name="external_id" type="VARCHAR(100)">
@@ -2728,7 +2728,7 @@
             <column name="submitted_on_date" type="date">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueNumeric="0" name="manually_adjusted_or_reversed" type="TINYINT"/>
+            <column defaultValueBoolean="false" name="manually_adjusted_or_reversed" type="boolean"/>
             <column defaultValueComputed="NULL" name="created_date" type="datetime"/>
             <column defaultValueComputed="NULL" name="appuser_id" type="BIGINT"/>
         </createTable>
@@ -2910,7 +2910,7 @@
             <column name="creditbureau_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            <column name="isActive" type="TINYINT">
+            <column name="isActive" type="boolean">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -2947,7 +2947,7 @@
             <column name="description" type="TEXT">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueNumeric="0" name="active" type="TINYINT">
+            <column defaultValueBoolean="false" name="active" type="boolean">
                 <constraints nullable="false"/>
             </column>
             <column name="key" type="VARCHAR(255)">
@@ -2975,7 +2975,7 @@
             </column>
             <column name="value" type="VARCHAR(100)"/>
             <column name="description" type="VARCHAR(500)"/>
-            <column defaultValueNumeric="0" name="is_cash_payment" type="TINYINT"/>
+            <column defaultValueBoolean="false" name="is_cash_payment" type="boolean"/>
             <column defaultValueNumeric="0" name="order_position" type="INT">
                 <constraints nullable="false"/>
             </column>
@@ -2992,7 +2992,7 @@
             </column>
             <column name="entity_name" type="VARCHAR(100)"/>
             <column name="action_name" type="VARCHAR(100)"/>
-            <column defaultValueNumeric="1" name="can_maker_checker" type="TINYINT">
+            <column defaultValueBoolean="true" name="can_maker_checker" type="boolean">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -3038,7 +3038,7 @@
             <column defaultValueNumeric="1" name="association_type_enum" type="SMALLINT">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueNumeric="1" name="is_active" type="TINYINT">
+            <column defaultValueBoolean="true" name="is_active" type="boolean">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -3125,7 +3125,7 @@
             <column defaultValueNumeric="1" name="interest_calculated_in_period_enum" type="SMALLINT">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueNumeric="0" name="allow_partial_period_interest_calcualtion" type="TINYINT">
+            <column defaultValueBoolean="false" name="allow_partial_period_interest_calcualtion" type="boolean">
                 <constraints nullable="false"/>
             </column>
             <column name="repay_every" type="SMALLINT">
@@ -3153,15 +3153,15 @@
             <column name="external_id" type="VARCHAR(100)">
                 <constraints unique="true"/>
             </column>
-            <column defaultValueNumeric="0" name="include_in_borrower_cycle" type="TINYINT">
+            <column defaultValueBoolean="false" name="include_in_borrower_cycle" type="boolean">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueNumeric="0" name="use_borrower_cycle" type="TINYINT">
+            <column defaultValueBoolean="false" name="use_borrower_cycle" type="boolean">
                 <constraints nullable="false"/>
             </column>
             <column defaultValueComputed="NULL" name="start_date" type="date"/>
             <column defaultValueComputed="NULL" name="close_date" type="date"/>
-            <column defaultValueNumeric="0" name="allow_multiple_disbursals" type="TINYINT">
+            <column defaultValueBoolean="false" name="allow_multiple_disbursals" type="boolean">
                 <constraints nullable="false"/>
             </column>
             <column defaultValueComputed="NULL" name="max_disbursals" type="INT"/>
@@ -3174,28 +3174,28 @@
             <column defaultValueNumeric="1" name="days_in_year_enum" type="SMALLINT">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueNumeric="0" name="interest_recalculation_enabled" type="TINYINT">
+            <column defaultValueBoolean="false" name="interest_recalculation_enabled" type="boolean">
                 <constraints nullable="false"/>
             </column>
             <column defaultValueComputed="NULL" name="min_days_between_disbursal_and_first_repayment" type="INT"/>
-            <column defaultValueNumeric="0" name="hold_guarantee_funds" type="TINYINT">
+            <column defaultValueBoolean="false" name="hold_guarantee_funds" type="boolean">
                 <constraints nullable="false"/>
             </column>
             <column defaultValueNumeric="50.00" name="principal_threshold_for_last_installment" type="DECIMAL(5, 2)">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueNumeric="0" name="account_moves_out_of_npa_only_on_arrears_completion" type="TINYINT">
+            <column defaultValueBoolean="false" name="account_moves_out_of_npa_only_on_arrears_completion" type="boolean">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueNumeric="0" name="can_define_fixed_emi_amount" type="TINYINT">
+            <column defaultValueBoolean="false" name="can_define_fixed_emi_amount" type="boolean">
                 <constraints nullable="false"/>
             </column>
             <column defaultValueComputed="NULL" name="instalment_amount_in_multiples_of" type="DECIMAL(19, 6)"/>
-            <column defaultValueNumeric="0" name="can_use_for_topup" type="TINYINT">
+            <column defaultValueBoolean="false" name="can_use_for_topup" type="boolean">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueNumeric="0" name="sync_expected_with_disbursement_date" type="TINYINT"/>
-            <column defaultValueNumeric="0" name="is_equal_amortization" type="TINYINT">
+            <column defaultValueBoolean="false" name="sync_expected_with_disbursement_date" type="boolean"/>
+            <column defaultValueBoolean="false" name="is_equal_amortization" type="boolean">
                 <constraints nullable="false"/>
             </column>
             <column defaultValueComputed="NULL" name="fixed_principal_percentage_per_installment" type="DECIMAL(5, 2)"/>
@@ -3219,28 +3219,28 @@
             <column name="loan_product_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueNumeric="1" name="amortization_method_enum" type="TINYINT">
+            <column defaultValueBoolean="true" name="amortization_method_enum" type="boolean">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueNumeric="1" name="interest_method_enum" type="TINYINT">
+            <column defaultValueBoolean="true" name="interest_method_enum" type="boolean">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueNumeric="1" name="loan_transaction_strategy_id" type="TINYINT">
+            <column defaultValueBoolean="true" name="loan_transaction_strategy_id" type="boolean">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueNumeric="1" name="interest_calculated_in_period_enum" type="TINYINT">
+            <column defaultValueBoolean="true" name="interest_calculated_in_period_enum" type="boolean">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueNumeric="1" name="arrearstolerance_amount" type="TINYINT">
+            <column defaultValueBoolean="true" name="arrearstolerance_amount" type="boolean">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueNumeric="1" name="repay_every" type="TINYINT">
+            <column defaultValueBoolean="true" name="repay_every" type="boolean">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueNumeric="1" name="moratorium" type="TINYINT">
+            <column defaultValueBoolean="true" name="moratorium" type="boolean">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueNumeric="1" name="grace_on_arrears_ageing" type="TINYINT">
+            <column defaultValueBoolean="true" name="grace_on_arrears_ageing" type="boolean">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -3318,7 +3318,7 @@
             <column defaultValueNumeric="0" name="rest_frequency_interval" type="SMALLINT">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueNumeric="0" name="arrears_based_on_original_schedule" type="TINYINT">
+            <column defaultValueBoolean="false" name="arrears_based_on_original_schedule" type="boolean">
                 <constraints nullable="false"/>
             </column>
             <column defaultValueNumeric="1" name="pre_close_interest_calculation_strategy" type="SMALLINT">
@@ -3332,10 +3332,10 @@
             <column defaultValueComputed="NULL" name="compounding_frequency_nth_day_enum" type="INT"/>
             <column defaultValueComputed="NULL" name="compounding_frequency_on_day" type="INT"/>
             <column defaultValueComputed="NULL" name="compounding_frequency_weekday_enum" type="INT"/>
-            <column defaultValueNumeric="0" name="is_compounding_to_be_posted_as_transaction" type="TINYINT">
+            <column defaultValueBoolean="false" name="is_compounding_to_be_posted_as_transaction" type="boolean">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueNumeric="0" name="allow_compounding_on_eod" type="TINYINT">
+            <column defaultValueBoolean="false" name="allow_compounding_on_eod" type="boolean">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -3465,7 +3465,7 @@
             <column name="percentage" type="DECIMAL(10, 2)">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueNumeric="0" name="active" type="TINYINT"/>
+            <column defaultValueBoolean="false" name="active" type="boolean"/>
             <column name="product_apply" type="SMALLINT">
                 <constraints nullable="false"/>
             </column>
@@ -3550,10 +3550,10 @@
             <column defaultValueNumeric="0" name="number_of_runs" type="INT">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueNumeric="0" name="is_active" type="TINYINT">
+            <column defaultValueBoolean="false" name="is_active" type="boolean">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueNumeric="0" name="is_deleted" type="TINYINT">
+            <column defaultValueBoolean="false" name="is_deleted" type="boolean">
                 <constraints nullable="false"/>
             </column>
             <column name="run_as_userid" type="BIGINT">
@@ -3606,7 +3606,7 @@
             <column name="description" type="VARCHAR(500)">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueNumeric="0" name="is_disabled" type="TINYINT">
+            <column defaultValueBoolean="false" name="is_disabled" type="boolean">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -3688,8 +3688,8 @@
             <column defaultValueComputed="NULL" name="min_required_opening_balance" type="DECIMAL(19, 6)"/>
             <column defaultValueComputed="NULL" name="lockin_period_frequency" type="DECIMAL(19, 6)"/>
             <column defaultValueComputed="NULL" name="lockin_period_frequency_enum" type="SMALLINT"/>
-            <column defaultValueNumeric="1" name="withdrawal_fee_for_transfer" type="TINYINT"/>
-            <column defaultValueNumeric="0" name="allow_overdraft" type="TINYINT">
+            <column defaultValueBoolean="true" name="withdrawal_fee_for_transfer" type="boolean"/>
+            <column defaultValueBoolean="false" name="allow_overdraft" type="boolean">
                 <constraints nullable="false"/>
             </column>
             <column defaultValueComputed="NULL" name="overdraft_limit" type="DECIMAL(19, 6)"/>
@@ -3710,7 +3710,7 @@
                 <constraints nullable="false"/>
             </column>
             <column defaultValueComputed="NULL" name="min_required_balance" type="DECIMAL(19, 6)"/>
-            <column defaultValueNumeric="0" name="enforce_min_required_balance" type="TINYINT">
+            <column defaultValueBoolean="false" name="enforce_min_required_balance" type="boolean">
                 <constraints nullable="false"/>
             </column>
             <column defaultValueComputed="NULL" name="min_balance_for_interest_calculation" type="DECIMAL(19, 6)"/>
@@ -3719,7 +3719,7 @@
             <column defaultValueNumeric="1" name="version" type="INT">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueNumeric="0" name="withhold_tax" type="TINYINT">
+            <column defaultValueBoolean="false" name="withhold_tax" type="boolean">
                 <constraints nullable="false"/>
             </column>
             <column defaultValueComputed="NULL" name="tax_group_id" type="BIGINT"/>
@@ -3739,7 +3739,7 @@
             <column name="charge_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueNumeric="0" name="is_penalty" type="TINYINT">
+            <column defaultValueBoolean="false" name="is_penalty" type="boolean">
                 <constraints nullable="false"/>
             </column>
             <column name="charge_time_enum" type="SMALLINT">
@@ -3765,13 +3765,13 @@
             <column defaultValueNumeric="0.000000" name="amount_outstanding_derived" type="DECIMAL(19, 6)">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueNumeric="0" name="is_paid_derived" type="TINYINT">
+            <column defaultValueBoolean="false" name="is_paid_derived" type="boolean">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueNumeric="0" name="waived" type="TINYINT">
+            <column defaultValueBoolean="false" name="waived" type="boolean">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueNumeric="1" name="is_active" type="TINYINT">
+            <column defaultValueBoolean="true" name="is_active" type="boolean">
                 <constraints nullable="false"/>
             </column>
             <column defaultValueComputed="NULL" name="inactivated_on_date" type="date"/>
@@ -3807,7 +3807,7 @@
                 <constraints nullable="false"/>
             </column>
             <column defaultValueComputed="NULL" name="end_date" type="date"/>
-            <column defaultValueNumeric="0" name="is_primary_grouping_by_amount" type="TINYINT">
+            <column defaultValueBoolean="false" name="is_primary_grouping_by_amount" type="boolean">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -3849,7 +3849,7 @@
             <column name="transaction_type_enum" type="SMALLINT">
                 <constraints nullable="false"/>
             </column>
-            <column name="is_reversed" type="TINYINT">
+            <column name="is_reversed" type="boolean">
                 <constraints nullable="false"/>
             </column>
             <column name="transaction_date" type="date">
@@ -3869,7 +3869,7 @@
             <column defaultValueComputed="NULL" name="appuser_id" type="BIGINT"/>
             <column defaultValueBoolean="false" name="is_manual" type="boolean"/>
             <column defaultValueComputed="NULL" name="release_id_of_hold_amount" type="BIGINT"/>
-            <column defaultValueComputed="NULL" name="is_loan_disbursement" type="BIGINT"/>
+            <column defaultValueComputed="NULL" name="is_loan_disbursement" type="boolean"/>
         </createTable>
     </changeSet>
     <changeSet author="fineract" id="157">
@@ -3980,23 +3980,23 @@
             </column>
             <column defaultValueComputed="NULL" name="withdrawal_fee_amount" type="DECIMAL(19, 6)"/>
             <column defaultValueComputed="NULL" name="withdrawal_fee_type_enum" type="SMALLINT"/>
-            <column defaultValueNumeric="1" name="withdrawal_fee_for_transfer" type="TINYINT"/>
-            <column defaultValueNumeric="0" name="allow_overdraft" type="TINYINT">
+            <column defaultValueBoolean="true" name="withdrawal_fee_for_transfer" type="boolean"/>
+            <column defaultValueBoolean="false" name="allow_overdraft" type="boolean">
                 <constraints nullable="false"/>
             </column>
             <column defaultValueComputed="NULL" name="overdraft_limit" type="DECIMAL(19, 6)"/>
             <column defaultValueNumeric="0.000000" name="nominal_annual_interest_rate_overdraft" type="DECIMAL(19, 6)"/>
             <column defaultValueNumeric="0.000000" name="min_overdraft_for_interest_calculation" type="DECIMAL(19, 6)"/>
             <column defaultValueComputed="NULL" name="min_required_balance" type="DECIMAL(19, 6)"/>
-            <column defaultValueNumeric="0" name="enforce_min_required_balance" type="TINYINT">
+            <column defaultValueBoolean="false" name="enforce_min_required_balance" type="boolean">
                 <constraints nullable="false"/>
             </column>
             <column defaultValueComputed="NULL" name="min_balance_for_interest_calculation" type="DECIMAL(19, 6)"/>
-            <column defaultValueNumeric="0" name="withhold_tax" type="TINYINT">
+            <column defaultValueBoolean="false" name="withhold_tax" type="boolean">
                 <constraints nullable="false"/>
             </column>
             <column defaultValueComputed="NULL" name="tax_group_id" type="BIGINT"/>
-            <column defaultValueComputed="NULL" name="is_dormancy_tracking_active" type="SMALLINT"/>
+            <column defaultValueComputed="NULL" name="is_dormancy_tracking_active" type="boolean"/>
             <column defaultValueComputed="NULL" name="days_to_inactive" type="INT"/>
             <column defaultValueComputed="NULL" name="days_to_dormancy" type="INT"/>
             <column defaultValueComputed="NULL" name="days_to_escheat" type="INT"/>
@@ -4138,15 +4138,15 @@
             <column defaultValueNumeric="0.000000" name="amount_outstanding_derived" type="DECIMAL(19, 6)">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueNumeric="0" name="is_paid_derived" type="TINYINT">
+            <column defaultValueBoolean="false" name="is_paid_derived" type="boolean">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueNumeric="0" name="waived" type="TINYINT">
+            <column defaultValueBoolean="false" name="waived" type="boolean">
                 <constraints nullable="false"/>
             </column>
             <column defaultValueComputed="NULL" name="min_cap" type="DECIMAL(19, 6)"/>
             <column defaultValueComputed="NULL" name="max_cap" type="DECIMAL(19, 6)"/>
-            <column defaultValueNumeric="1" name="is_active" type="TINYINT">
+            <column defaultValueBoolean="true" name="is_active" type="boolean">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -4201,7 +4201,7 @@
                 <constraints nullable="false"/>
             </column>
             <column defaultValueComputed="NULL" name="type_enum" type="SMALLINT"/>
-            <column defaultValueNumeric="1" name="is_active" type="TINYINT">
+            <column defaultValueBoolean="true" name="is_active" type="boolean">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -4315,7 +4315,7 @@
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
-            <column defaultValueNumeric="0" name="is_loan_officer" type="TINYINT">
+            <column defaultValueBoolean="false" name="is_loan_officer" type="boolean">
                 <constraints nullable="false"/>
             </column>
             <column defaultValueComputed="NULL" name="office_id" type="BIGINT"/>
@@ -4332,7 +4332,7 @@
             </column>
             <column defaultValueComputed="NULL" name="organisational_role_enum" type="SMALLINT"/>
             <column defaultValueComputed="NULL" name="organisational_role_parent_staff_id" type="BIGINT"/>
-            <column defaultValueNumeric="1" name="is_active" type="TINYINT">
+            <column defaultValueBoolean="true" name="is_active" type="boolean">
                 <constraints nullable="false"/>
             </column>
             <column defaultValueComputed="NULL" name="joining_date" type="date"/>
@@ -4682,7 +4682,7 @@
             </column>
             <column name="recurrence" type="VARCHAR(100)"/>
             <column defaultValueComputed="NULL" name="repayment_rescheduling_enum" type="SMALLINT"/>
-            <column defaultValueNumeric="0" name="extend_term_daily_repayments" type="TINYINT"/>
+            <column defaultValueBoolean="false" name="extend_term_daily_repayments" type="boolean"/>
             <column defaultValueBoolean="false" name="extend_term_holiday_repayment" type="boolean">
                 <constraints nullable="false"/>
             </column>
@@ -4698,7 +4698,7 @@
             <column name="dimension" type="VARCHAR(100)"/>
             <column defaultValueComputed="NULL" name="type" type="INT"/>
             <column name="description" type="VARCHAR(1000)"/>
-            <column defaultValueComputed="NULL" name="need_mapping" type="TINYINT"/>
+            <column defaultValueComputed="NULL" name="need_mapping" type="boolean"/>
         </createTable>
     </changeSet>
     <changeSet author="fineract" id="192">
@@ -4734,7 +4734,7 @@
             <column defaultValueComputed="NULL" name="object_identifier" type="BIGINT"/>
             <column name="action" type="TEXT"/>
             <column defaultValueComputed="NULL" name="actor" type="BIGINT"/>
-            <column defaultValueNumeric="0" name="is_system_generated" type="TINYINT"/>
+            <column defaultValueBoolean="false" name="is_system_generated" type="boolean"/>
             <column name="notification_content" type="TEXT"/>
             <column defaultValueComputed="NULL" name="created_at" type="datetime"/>
         </createTable>
@@ -4746,7 +4746,7 @@
             </column>
             <column defaultValueComputed="NULL" name="notification_id" type="BIGINT"/>
             <column defaultValueComputed="NULL" name="user_id" type="BIGINT"/>
-            <column defaultValueNumeric="0" name="is_read" type="TINYINT"/>
+            <column defaultValueBoolean="false" name="is_read" type="boolean"/>
             <column defaultValueComputed="NULL" name="created_at" type="datetime"/>
         </createTable>
     </changeSet>
@@ -4841,7 +4841,7 @@
             <column name="enum_value" type="VARCHAR(100)">
                 <constraints nullable="false"/>
             </column>
-            <column name="enum_type" type="TINYINT">
+            <column name="enum_type" type="boolean">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -4909,7 +4909,7 @@
             <column name="campaign_type" type="INT">
                 <constraints nullable="false"/>
             </column>
-            <column name="businessRule_id" type="INT">
+            <column name="business_rule_id" type="INT">
                 <constraints nullable="false"/>
             </column>
             <column name="param_value" type="TEXT"/>
@@ -4935,7 +4935,7 @@
             <column defaultValueComputed="NULL" name="next_trigger_date" type="datetime"/>
             <column defaultValueComputed="NULL" name="last_trigger_date" type="datetime"/>
             <column defaultValueComputed="NULL" name="recurrence_start_date" type="datetime"/>
-            <column defaultValueNumeric="1" name="is_visible" type="TINYINT"/>
+            <column defaultValueBoolean="true" name="is_visible" type="boolean"/>
             <column name="previous_run_error_log" type="TEXT"/>
             <column name="previous_run_error_message" type="TEXT"/>
             <column name="previous_run_status" type="VARCHAR(10)"/>
@@ -4983,13 +4983,13 @@
             <column autoIncrement="true" name="id" type="SMALLINT">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
-            <column defaultValueNumeric="0" name="is_suspended" type="TINYINT">
+            <column defaultValueBoolean="false" name="is_suspended" type="boolean">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueNumeric="1" name="execute_misfired_jobs" type="TINYINT">
+            <column defaultValueBoolean="true" name="execute_misfired_jobs" type="boolean">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueNumeric="1" name="reset_scheduler_on_bootup" type="TINYINT">
+            <column defaultValueBoolean="true" name="reset_scheduler_on_bootup" type="boolean">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -5029,8 +5029,8 @@
             <column defaultValueComputed="NULL" name="next_trigger_date" type="datetime"/>
             <column defaultValueComputed="NULL" name="last_trigger_date" type="datetime"/>
             <column defaultValueComputed="NULL" name="recurrence_start_date" type="datetime"/>
-            <column defaultValueNumeric="1" name="is_visible" type="TINYINT"/>
-            <column defaultValueNumeric="0" name="is_notification" type="TINYINT"/>
+            <column defaultValueBoolean="true" name="is_visible" type="boolean"/>
+            <column defaultValueBoolean="false" name="is_notification" type="boolean"/>
         </createTable>
     </changeSet>
     <changeSet author="fineract" id="212">
@@ -5052,7 +5052,7 @@
             <column name="external_id" type="VARCHAR(100)"/>
             <column defaultValueComputed="NULL" name="submittedon_date" type="date"/>
             <column defaultValueComputed="NULL" name="delivered_on_date" type="datetime"/>
-            <column defaultValueNumeric="0" name="is_notification" type="TINYINT">
+            <column defaultValueBoolean="false" name="is_notification" type="boolean">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -5100,9 +5100,9 @@
             <column name="report_category" type="VARCHAR(45)"/>
             <column name="report_sql" type="TEXT"/>
             <column name="description" type="TEXT"/>
-            <column defaultValueNumeric="0" name="core_report" type="TINYINT"/>
-            <column defaultValueNumeric="0" name="use_report" type="TINYINT"/>
-            <column defaultValueNumeric="0" name="self_service_user_report" type="TINYINT">
+            <column defaultValueBoolean="false" name="core_report" type="boolean"/>
+            <column defaultValueBoolean="false" name="use_report" type="boolean"/>
+            <column defaultValueBoolean="false" name="self_service_user_report" type="boolean">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -5129,7 +5129,7 @@
             <column name="title" type="VARCHAR(100)">
                 <constraints nullable="false" unique="true"/>
             </column>
-            <column defaultValueComputed="NULL" name="enabled" type="TINYINT"/>
+            <column defaultValueComputed="NULL" name="enabled" type="boolean"/>
             <column name="entity_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>

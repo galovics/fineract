@@ -40,6 +40,7 @@ import org.apache.fineract.infrastructure.core.exception.PlatformApiDataValidati
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
 import org.apache.fineract.infrastructure.core.service.DateUtils;
 import org.apache.fineract.infrastructure.core.service.RoutingDataSource;
+import org.apache.fineract.infrastructure.core.service.database.DatabaseSpecificSQLGenerator;
 import org.apache.fineract.infrastructure.jobs.annotation.CronTarget;
 import org.apache.fineract.infrastructure.jobs.exception.JobExecutionException;
 import org.apache.fineract.infrastructure.jobs.service.JobName;
@@ -85,14 +86,15 @@ public class StandingInstructionWritePlatformServiceImpl implements StandingInst
     private final StandingInstructionReadPlatformService standingInstructionReadPlatformService;
     private final AccountTransfersWritePlatformService accountTransfersWritePlatformService;
     private final JdbcTemplate jdbcTemplate;
+    private final DatabaseSpecificSQLGenerator sqlGenerator;
 
     @Autowired
     public StandingInstructionWritePlatformServiceImpl(final StandingInstructionDataValidator standingInstructionDataValidator,
-            final StandingInstructionAssembler standingInstructionAssembler,
-            final AccountTransferDetailRepository accountTransferDetailRepository,
-            final StandingInstructionRepository standingInstructionRepository,
-            final StandingInstructionReadPlatformService standingInstructionReadPlatformService,
-            final AccountTransfersWritePlatformService accountTransfersWritePlatformService, final RoutingDataSource dataSource) {
+                                                       final StandingInstructionAssembler standingInstructionAssembler,
+                                                       final AccountTransferDetailRepository accountTransferDetailRepository,
+                                                       final StandingInstructionRepository standingInstructionRepository,
+                                                       final StandingInstructionReadPlatformService standingInstructionReadPlatformService,
+                                                       final AccountTransfersWritePlatformService accountTransfersWritePlatformService, final RoutingDataSource dataSource, DatabaseSpecificSQLGenerator sqlGenerator) {
         this.standingInstructionDataValidator = standingInstructionDataValidator;
         this.standingInstructionAssembler = standingInstructionAssembler;
         this.accountTransferDetailRepository = accountTransferDetailRepository;
@@ -100,6 +102,7 @@ public class StandingInstructionWritePlatformServiceImpl implements StandingInst
         this.standingInstructionReadPlatformService = standingInstructionReadPlatformService;
         this.accountTransfersWritePlatformService = accountTransfersWritePlatformService;
         this.jdbcTemplate = new JdbcTemplate(dataSource);
+        this.sqlGenerator = sqlGenerator;
     }
 
     @Transactional
@@ -261,7 +264,7 @@ public class StandingInstructionWritePlatformServiceImpl implements StandingInst
         boolean transferCompleted = true;
         StringBuilder errorLog = new StringBuilder();
         StringBuilder updateQuery = new StringBuilder(
-                "INSERT INTO `m_account_transfer_standing_instructions_history` (`standing_instruction_id`, `status`, `amount`,`execution_time`, `error_log`) VALUES (");
+                "INSERT INTO m_account_transfer_standing_instructions_history (standing_instruction_id, " + sqlGenerator.escape("status") + ", amount,execution_time, error_log) VALUES (");
         try {
             this.accountTransfersWritePlatformService.transferFunds(accountTransferDTO);
         } catch (final PlatformApiDataValidationException e) {

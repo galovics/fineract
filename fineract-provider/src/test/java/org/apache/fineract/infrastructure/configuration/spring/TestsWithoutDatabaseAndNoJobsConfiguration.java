@@ -19,11 +19,12 @@
 package org.apache.fineract.infrastructure.configuration.spring;
 
 import static org.mockito.Mockito.mock;
-
 import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.core.boot.AbstractApplicationConfiguration;
 import org.apache.fineract.infrastructure.core.config.FineractProperties;
 import org.apache.fineract.infrastructure.core.domain.FineractPlatformTenant;
+import org.apache.fineract.infrastructure.core.service.database.DatabaseType;
+import org.apache.fineract.infrastructure.core.service.database.DatabaseTypeResolver;
 import org.apache.fineract.infrastructure.core.service.migration.TenantDataSourceFactory;
 import org.apache.fineract.infrastructure.core.service.migration.TenantDatabaseUpgradeService;
 import org.apache.fineract.infrastructure.jobs.service.JobRegisterService;
@@ -41,6 +42,21 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  */
 @EnableConfigurationProperties({ FineractProperties.class })
 public class TestsWithoutDatabaseAndNoJobsConfiguration extends AbstractApplicationConfiguration {
+
+    @Bean
+    public DatabaseTypeResolver databaseTypeResolver() {
+        return new DatabaseTypeResolver(null) {
+            @Override
+            public DatabaseType databaseType() {
+                return DatabaseType.MYSQL;
+            }
+
+            @Override
+            public DatabaseType databaseType(DataSource dataSource) {
+                return DatabaseType.MYSQL;
+            }
+        };
+    }
 
     @Bean
     public TenantDataSourceFactory tenantDataSourceFactory() {

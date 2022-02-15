@@ -16,17 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.fineract.portfolio.client.exception;
+package org.apache.fineract.infrastructure.core.service.database;
 
-import org.apache.fineract.infrastructure.core.exception.AbstractPlatformDomainRuleException;
+import javax.sql.DataSource;
 
-/**
- * A {@link RuntimeException} thrown when attempting to delete clients
- */
-public class ClientMustBePendingToBeDeletedException extends AbstractPlatformDomainRuleException {
+interface DatabaseQueryService {
+    boolean isSupported(DataSource dataSource);
 
-    public ClientMustBePendingToBeDeletedException(final Long id) {
-        super("error.msg.clients.cannot.be.deleted", "Client with identifier " + id + " cannot be deleted as it is not in Pending state.",
-                id);
-    }
+    boolean isTablePresent(DataSource dataSource, String tableName);
 }

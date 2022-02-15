@@ -27,6 +27,7 @@ import org.apache.fineract.infrastructure.core.service.PaginationHelper;
 import org.apache.fineract.infrastructure.core.service.RoutingDataSource;
 import org.apache.fineract.infrastructure.core.service.SearchParameters;
 import org.apache.fineract.infrastructure.core.service.ThreadLocalContextUtil;
+import org.apache.fineract.infrastructure.core.service.database.DatabaseSpecificSQLGenerator;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.infrastructure.security.utils.ColumnValidator;
 import org.apache.fineract.notification.cache.CacheNotificationResponseHeader;
@@ -43,17 +44,20 @@ public class NotificationReadPlatformServiceImpl implements NotificationReadPlat
     private final JdbcTemplate jdbcTemplate;
     private final PlatformSecurityContext context;
     private final ColumnValidator columnValidator;
-    private final PaginationHelper<NotificationData> paginationHelper = new PaginationHelper<>();
+    private final PaginationHelper<NotificationData> paginationHelper;
+    private final DatabaseSpecificSQLGenerator sqlGenerator;
     private final NotificationDataRow notificationDataRow = new NotificationDataRow();
     private final NotificationMapperRow notificationMapperRow = new NotificationMapperRow();
     private HashMap<Long, HashMap<Long, CacheNotificationResponseHeader>> tenantNotificationResponseHeaderCache = new HashMap<>();
 
     @Autowired
     public NotificationReadPlatformServiceImpl(final RoutingDataSource dataSource, final PlatformSecurityContext context,
-            final ColumnValidator columnValidator) {
+                                               final ColumnValidator columnValidator, DatabaseSpecificSQLGenerator sqlGenerator) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.context = context;
         this.columnValidator = columnValidator;
+        this.paginationHelper = new PaginationHelper<>(sqlGenerator);
+        this.sqlGenerator = sqlGenerator;
     }
 
     @Override
@@ -114,7 +118,7 @@ public class NotificationReadPlatformServiceImpl implements NotificationReadPlat
     @Override
     public Page<NotificationData> getAllUnreadNotifications(final SearchParameters searchParameters) {
         final Long appUserId = context.authenticatedUser().getId();
-        String sql = "SELECT SQL_CALC_FOUND_ROWS ng.id as id, nm.user_id as userId, ng.object_type as objectType, "
+        String sql = "SELECT " + sqlGenerator.calcFoundRows() + " ng.id as id, nm.user_id as userId, ng.object_type as objectType, "
                 + "ng.object_identifier as objectId, ng.actor as actor, ng.action action, ng.notification_content "
                 + "as content, ng.is_system_generated as isSystemGenerated, nm.created_at as createdAt "
                 + "FROM notification_mapper nm INNER JOIN notification_generator ng ON nm.notification_id = ng.id "
@@ -126,7 +130,7 @@ public class NotificationReadPlatformServiceImpl implements NotificationReadPlat
     @Override
     public Page<NotificationData> getAllNotifications(SearchParameters searchParameters) {
         final Long appUserId = context.authenticatedUser().getId();
-        String sql = "SELECT SQL_CALC_FOUND_ROWS ng.id as id, nm.user_id as userId, ng.object_type as objectType, "
+        String sql = "SELECT " + sqlGenerator.calcFoundRows() + " ng.id as id, nm.user_id as userId, ng.object_type as objectType, "
                 + "ng.object_identifier as objectId, ng.actor as actor, ng.action action, ng.notification_content "
                 + "as content, ng.is_system_generated as isSystemGenerated, nm.created_at as createdAt "
                 + "FROM notification_mapper nm INNER JOIN notification_generator ng ON nm.notification_id = ng.id "
@@ -155,9 +159,8 @@ public class NotificationReadPlatformServiceImpl implements NotificationReadPlat
             }
         }
 
-        final String sqlCountRows = "SELECT FOUND_ROWS()";
         Object[] params = new Object[] { appUserId };
-        return this.paginationHelper.fetchPage(this.jdbcTemplate, sqlCountRows, sqlBuilder.toString(), params, this.notificationDataRow);
+        return this.paginationHelper.fetchPage(this.jdbcTemplate, sqlBuilder.toString(), params, this.notificationDataRow);
     }
 
     private static final class NotificationMapperRow implements RowMapper<NotificationMapperData> {

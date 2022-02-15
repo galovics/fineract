@@ -30,6 +30,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import org.apache.fineract.infrastructure.configuration.domain.ConfigurationDomainService;
 import org.apache.fineract.infrastructure.core.service.DateUtils;
 import org.apache.fineract.infrastructure.core.service.ThreadLocalContextUtil;
 import org.apache.fineract.infrastructure.jobs.annotation.CronTarget;
@@ -54,17 +55,20 @@ public class SavingsSchedularServiceImpl implements SavingsSchedularService {
     private final SavingsAccountReadPlatformService savingAccountReadPlatformService;
     private final SavingsAccountRepositoryWrapper savingsAccountRepository;
     private final ApplicationContext applicationContext;
+    private final ConfigurationDomainService configurationDomainService;
 
     @Autowired
     public SavingsSchedularServiceImpl(final SavingsAccountAssembler savingAccountAssembler,
             final SavingsAccountWritePlatformService savingsAccountWritePlatformService,
             final SavingsAccountReadPlatformService savingAccountReadPlatformService,
-            final SavingsAccountRepositoryWrapper savingsAccountRepository, final ApplicationContext applicationContext) {
+            final SavingsAccountRepositoryWrapper savingsAccountRepository, final ApplicationContext applicationContext,
+    ConfigurationDomainService configurationDomainService) {
         this.savingAccountAssembler = savingAccountAssembler;
         this.savingsAccountWritePlatformService = savingsAccountWritePlatformService;
         this.savingAccountReadPlatformService = savingAccountReadPlatformService;
         this.savingsAccountRepository = savingsAccountRepository;
         this.applicationContext = applicationContext;
+        this.configurationDomainService = configurationDomainService;
     }
 
     @Override
@@ -122,6 +126,7 @@ public class SavingsSchedularServiceImpl implements SavingsSchedularService {
             poster.setSavingsAccountWritePlatformService(savingsAccountWritePlatformService);
             poster.setSavingsAccountRepository(savingsAccountRepository);
             poster.setSavingAccountAssembler(savingAccountAssembler);
+            poster.setConfigurationDomainService(configurationDomainService);
             posters.add(poster);
 
             if (lastBatch) {

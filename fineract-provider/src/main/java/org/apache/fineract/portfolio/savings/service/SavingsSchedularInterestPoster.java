@@ -77,6 +77,10 @@ public class SavingsSchedularInterestPoster implements Callable<Void> {
         this.tenant = tenant;
     }
 
+    public void setConfigurationDomainService(ConfigurationDomainService configurationDomainService) {
+        this.configurationDomainService = configurationDomainService;
+    }
+
     @Override
     @SuppressFBWarnings(value = {
             "DMI_RANDOM_USED_ONLY_ONCE" }, justification = "False positive for random object created and used only once")

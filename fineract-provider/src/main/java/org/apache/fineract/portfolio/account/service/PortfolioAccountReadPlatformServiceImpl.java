@@ -26,6 +26,7 @@ import java.util.Collection;
 import java.util.List;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
 import org.apache.fineract.infrastructure.core.service.RoutingDataSource;
+import org.apache.fineract.infrastructure.core.service.database.DatabaseSpecificSQLGenerator;
 import org.apache.fineract.organisation.monetary.data.CurrencyData;
 import org.apache.fineract.portfolio.account.PortfolioAccountType;
 import org.apache.fineract.portfolio.account.data.PortfolioAccountDTO;
@@ -48,11 +49,11 @@ public class PortfolioAccountReadPlatformServiceImpl implements PortfolioAccount
     private final PortfolioLoanAccountRefundByTransferMapper accountRefundByTransferMapper;
 
     @Autowired
-    public PortfolioAccountReadPlatformServiceImpl(final RoutingDataSource dataSource) {
+    public PortfolioAccountReadPlatformServiceImpl(final RoutingDataSource dataSource, DatabaseSpecificSQLGenerator sqlGenerator) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.savingsAccountMapper = new PortfolioSavingsAccountMapper();
         this.loanAccountMapper = new PortfolioLoanAccountMapper();
-        this.accountRefundByTransferMapper = new PortfolioLoanAccountRefundByTransferMapper();
+        this.accountRefundByTransferMapper = new PortfolioLoanAccountRefundByTransferMapper(sqlGenerator);
     }
 
     @Override
@@ -295,20 +296,20 @@ public class PortfolioAccountReadPlatformServiceImpl implements PortfolioAccount
 
         private final String schemaSql;
 
-        PortfolioLoanAccountRefundByTransferMapper() {
+        PortfolioLoanAccountRefundByTransferMapper(DatabaseSpecificSQLGenerator sqlGenerator) {
 
             final StringBuilder amountQueryString = new StringBuilder(400);
-            amountQueryString.append("(select (SUM(ifnull(mr.principal_completed_derived, 0)) +");
-            amountQueryString.append("SUM(ifnull(mr.interest_completed_derived, 0)) + ");
-            amountQueryString.append("SUM(ifnull(mr.fee_charges_completed_derived, 0)) + ");
-            amountQueryString.append(" SUM(ifnull(mr.penalty_charges_completed_derived, 0))) as total_in_advance_derived");
+            amountQueryString.append("(select (SUM(COALESCE(mr.principal_completed_derived, 0)) +");
+            amountQueryString.append("SUM(COALESCE(mr.interest_completed_derived, 0)) + ");
+            amountQueryString.append("SUM(COALESCE(mr.fee_charges_completed_derived, 0)) + ");
+            amountQueryString.append(" SUM(COALESCE(mr.penalty_charges_completed_derived, 0))) as total_in_advance_derived");
             amountQueryString.append(" from m_loan ml INNER JOIN m_loan_repayment_schedule mr on mr.loan_id = ml.id");
             amountQueryString.append(" where ml.id=? and ml.loan_status_id = 300");
-            amountQueryString.append("  and  mr.duedate >= CURDATE() group by ml.id having");
-            amountQueryString.append(" (SUM(ifnull(mr.principal_completed_derived, 0)) + ");
-            amountQueryString.append(" SUM(ifnull(mr.interest_completed_derived, 0)) + ");
-            amountQueryString.append("SUM(ifnull(mr.fee_charges_completed_derived, 0)) + ");
-            amountQueryString.append("SUM(ifnull(mr.penalty_charges_completed_derived, 0))) > 0) as totalOverpaid ");
+            amountQueryString.append("  and  mr.duedate >= " + sqlGenerator.currentDate() + " group by ml.id having");
+            amountQueryString.append(" (SUM(COALESCE(mr.principal_completed_derived, 0)) + ");
+            amountQueryString.append(" SUM(COALESCE(mr.interest_completed_derived, 0)) + ");
+            amountQueryString.append("SUM(COALESCE(mr.fee_charges_completed_derived, 0)) + ");
+            amountQueryString.append("SUM(COALESCE(mr.penalty_charges_completed_derived, 0))) > 0) as totalOverpaid ");
 
             final StringBuilder sqlBuilder = new StringBuilder(400);
             sqlBuilder.append("la.id as id, la.account_no as accountNo, la.external_id as externalId, ");

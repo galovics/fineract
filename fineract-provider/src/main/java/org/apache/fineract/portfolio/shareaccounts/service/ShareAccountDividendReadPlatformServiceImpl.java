@@ -30,6 +30,7 @@ import org.apache.fineract.infrastructure.core.service.Page;
 import org.apache.fineract.infrastructure.core.service.PaginationHelper;
 import org.apache.fineract.infrastructure.core.service.RoutingDataSource;
 import org.apache.fineract.infrastructure.core.service.SearchParameters;
+import org.apache.fineract.infrastructure.core.service.database.DatabaseSpecificSQLGenerator;
 import org.apache.fineract.infrastructure.security.utils.ColumnValidator;
 import org.apache.fineract.portfolio.shareaccounts.data.ShareAccountData;
 import org.apache.fineract.portfolio.shareaccounts.data.ShareAccountDividendData;
@@ -45,12 +46,15 @@ public class ShareAccountDividendReadPlatformServiceImpl implements ShareAccount
 
     private final JdbcTemplate jdbcTemplate;
     private final ColumnValidator columnValidator;
-    private final PaginationHelper<ShareAccountDividendData> paginationHelper = new PaginationHelper<>();
+    private final PaginationHelper<ShareAccountDividendData> paginationHelper;
+    private final DatabaseSpecificSQLGenerator sqlGenerator;
 
     @Autowired
-    public ShareAccountDividendReadPlatformServiceImpl(final RoutingDataSource dataSource, final ColumnValidator columnValidator) {
+    public ShareAccountDividendReadPlatformServiceImpl(final RoutingDataSource dataSource, final ColumnValidator columnValidator, DatabaseSpecificSQLGenerator sqlGenerator) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.columnValidator = columnValidator;
+        this.paginationHelper = new PaginationHelper<>(sqlGenerator);
+        this.sqlGenerator = sqlGenerator;
     }
 
     @Override
@@ -71,7 +75,7 @@ public class ShareAccountDividendReadPlatformServiceImpl implements ShareAccount
     public Page<ShareAccountDividendData> retriveAll(final Long payoutDetailId, final SearchParameters searchParameters) {
         ShareAccountDividendMapper shareAccountDividendMapper = new ShareAccountDividendMapper();
         final StringBuilder sqlBuilder = new StringBuilder(200);
-        sqlBuilder.append("select SQL_CALC_FOUND_ROWS ");
+        sqlBuilder.append("select " + sqlGenerator.calcFoundRows() + " ");
         sqlBuilder.append(shareAccountDividendMapper.schema());
         sqlBuilder.append(" where sadd.dividend_pay_out_id = ? ");
         List<Object> params = new ArrayList<>(2);
@@ -98,9 +102,8 @@ public class ShareAccountDividendReadPlatformServiceImpl implements ShareAccount
             }
         }
 
-        final String sqlCountRows = "SELECT FOUND_ROWS()";
         Object[] paramsObj = params.toArray();
-        return this.paginationHelper.fetchPage(this.jdbcTemplate, sqlCountRows, sqlBuilder.toString(), paramsObj,
+        return this.paginationHelper.fetchPage(this.jdbcTemplate, sqlBuilder.toString(), paramsObj,
                 shareAccountDividendMapper);
     }
 

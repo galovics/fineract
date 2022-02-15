@@ -26,6 +26,7 @@ import org.apache.fineract.infrastructure.core.service.Page;
 import org.apache.fineract.infrastructure.core.service.PaginationHelper;
 import org.apache.fineract.infrastructure.core.service.RoutingDataSource;
 import org.apache.fineract.infrastructure.core.service.SearchParameters;
+import org.apache.fineract.infrastructure.core.service.database.DatabaseSpecificSQLGenerator;
 import org.apache.fineract.infrastructure.jobs.data.JobDetailData;
 import org.apache.fineract.infrastructure.jobs.data.JobDetailHistoryData;
 import org.apache.fineract.infrastructure.jobs.exception.JobNotFoundException;
@@ -36,24 +37,29 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional(readOnly = true)
 public class SchedulerJobRunnerReadServiceImpl implements SchedulerJobRunnerReadService {
 
     private final JdbcTemplate jdbcTemplate;
     private final ColumnValidator columnValidator;
+    private final DatabaseSpecificSQLGenerator sqlGenerator;
 
-    private final PaginationHelper<JobDetailHistoryData> paginationHelper = new PaginationHelper<>();
+    private final PaginationHelper<JobDetailHistoryData> paginationHelper;
 
     @Autowired
-    public SchedulerJobRunnerReadServiceImpl(final RoutingDataSource dataSource, final ColumnValidator columnValidator) {
+    public SchedulerJobRunnerReadServiceImpl(final RoutingDataSource dataSource, final ColumnValidator columnValidator, DatabaseSpecificSQLGenerator sqlGenerator) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.columnValidator = columnValidator;
+        this.sqlGenerator = sqlGenerator;
+        this.paginationHelper = new PaginationHelper<>(sqlGenerator);
     }
 
     @Override
     public List<JobDetailData> findAllJobDeatils() {
-        final JobDetailMapper detailMapper = new JobDetailMapper();
+        final JobDetailMapper detailMapper = new JobDetailMapper(sqlGenerator);
         final String sql = detailMapper.schema();
         final List<JobDetailData> JobDeatils = this.jdbcTemplate.query(sql, detailMapper, new Object[] {});
         return JobDeatils;
@@ -63,7 +69,7 @@ public class SchedulerJobRunnerReadServiceImpl implements SchedulerJobRunnerRead
     @Override
     public JobDetailData retrieveOne(final Long jobId) {
         try {
-            final JobDetailMapper detailMapper = new JobDetailMapper();
+            final JobDetailMapper detailMapper = new JobDetailMapper(sqlGenerator);
             final String sql = detailMapper.schema() + " where job.id=?";
             return this.jdbcTemplate.queryForObject(sql, detailMapper, new Object[] { jobId });
         } catch (final EmptyResultDataAccessException e) {
@@ -76,9 +82,9 @@ public class SchedulerJobRunnerReadServiceImpl implements SchedulerJobRunnerRead
         if (!isJobExist(jobId)) {
             throw new JobNotFoundException(String.valueOf(jobId));
         }
-        final JobHistoryMapper jobHistoryMapper = new JobHistoryMapper();
+        final JobHistoryMapper jobHistoryMapper = new JobHistoryMapper(sqlGenerator);
         final StringBuilder sqlBuilder = new StringBuilder(200);
-        sqlBuilder.append("select SQL_CALC_FOUND_ROWS ");
+        sqlBuilder.append("select " + sqlGenerator.calcFoundRows() + " ");
         sqlBuilder.append(jobHistoryMapper.schema());
         sqlBuilder.append(" where job.id=?");
         if (searchParameters.isOrderByRequested()) {
@@ -97,8 +103,7 @@ public class SchedulerJobRunnerReadServiceImpl implements SchedulerJobRunnerRead
             }
         }
 
-        final String sqlCountRows = "SELECT FOUND_ROWS()";
-        return this.paginationHelper.fetchPage(this.jdbcTemplate, sqlCountRows, sqlBuilder.toString(), new Object[] { jobId },
+        return this.paginationHelper.fetchPage(this.jdbcTemplate, sqlBuilder.toString(), new Object[] { jobId },
                 jobHistoryMapper);
     }
 
@@ -131,10 +136,14 @@ public class SchedulerJobRunnerReadServiceImpl implements SchedulerJobRunnerRead
 
     private static final class JobDetailMapper implements RowMapper<JobDetailData> {
 
-        private final StringBuilder sqlBuilder = new StringBuilder("select").append(
-                " job.id,job.display_name as displayName,job.next_run_time as nextRunTime,job.initializing_errorlog as initializingError,job.cron_expression as cronExpression,job.is_active as active,job.currently_running as currentlyRunning,")
-                .append(" runHistory.version,runHistory.start_time as lastRunStartTime,runHistory.end_time as lastRunEndTime,runHistory.`status`,runHistory.error_message as jobRunErrorMessage,runHistory.trigger_type as triggerType,runHistory.error_log as jobRunErrorLog ")
-                .append(" from job job  left join job_run_history runHistory ON job.id=runHistory.job_id and job.previous_run_start_time=runHistory.start_time ");
+        private final StringBuilder sqlBuilder;
+
+        public JobDetailMapper(DatabaseSpecificSQLGenerator sqlGenerator) {
+            sqlBuilder = new StringBuilder("select").append(
+                    " job.id,job.display_name as displayName,job.next_run_time as nextRunTime,job.initializing_errorlog as initializingError,job.cron_expression as cronExpression,job.is_active as active,job.currently_running as currentlyRunning,")
+                    .append(" runHistory.version,runHistory.start_time as lastRunStartTime,runHistory.end_time as lastRunEndTime,runHistory." + sqlGenerator.escape("status") + ",runHistory.error_message as jobRunErrorMessage,runHistory.trigger_type as triggerType,runHistory.error_log as jobRunErrorLog ")
+                    .append(" from job job  left join job_run_history runHistory ON job.id=runHistory.job_id and job.previous_run_start_time=runHistory.start_time ");
+        }
 
         public String schema() {
             return this.sqlBuilder.toString();
@@ -172,9 +181,13 @@ public class SchedulerJobRunnerReadServiceImpl implements SchedulerJobRunnerRead
 
     private static final class JobHistoryMapper implements RowMapper<JobDetailHistoryData> {
 
-        private final StringBuilder sqlBuilder = new StringBuilder(200).append(
-                " runHistory.version,runHistory.start_time as runStartTime,runHistory.end_time as runEndTime,runHistory.`status`,runHistory.error_message as jobRunErrorMessage,runHistory.trigger_type as triggerType,runHistory.error_log as jobRunErrorLog ")
-                .append(" from job job join job_run_history runHistory ON job.id=runHistory.job_id");
+        private final StringBuilder sqlBuilder;
+
+        public JobHistoryMapper(DatabaseSpecificSQLGenerator sqlGenerator) {
+            sqlBuilder = new StringBuilder(200).append(
+                    " runHistory.version,runHistory.start_time as runStartTime,runHistory.end_time as runEndTime,runHistory." + sqlGenerator.escape("status") + ",runHistory.error_message as jobRunErrorMessage,runHistory.trigger_type as triggerType,runHistory.error_log as jobRunErrorLog ")
+                    .append(" from job job join job_run_history runHistory ON job.id=runHistory.job_id");
+        }
 
         public String schema() {
             return this.sqlBuilder.toString();

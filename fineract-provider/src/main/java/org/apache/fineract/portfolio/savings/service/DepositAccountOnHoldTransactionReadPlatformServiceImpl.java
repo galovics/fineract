@@ -30,6 +30,7 @@ import org.apache.fineract.infrastructure.core.service.Page;
 import org.apache.fineract.infrastructure.core.service.PaginationHelper;
 import org.apache.fineract.infrastructure.core.service.RoutingDataSource;
 import org.apache.fineract.infrastructure.core.service.SearchParameters;
+import org.apache.fineract.infrastructure.core.service.database.DatabaseSpecificSQLGenerator;
 import org.apache.fineract.infrastructure.security.utils.ColumnValidator;
 import org.apache.fineract.portfolio.savings.data.DepositAccountOnHoldTransactionData;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,16 +42,19 @@ import org.springframework.stereotype.Service;
 public class DepositAccountOnHoldTransactionReadPlatformServiceImpl implements DepositAccountOnHoldTransactionReadPlatformService {
 
     private final JdbcTemplate jdbcTemplate;
+    private final DatabaseSpecificSQLGenerator sqlGenerator;
     private final ColumnValidator columnValidator;
-    private final PaginationHelper<DepositAccountOnHoldTransactionData> paginationHelper = new PaginationHelper<>();
+    private final PaginationHelper<DepositAccountOnHoldTransactionData> paginationHelper;
     private final DepositAccountOnHoldTransactionsMapper mapper;
 
     @Autowired
     public DepositAccountOnHoldTransactionReadPlatformServiceImpl(final RoutingDataSource dataSource,
-            final ColumnValidator columnValidator) {
+                                                                  final ColumnValidator columnValidator, DatabaseSpecificSQLGenerator sqlGenerator) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
-        mapper = new DepositAccountOnHoldTransactionsMapper();
+        this.sqlGenerator = sqlGenerator;
+        this.mapper = new DepositAccountOnHoldTransactionsMapper();
         this.columnValidator = columnValidator;
+        this.paginationHelper = new PaginationHelper<>(sqlGenerator);
     }
 
     @Override
@@ -58,7 +62,7 @@ public class DepositAccountOnHoldTransactionReadPlatformServiceImpl implements D
             SearchParameters searchParameters) {
         final StringBuilder sqlBuilder = new StringBuilder(200);
         List<Long> paramObj = new ArrayList<>(2);
-        sqlBuilder.append("select SQL_CALC_FOUND_ROWS ");
+        sqlBuilder.append("select " + sqlGenerator.calcFoundRows() + " ");
         sqlBuilder.append(this.mapper.schema());
 
         sqlBuilder.append(" where tr.savings_account_id = ? ");
@@ -85,9 +89,8 @@ public class DepositAccountOnHoldTransactionReadPlatformServiceImpl implements D
             }
         }
 
-        final String sqlCountRows = "SELECT FOUND_ROWS()";
         final Object[] finalObjectArray = paramObj.toArray();
-        return this.paginationHelper.fetchPage(this.jdbcTemplate, sqlCountRows, sqlBuilder.toString(), finalObjectArray, this.mapper);
+        return this.paginationHelper.fetchPage(this.jdbcTemplate, sqlBuilder.toString(), finalObjectArray, this.mapper);
 
     }
 

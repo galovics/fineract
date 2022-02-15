@@ -140,13 +140,13 @@ public class DepositAccountInterestRateChartReadPlatformServiceImpl implements D
         sql.append(this.chartExtractor.schema());
         sql.append(" where irc.savings_account_id = ? order by irc.id asc, ");
         sql.append("CASE ");
-        sql.append("WHEN isPrimaryGroupingByAmount then ircd.amount_range_from ");
-        sql.append("WHEN isPrimaryGroupingByAmount then ircd.amount_range_to ");
+        sql.append("WHEN irc.is_primary_grouping_by_amount then ircd.amount_range_from ");
+        sql.append("WHEN irc.is_primary_grouping_by_amount then ircd.amount_range_to ");
         sql.append("END,");
         sql.append("ircd.from_period, ircd.to_period,");
         sql.append("CASE ");
-        sql.append("WHEN !isPrimaryGroupingByAmount then ircd.amount_range_from ");
-        sql.append("WHEN !isPrimaryGroupingByAmount then ircd.amount_range_to ");
+        sql.append("WHEN NOT irc.is_primary_grouping_by_amount then ircd.amount_range_from ");
+        sql.append("WHEN NOT irc.is_primary_grouping_by_amount then ircd.amount_range_to ");
         sql.append("END");
 
         Collection<DepositAccountInterestRateChartData> chartDatas = this.jdbcTemplate.query(sql.toString(), this.chartExtractor,

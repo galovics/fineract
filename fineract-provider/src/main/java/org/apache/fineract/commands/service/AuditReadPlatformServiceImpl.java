@@ -43,6 +43,7 @@ import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
 import org.apache.fineract.infrastructure.core.service.Page;
 import org.apache.fineract.infrastructure.core.service.PaginationHelper;
 import org.apache.fineract.infrastructure.core.service.RoutingDataSource;
+import org.apache.fineract.infrastructure.core.service.database.DatabaseSpecificSQLGenerator;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.infrastructure.security.utils.ColumnValidator;
 import org.apache.fineract.infrastructure.security.utils.SQLBuilder;
@@ -87,7 +88,8 @@ public class AuditReadPlatformServiceImpl implements AuditReadPlatformService {
     private final ClientReadPlatformService clientReadPlatformService;
     private final LoanProductReadPlatformService loanProductReadPlatformService;
     private final StaffReadPlatformService staffReadPlatformService;
-    private final PaginationHelper<AuditData> paginationHelper = new PaginationHelper<>();
+    private final PaginationHelper<AuditData> paginationHelper;
+    private final DatabaseSpecificSQLGenerator sqlGenerator;
     private final PaginationParametersDataValidator paginationParametersDataValidator;
     private final SavingsProductReadPlatformService savingsProductReadPlatformService;
     private final DepositProductReadPlatformService depositProductReadPlatformService;
@@ -95,12 +97,12 @@ public class AuditReadPlatformServiceImpl implements AuditReadPlatformService {
 
     @Autowired
     public AuditReadPlatformServiceImpl(final PlatformSecurityContext context, final RoutingDataSource dataSource,
-            final FromJsonHelper fromApiJsonHelper, final AppUserReadPlatformService appUserReadPlatformService,
-            final OfficeReadPlatformService officeReadPlatformService, final ClientReadPlatformService clientReadPlatformService,
-            final LoanProductReadPlatformService loanProductReadPlatformService, final StaffReadPlatformService staffReadPlatformService,
-            final PaginationParametersDataValidator paginationParametersDataValidator,
-            final SavingsProductReadPlatformService savingsProductReadPlatformService,
-            final DepositProductReadPlatformService depositProductReadPlatformService, final ColumnValidator columnValidator) {
+                                        final FromJsonHelper fromApiJsonHelper, final AppUserReadPlatformService appUserReadPlatformService,
+                                        final OfficeReadPlatformService officeReadPlatformService, final ClientReadPlatformService clientReadPlatformService,
+                                        final LoanProductReadPlatformService loanProductReadPlatformService, final StaffReadPlatformService staffReadPlatformService,
+                                        final PaginationParametersDataValidator paginationParametersDataValidator,
+                                        final SavingsProductReadPlatformService savingsProductReadPlatformService,
+                                        final DepositProductReadPlatformService depositProductReadPlatformService, final ColumnValidator columnValidator, DatabaseSpecificSQLGenerator sqlGenerator) {
         this.context = context;
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.fromApiJsonHelper = fromApiJsonHelper;
@@ -113,6 +115,8 @@ public class AuditReadPlatformServiceImpl implements AuditReadPlatformService {
         this.savingsProductReadPlatformService = savingsProductReadPlatformService;
         this.depositProductReadPlatformService = depositProductReadPlatformService;
         this.columnValidator = columnValidator;
+        this.paginationHelper = new PaginationHelper<>(sqlGenerator);
+        this.sqlGenerator = sqlGenerator;
     }
 
     private static final class AuditMapper implements RowMapper<AuditData> {
@@ -199,7 +203,7 @@ public class AuditReadPlatformServiceImpl implements AuditReadPlatformService {
 
         final AuditMapper rm = new AuditMapper();
         final StringBuilder sqlBuilder = new StringBuilder(200);
-        sqlBuilder.append("select SQL_CALC_FOUND_ROWS ");
+        sqlBuilder.append("select " + sqlGenerator.calcFoundRows() + " ");
         sqlBuilder.append(rm.schema(includeJson, hierarchy));
         sqlBuilder.append(' ').append(extraCriteria.getSQLTemplate());
         if (parameters.isOrderByRequested()) {
@@ -216,8 +220,7 @@ public class AuditReadPlatformServiceImpl implements AuditReadPlatformService {
 
         LOG.info("sql: {}", sqlBuilder);
 
-        final String sqlCountRows = "SELECT FOUND_ROWS()";
-        return this.paginationHelper.fetchPage(this.jdbcTemplate, sqlCountRows, sqlBuilder.toString(), extraCriteria.getArguments(), rm);
+        return this.paginationHelper.fetchPage(this.jdbcTemplate, sqlBuilder.toString(), extraCriteria.getArguments(), rm);
     }
 
     @Override

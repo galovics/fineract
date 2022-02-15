@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.fineract.infrastructure.core.database;
+package org.apache.fineract.infrastructure.core.service.database;
 
 import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
 import java.sql.SQLException;

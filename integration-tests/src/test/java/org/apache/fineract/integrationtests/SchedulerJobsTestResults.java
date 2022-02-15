@@ -656,6 +656,7 @@ public class SchedulerJobsTestResults {
                 "Verifying transferred amount and logged transaction amounts");
     }
 
+    // TODO: Reenable this test. It randomly stucks.
     @Test
     public void testApplyPenaltyForOverdueLoansJobOutcome() throws InterruptedException {
         this.savingsAccountHelper = new SavingsAccountHelper(requestSpec, responseSpec);

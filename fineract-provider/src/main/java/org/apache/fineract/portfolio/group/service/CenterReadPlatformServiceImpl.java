@@ -46,6 +46,7 @@ import org.apache.fineract.infrastructure.core.service.Page;
 import org.apache.fineract.infrastructure.core.service.PaginationHelper;
 import org.apache.fineract.infrastructure.core.service.RoutingDataSource;
 import org.apache.fineract.infrastructure.core.service.SearchParameters;
+import org.apache.fineract.infrastructure.core.service.database.DatabaseSpecificSQLGenerator;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.infrastructure.security.utils.ColumnValidator;
 import org.apache.fineract.infrastructure.security.utils.SQLBuilder;
@@ -94,17 +95,18 @@ public class CenterReadPlatformServiceImpl implements CenterReadPlatformService 
     private final CenterDataMapper centerMapper = new CenterDataMapper();
     private final GroupDataMapper groupDataMapper = new GroupDataMapper();
 
-    private final PaginationHelper<CenterData> paginationHelper = new PaginationHelper<>();
+    private final PaginationHelper<CenterData> paginationHelper;
+    private final DatabaseSpecificSQLGenerator sqlGenerator;
     private final PaginationParametersDataValidator paginationParametersDataValidator;
     private static final Set<String> SUPPORTED_ORDER_BY_VALUES = new HashSet<>(Arrays.asList("id", "name", "officeId", "officeName"));
 
     @Autowired
     public CenterReadPlatformServiceImpl(final PlatformSecurityContext context, final RoutingDataSource dataSource,
-            final ClientReadPlatformService clientReadPlatformService, final OfficeReadPlatformService officeReadPlatformService,
-            final StaffReadPlatformService staffReadPlatformService, final CodeValueReadPlatformService codeValueReadPlatformService,
-            final PaginationParametersDataValidator paginationParametersDataValidator,
-            final ConfigurationDomainService configurationDomainService, final CalendarReadPlatformService calendarReadPlatformService,
-            final ColumnValidator columnValidator) {
+                                         final ClientReadPlatformService clientReadPlatformService, final OfficeReadPlatformService officeReadPlatformService,
+                                         final StaffReadPlatformService staffReadPlatformService, final CodeValueReadPlatformService codeValueReadPlatformService,
+                                         final PaginationParametersDataValidator paginationParametersDataValidator,
+                                         final ConfigurationDomainService configurationDomainService, final CalendarReadPlatformService calendarReadPlatformService,
+                                         final ColumnValidator columnValidator, DatabaseSpecificSQLGenerator sqlGenerator) {
         this.context = context;
         this.clientReadPlatformService = clientReadPlatformService;
         this.jdbcTemplate = new JdbcTemplate(dataSource);
@@ -115,6 +117,8 @@ public class CenterReadPlatformServiceImpl implements CenterReadPlatformService 
         this.configurationDomainService = configurationDomainService;
         this.calendarReadPlatformService = calendarReadPlatformService;
         this.columnValidator = columnValidator;
+        this.paginationHelper = new PaginationHelper<>(sqlGenerator);
+        this.sqlGenerator = sqlGenerator;
     }
 
     // 'g.' preffix because of ERROR 1052 (23000): Column 'column_name' in where
@@ -213,13 +217,13 @@ public class CenterReadPlatformServiceImpl implements CenterReadPlatformService 
                     + " ci.entity_type_enum as entityTypeId, c.title as title,  c.description as description,"
                     + "c.location as location, c.start_date as startDate, c.end_date as endDate, c.recurrence as recurrence,c.meeting_time as meetingTime,"
                     + "sum(if(l.loan_status_id=300 and lrs.duedate = ?,"
-                    + "(ifnull(lrs.principal_amount,0)) + (ifnull(lrs.interest_amount,0)),0)) as installmentDue,"
+                    + "coalesce(lrs.principal_amount,0)) + coalesce(lrs.interest_amount,0)),0)) as installmentDue,"
                     + "sum(if(l.loan_status_id=300 and lrs.duedate = ?,"
-                    + "(ifnull(lrs.principal_completed_derived,0)) + (ifnull(lrs.interest_completed_derived,0)),0)) as totalCollected,"
-                    + "sum(if(l.loan_status_id=300 and lrs.duedate <= ?, (ifnull(lrs.principal_amount,0)) + (ifnull(lrs.interest_amount,0)),0))"
-                    + "- sum(if(l.loan_status_id=300 and lrs.duedate <= ?, (ifnull(lrs.principal_completed_derived,0)) + (ifnull(lrs.interest_completed_derived,0)),0)) as totaldue, "
-                    + "sum(if(l.loan_status_id=300 and lrs.duedate < ?, (ifnull(lrs.principal_amount,0)) + (ifnull(lrs.interest_amount,0)),0))"
-                    + "- sum(if(l.loan_status_id=300 and lrs.duedate < ?, (ifnull(lrs.principal_completed_derived,0)) + (ifnull(lrs.interest_completed_derived,0)),0)) as totaloverdue"
+                    + "coalesce(lrs.principal_completed_derived,0)) + coalesce(lrs.interest_completed_derived,0)),0)) as totalCollected,"
+                    + "sum(if(l.loan_status_id=300 and lrs.duedate <= ?, coalesce(lrs.principal_amount,0)) + coalesce(lrs.interest_amount,0)),0))"
+                    + "- sum(if(l.loan_status_id=300 and lrs.duedate <= ?, coalesce(lrs.principal_completed_derived,0)) + coalesce(lrs.interest_completed_derived,0)),0)) as totaldue, "
+                    + "sum(if(l.loan_status_id=300 and lrs.duedate < ?, coalesce(lrs.principal_amount,0)) + coalesce(lrs.interest_amount,0)),0))"
+                    + "- sum(if(l.loan_status_id=300 and lrs.duedate < ?, coalesce(lrs.principal_completed_derived,0)) + coalesce(lrs.interest_completed_derived,0)),0)) as totaloverdue"
                     + " from m_calendar c join m_calendar_instance ci on ci.calendar_id=c.id and ci.entity_type_enum=4"
                     + " join m_group ce on ce.id = ci.entity_id" + " join m_group g   on g.parent_id = ce.id"
                     + " join m_group_client gc on gc.group_id=g.id" + " join m_client cl on cl.id=gc.client_id"
@@ -338,7 +342,7 @@ public class CenterReadPlatformServiceImpl implements CenterReadPlatformService 
         final String hierarchySearchString = hierarchy + "%";
 
         final StringBuilder sqlBuilder = new StringBuilder(200);
-        sqlBuilder.append("select SQL_CALC_FOUND_ROWS ");
+        sqlBuilder.append("select " + sqlGenerator.calcFoundRows() + " ");
         sqlBuilder.append(this.centerMapper.schema());
         final SQLBuilder extraCriteria = getCenterExtraCriteria(this.centerMapper.schema(), searchParameters);
         extraCriteria.addNonNullCriteria("o.hierarchy like ", hierarchySearchString);
@@ -357,8 +361,7 @@ public class CenterReadPlatformServiceImpl implements CenterReadPlatformService 
             }
         }
 
-        final String sqlCountRows = "SELECT FOUND_ROWS()";
-        return this.paginationHelper.fetchPage(this.jdbcTemplate, sqlCountRows, sqlBuilder.toString(), extraCriteria.getArguments(),
+        return this.paginationHelper.fetchPage(this.jdbcTemplate, sqlBuilder.toString(), extraCriteria.getArguments(),
                 this.centerMapper);
     }
 

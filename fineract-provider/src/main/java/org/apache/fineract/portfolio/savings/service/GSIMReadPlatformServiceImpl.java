@@ -273,9 +273,9 @@ public class GSIMReadPlatformServiceImpl implements GSIMReadPlatformService {
             accountsSummary.append("avbu.firstname as activatedByFirstname, avbu.lastname as activatedByLastname,");
 
             accountsSummary.append("sa.sub_status_enum as subStatusEnum, ");
-            accountsSummary.append("(select IFNULL(max(sat.transaction_date),sa.activatedon_date) ");
+            accountsSummary.append("(select coalesce(max(sat.transaction_date),sa.activatedon_date) ");
             accountsSummary.append("from m_savings_account_transaction as sat ");
-            accountsSummary.append("where sat.is_reversed = 0 ");
+            accountsSummary.append("where sat.is_reversed = false ");
             accountsSummary.append("and sat.transaction_type_enum in (1,2) ");
             accountsSummary.append("and sat.savings_account_id = sa.id) as lastActiveTransactionDate, ");
 

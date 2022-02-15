@@ -57,8 +57,10 @@ import org.apache.fineract.portfolio.loanproduct.exception.LoanProductNotFoundEx
 import org.apache.fineract.portfolio.loanproduct.serialization.LoanProductDataValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class LoanScheduleCalculationPlatformServiceImpl implements LoanScheduleCalculationPlatformService {
 
     private final CalculateLoanScheduleQueryFromApiJsonHelper fromApiJsonDeserializer;

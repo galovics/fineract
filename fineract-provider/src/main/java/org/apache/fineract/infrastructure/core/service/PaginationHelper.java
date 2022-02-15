@@ -20,26 +20,34 @@ package org.apache.fineract.infrastructure.core.service;
 
 import java.util.List;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.fineract.infrastructure.core.service.database.DatabaseSpecificSQLGenerator;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
 public class PaginationHelper<E> {
+    private final DatabaseSpecificSQLGenerator sqlGenerator;
 
-    public Page<E> fetchPage(final JdbcTemplate jt, final String sqlCountRows, final String sqlFetchRows, final Object[] args,
-            final RowMapper<E> rowMapper) {
+    public PaginationHelper(DatabaseSpecificSQLGenerator sqlGenerator) {
+        this.sqlGenerator = sqlGenerator;
+    }
+
+    public Page<E> fetchPage(final JdbcTemplate jt, final String sqlFetchRows, final Object[] args,
+                             final RowMapper<E> rowMapper) {
 
         final List<E> items = jt.query(sqlFetchRows, rowMapper, args);
 
         // determine how many rows are available
-        final int totalFilteredRecords = jt.queryForObject(sqlCountRows, Integer.class);
+        String sqlCountRows = sqlGenerator.countLastExecutedQueryResult(sqlFetchRows);
+        final int totalFilteredRecords = jt.queryForObject(sqlCountRows, Integer.class, args);
 
         return new Page<>(items, totalFilteredRecords);
     }
 
-    public Page<Long> fetchPage(JdbcTemplate jdbcTemplate, String sql, String sqlCountRows, Class<Long> type) {
+    public Page<Long> fetchPage(JdbcTemplate jdbcTemplate, String sql, Class<Long> type) {
         final List<Long> items = jdbcTemplate.queryForList(sql, type);
 
         // determine how many rows are available
+        String sqlCountRows = sqlGenerator.countLastExecutedQueryResult(sql);
         Integer totalFilteredRecords = jdbcTemplate.queryForObject(sqlCountRows, Integer.class);
 
         return new Page<>(items, ObjectUtils.defaultIfNull(totalFilteredRecords, 0));

@@ -35,6 +35,7 @@ import org.apache.fineract.infrastructure.core.service.DateUtils;
 import org.apache.fineract.infrastructure.core.service.Page;
 import org.apache.fineract.infrastructure.core.service.PaginationHelper;
 import org.apache.fineract.infrastructure.core.service.RoutingDataSource;
+import org.apache.fineract.infrastructure.core.service.database.DatabaseSpecificSQLGenerator;
 import org.apache.fineract.organisation.monetary.data.CurrencyData;
 import org.apache.fineract.portfolio.accountdetails.data.ShareAccountSummaryData;
 import org.apache.fineract.portfolio.accounts.constants.AccountsApiConstants;
@@ -81,16 +82,17 @@ public class ShareAccountReadPlatformServiceImpl implements ShareAccountReadPlat
     private final PurchasedSharesReadPlatformService purchasedSharesReadPlatformService;
     private final JdbcTemplate jdbcTemplate;
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-    private final PaginationHelper<AccountData> shareAccountDataPaginationHelper = new PaginationHelper<>();
+    private final PaginationHelper<AccountData> shareAccountDataPaginationHelper;
+    private final DatabaseSpecificSQLGenerator sqlGenerator;
 
     @Autowired
     public ShareAccountReadPlatformServiceImpl(final RoutingDataSource dataSource, final ApplicationContext applicationContext,
-            final ChargeReadPlatformService chargeReadPlatformService,
-            final ShareProductDropdownReadPlatformService shareProductDropdownReadPlatformService,
-            final SavingsAccountReadPlatformService savingsAccountReadPlatformService,
-            final ClientReadPlatformService clientReadPlatformService,
-            final ShareAccountChargeReadPlatformService shareAccountChargeReadPlatformService,
-            final PurchasedSharesReadPlatformService purchasedSharesReadPlatformService) {
+                                               final ChargeReadPlatformService chargeReadPlatformService,
+                                               final ShareProductDropdownReadPlatformService shareProductDropdownReadPlatformService,
+                                               final SavingsAccountReadPlatformService savingsAccountReadPlatformService,
+                                               final ClientReadPlatformService clientReadPlatformService,
+                                               final ShareAccountChargeReadPlatformService shareAccountChargeReadPlatformService,
+                                               final PurchasedSharesReadPlatformService purchasedSharesReadPlatformService, DatabaseSpecificSQLGenerator sqlGenerator) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.applicationContext = applicationContext;
         this.chargeReadPlatformService = chargeReadPlatformService;
@@ -99,7 +101,8 @@ public class ShareAccountReadPlatformServiceImpl implements ShareAccountReadPlat
         this.clientReadPlatformService = clientReadPlatformService;
         this.shareAccountChargeReadPlatformService = shareAccountChargeReadPlatformService;
         this.purchasedSharesReadPlatformService = purchasedSharesReadPlatformService;
-
+        this.shareAccountDataPaginationHelper = new PaginationHelper<>(sqlGenerator);
+        this.sqlGenerator = sqlGenerator;
     }
 
     @Override
@@ -189,7 +192,7 @@ public class ShareAccountReadPlatformServiceImpl implements ShareAccountReadPlat
         final Collection<ShareAccountTransactionData> purchasedShares = null;
         ShareAccountMapper mapper = new ShareAccountMapper(charges, purchasedShares);
         StringBuilder sqlBuilder = new StringBuilder();
-        sqlBuilder.append("select SQL_CALC_FOUND_ROWS ");
+        sqlBuilder.append("select " + sqlGenerator.calcFoundRows() + " ");
         sqlBuilder.append(mapper.schema());
         sqlBuilder.append(" where sa.status_enum = ? ");
         if (limit != null) {
@@ -199,9 +202,8 @@ public class ShareAccountReadPlatformServiceImpl implements ShareAccountReadPlat
             sqlBuilder.append(" offset ").append(offSet);
         }
 
-        final String sqlCountRows = "SELECT FOUND_ROWS()";
         Object[] whereClauseItemsitems = new Object[] { ShareAccountStatusType.ACTIVE.getValue() };
-        return this.shareAccountDataPaginationHelper.fetchPage(this.jdbcTemplate, sqlCountRows, sqlBuilder.toString(),
+        return this.shareAccountDataPaginationHelper.fetchPage(this.jdbcTemplate, sqlBuilder.toString(),
                 whereClauseItemsitems, mapper);
     }
 

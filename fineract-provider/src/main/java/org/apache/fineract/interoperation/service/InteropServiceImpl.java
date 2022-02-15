@@ -50,6 +50,7 @@ import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityEx
 import org.apache.fineract.infrastructure.core.serialization.DefaultToApiJsonSerializer;
 import org.apache.fineract.infrastructure.core.service.DateUtils;
 import org.apache.fineract.infrastructure.core.service.RoutingDataSource;
+import org.apache.fineract.infrastructure.core.service.database.DatabaseSpecificSQLGenerator;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.interoperation.data.InteropAccountData;
 import org.apache.fineract.interoperation.data.InteropIdentifierAccountResponseData;
@@ -141,16 +142,17 @@ public class InteropServiceImpl implements InteropService {
     private final PortfolioCommandSourceWritePlatformService commandsSourceWritePlatformService;
 
     private final DefaultToApiJsonSerializer<LoanAccountData> toApiJsonSerializer;
+    private final DatabaseSpecificSQLGenerator sqlGenerator;
 
     @Autowired
     public InteropServiceImpl(PlatformSecurityContext securityContext, InteropDataValidator interopDataValidator,
-            SavingsAccountRepository savingsAccountRepository, SavingsAccountTransactionRepository savingsAccountTransactionRepository,
-            ApplicationCurrencyRepository applicationCurrencyRepository, NoteRepository noteRepository,
-            PaymentTypeRepository paymentTypeRepository, InteropIdentifierRepository identifierRepository, LoanRepository loanRepository,
-            SavingsHelper savingsHelper, SavingsAccountTransactionSummaryWrapper savingsAccountTransactionSummaryWrapper,
-            SavingsAccountDomainService savingsAccountService, final RoutingDataSource dataSource,
-            final PortfolioCommandSourceWritePlatformService commandsSourceWritePlatformService,
-            final DefaultToApiJsonSerializer<LoanAccountData> toApiJsonSerializer) {
+                              SavingsAccountRepository savingsAccountRepository, SavingsAccountTransactionRepository savingsAccountTransactionRepository,
+                              ApplicationCurrencyRepository applicationCurrencyRepository, NoteRepository noteRepository,
+                              PaymentTypeRepository paymentTypeRepository, InteropIdentifierRepository identifierRepository, LoanRepository loanRepository,
+                              SavingsHelper savingsHelper, SavingsAccountTransactionSummaryWrapper savingsAccountTransactionSummaryWrapper,
+                              SavingsAccountDomainService savingsAccountService, final RoutingDataSource dataSource,
+                              final PortfolioCommandSourceWritePlatformService commandsSourceWritePlatformService,
+                              final DefaultToApiJsonSerializer<LoanAccountData> toApiJsonSerializer, DatabaseSpecificSQLGenerator sqlGenerator) {
         this.securityContext = securityContext;
         this.dataValidator = interopDataValidator;
         this.savingsAccountRepository = savingsAccountRepository;
@@ -166,22 +168,29 @@ public class InteropServiceImpl implements InteropService {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.commandsSourceWritePlatformService = commandsSourceWritePlatformService;
         this.toApiJsonSerializer = toApiJsonSerializer;
+        this.sqlGenerator = sqlGenerator;
     }
 
     private static final class KycMapper implements RowMapper<InteropKycData> {
 
+        private final DatabaseSpecificSQLGenerator sqlGenerator;
+
+        public KycMapper(DatabaseSpecificSQLGenerator sqlGenerator) {
+            this.sqlGenerator = sqlGenerator;
+        }
+
         public String schema() {
-            return " country.code_value as nationality, c.`date_of_birth` as dateOfBirth, c.`mobile_no` as contactPhone, gender.code_value as gender, c.`email_address` as email, "
-                    + "kyc.code_value as idType, ci.`document_key` as idNo, ci.`description` as description, "
+            return " country.code_value as nationality, c.date_of_birth as dateOfBirth, c.mobile_no as contactPhone, gender.code_value as gender, c.email_address as email, "
+                    + "kyc.code_value as idType, ci.document_key as idNo, ci." + sqlGenerator.escape("description") + " as description, "
                     + "country.code_value as country, a.`address_line_1`, a.`address_line_2`, "
-                    + "a.`city`, state.code_value as stateProvince, a.`postal_code` as postalCode, c.`firstname` as firstName, c.`middlename` as middleName,"
-                    + "c.`lastname` as lastName, c.`display_name` as displayName" + " from " + "m_client c "
+                    + "a.city, state.code_value as stateProvince, a.postal_code as postalCode, c.firstname as firstName, c.middlename as middleName,"
+                    + "c.lastname as lastName, c.display_name as displayName" + " from " + "m_client c "
                     + "left join m_client_address ca on c.id=ca.client_id " + "left join m_address a on a.id = ca.address_id "
-                    + "inner join m_code_value gender on gender.id=c.`gender_cv_id` "
-                    + "left join m_code_value country on country.id=a.`country_id` "
-                    + "left join m_code_value state on state.id = a.`state_province_id` "
-                    + "left join m_client_identifier ci on c.id=ci.`client_id` "
-                    + "left join m_code_value kyc on kyc.id = ci.`document_type_id` ";
+                    + "inner join m_code_value gender on gender.id=c.gender_cv_id "
+                    + "left join m_code_value country on country.id=a.country_id "
+                    + "left join m_code_value state on state.id = a.state_province_id "
+                    + "left join m_client_identifier ci on c.id=ci.client_id "
+                    + "left join m_code_value kyc on kyc.id = ci.document_type_id ";
         }
 
         @Override
@@ -512,7 +521,7 @@ public class InteropServiceImpl implements InteropService {
         Long client_id = savingsAccount.getClient().getId();
 
         try {
-            final InteropServiceImpl.KycMapper rm = new InteropServiceImpl.KycMapper();
+            final InteropServiceImpl.KycMapper rm = new InteropServiceImpl.KycMapper(sqlGenerator);
             final String sql = "select " + rm.schema() + " where c.id = ?";
 
             final InteropKycData accountKyc = this.jdbcTemplate.queryForObject(sql, rm, new Object[] { client_id });

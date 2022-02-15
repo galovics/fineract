@@ -21,7 +21,7 @@ package org.apache.fineract.infrastructure.core.service.migration;
 import java.util.Map;
 import java.util.Objects;
 import javax.sql.DataSource;
-import org.apache.fineract.infrastructure.core.database.DatabaseIndependentQueryService;
+import org.apache.fineract.infrastructure.core.service.database.DatabaseIndependentQueryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.liquibase.LiquibaseProperties;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;

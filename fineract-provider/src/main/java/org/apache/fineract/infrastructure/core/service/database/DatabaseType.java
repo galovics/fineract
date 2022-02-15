@@ -16,12 +16,8 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.fineract.infrastructure.core.database;
+package org.apache.fineract.infrastructure.core.service.database;
 
-import javax.sql.DataSource;
-
-interface DatabaseQueryService {
-    boolean isSupported(DataSource dataSource);
-
-    boolean isTablePresent(DataSource dataSource, String tableName);
+public enum DatabaseType {
+    MYSQL, POSTGRESQL
 }

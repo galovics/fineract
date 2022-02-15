@@ -31,6 +31,7 @@ import org.apache.fineract.infrastructure.core.service.Page;
 import org.apache.fineract.infrastructure.core.service.PaginationHelper;
 import org.apache.fineract.infrastructure.core.service.RoutingDataSource;
 import org.apache.fineract.infrastructure.core.service.SearchParameters;
+import org.apache.fineract.infrastructure.core.service.database.DatabaseSpecificSQLGenerator;
 import org.apache.fineract.infrastructure.dataqueries.data.ReportData;
 import org.apache.fineract.infrastructure.reportmailingjob.data.ReportMailingJobData;
 import org.apache.fineract.infrastructure.reportmailingjob.data.ReportMailingJobEmailAttachmentFileFormat;
@@ -49,11 +50,13 @@ public class ReportMailingJobReadPlatformServiceImpl implements ReportMailingJob
 
     private final JdbcTemplate jdbcTemplate;
     private final ColumnValidator columnValidator;
+    private final DatabaseSpecificSQLGenerator sqlGenerator;
 
     @Autowired
-    public ReportMailingJobReadPlatformServiceImpl(final RoutingDataSource dataSource, final ColumnValidator columnValidator) {
+    public ReportMailingJobReadPlatformServiceImpl(final RoutingDataSource dataSource, final ColumnValidator columnValidator, DatabaseSpecificSQLGenerator sqlGenerator) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.columnValidator = columnValidator;
+        this.sqlGenerator = sqlGenerator;
     }
 
     @Override
@@ -61,11 +64,11 @@ public class ReportMailingJobReadPlatformServiceImpl implements ReportMailingJob
         final StringBuilder sqlStringBuilder = new StringBuilder(200);
         final List<Object> queryParameters = new ArrayList<>();
         final ReportMailingJobMapper mapper = new ReportMailingJobMapper();
-        final PaginationHelper<ReportMailingJobData> paginationHelper = new PaginationHelper<>();
+        final PaginationHelper<ReportMailingJobData> paginationHelper = new PaginationHelper<>(sqlGenerator);
 
-        sqlStringBuilder.append("select SQL_CALC_FOUND_ROWS ");
+        sqlStringBuilder.append("select " + sqlGenerator.calcFoundRows() + " ");
         sqlStringBuilder.append(mapper.reportMailingJobSchema());
-        sqlStringBuilder.append(" where rmj.is_deleted = 0");
+        sqlStringBuilder.append(" where rmj.is_deleted = false");
 
         if (searchParameters.isOrderByRequested()) {
             sqlStringBuilder.append(" order by ").append(searchParameters.getOrderBy());
@@ -86,14 +89,14 @@ public class ReportMailingJobReadPlatformServiceImpl implements ReportMailingJob
             }
         }
 
-        return paginationHelper.fetchPage(this.jdbcTemplate, "SELECT FOUND_ROWS()", sqlStringBuilder.toString(), queryParameters.toArray(),
+        return paginationHelper.fetchPage(this.jdbcTemplate, sqlStringBuilder.toString(), queryParameters.toArray(),
                 mapper);
     }
 
     @Override
     public Collection<ReportMailingJobData> retrieveAllActiveReportMailingJobs() {
         final ReportMailingJobMapper mapper = new ReportMailingJobMapper();
-        final String sql = "select " + mapper.reportMailingJobSchema() + " where rmj.is_deleted = 0 and is_active = 1"
+        final String sql = "select " + mapper.reportMailingJobSchema() + " where rmj.is_deleted = false and is_active = true"
                 + " order by rmj.name";
 
         return this.jdbcTemplate.query(sql, mapper, new Object[] {});
@@ -103,7 +106,7 @@ public class ReportMailingJobReadPlatformServiceImpl implements ReportMailingJob
     public ReportMailingJobData retrieveReportMailingJob(final Long reportMailingJobId) {
         try {
             final ReportMailingJobMapper mapper = new ReportMailingJobMapper();
-            final String sql = "select " + mapper.reportMailingJobSchema() + " where rmj.id = ? and rmj.is_deleted = 0";
+            final String sql = "select " + mapper.reportMailingJobSchema() + " where rmj.id = ? and rmj.is_deleted = false";
 
             return this.jdbcTemplate.queryForObject(sql, mapper, new Object[] { reportMailingJobId });
         }

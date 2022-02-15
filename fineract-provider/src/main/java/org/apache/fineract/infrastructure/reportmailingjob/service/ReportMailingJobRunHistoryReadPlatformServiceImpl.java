@@ -28,6 +28,7 @@ import org.apache.fineract.infrastructure.core.service.Page;
 import org.apache.fineract.infrastructure.core.service.PaginationHelper;
 import org.apache.fineract.infrastructure.core.service.RoutingDataSource;
 import org.apache.fineract.infrastructure.core.service.SearchParameters;
+import org.apache.fineract.infrastructure.core.service.database.DatabaseSpecificSQLGenerator;
 import org.apache.fineract.infrastructure.reportmailingjob.data.ReportMailingJobRunHistoryData;
 import org.apache.fineract.infrastructure.security.utils.ColumnValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,15 +40,18 @@ import org.springframework.stereotype.Service;
 public class ReportMailingJobRunHistoryReadPlatformServiceImpl implements ReportMailingJobRunHistoryReadPlatformService {
 
     private final JdbcTemplate jdbcTemplate;
+    private final DatabaseSpecificSQLGenerator sqlGenerator;
     private final ReportMailingJobRunHistoryMapper reportMailingJobRunHistoryMapper;
     private final ColumnValidator columnValidator;
-    private final PaginationHelper<ReportMailingJobRunHistoryData> paginationHelper = new PaginationHelper<>();
+    private final PaginationHelper<ReportMailingJobRunHistoryData> paginationHelper;
 
     @Autowired
-    public ReportMailingJobRunHistoryReadPlatformServiceImpl(final RoutingDataSource dataSource, final ColumnValidator columnValidator) {
+    public ReportMailingJobRunHistoryReadPlatformServiceImpl(final RoutingDataSource dataSource, final ColumnValidator columnValidator, DatabaseSpecificSQLGenerator sqlGenerator) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
+        this.sqlGenerator = sqlGenerator;
         this.reportMailingJobRunHistoryMapper = new ReportMailingJobRunHistoryMapper();
         this.columnValidator = columnValidator;
+        this.paginationHelper = new PaginationHelper<>(sqlGenerator);
     }
 
     @Override
@@ -56,7 +60,7 @@ public class ReportMailingJobRunHistoryReadPlatformServiceImpl implements Report
         final StringBuilder sqlStringBuilder = new StringBuilder(200);
         final List<Object> queryParameters = new ArrayList<>();
 
-        sqlStringBuilder.append("select SQL_CALC_FOUND_ROWS ");
+        sqlStringBuilder.append("select " + sqlGenerator.calcFoundRows() + " ");
         sqlStringBuilder.append(this.reportMailingJobRunHistoryMapper.reportMailingJobRunHistorySchema());
 
         if (reportMailingJobId != null) {
@@ -81,7 +85,7 @@ public class ReportMailingJobRunHistoryReadPlatformServiceImpl implements Report
             }
         }
 
-        return this.paginationHelper.fetchPage(this.jdbcTemplate, "SELECT FOUND_ROWS()", sqlStringBuilder.toString(),
+        return this.paginationHelper.fetchPage(this.jdbcTemplate, sqlStringBuilder.toString(),
                 queryParameters.toArray(), this.reportMailingJobRunHistoryMapper);
     }
 

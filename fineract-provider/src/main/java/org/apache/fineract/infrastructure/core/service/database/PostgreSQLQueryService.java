@@ -16,30 +16,31 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.fineract.infrastructure.core.database;
+package org.apache.fineract.infrastructure.core.service.database;
 
 import static java.lang.String.format;
 import static org.apache.fineract.infrastructure.core.domain.FineractPlatformTenantConnection.toProtocol;
-import java.util.Set;
+import java.util.Objects;
 import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 
 @Component
-public class MySQLQueryService implements DatabaseQueryService {
-    private final Set<String> supportedProtocols = Set.of("jdbc:mariadb", "jdbc:mysql");
-
+public class PostgreSQLQueryService implements DatabaseQueryService {
     @Override
     public boolean isSupported(DataSource dataSource) {
         String protocol = toProtocol(dataSource);
-        return supportedProtocols.contains(protocol.toLowerCase());
+        return "jdbc:postgresql".equalsIgnoreCase(protocol);
     }
 
     @Override
     public boolean isTablePresent(DataSource dataSource, String tableName) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-        SqlRowSet rs = jdbcTemplate.queryForRowSet(format("SHOW TABLES LIKE '%s'", tableName));
-        return rs.next();
+        Integer result = jdbcTemplate.queryForObject(
+                format("SELECT COUNT(table_name) " +
+                        "FROM information_schema.tables " +
+                        "WHERE table_schema = 'public' " +
+                        "AND table_name = '%s';", tableName), Integer.class);
+        return Objects.equals(result, 1);
     }
 }

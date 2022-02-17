@@ -1147,7 +1147,6 @@
     </changeSet>
     <changeSet author="fineract" id="7">
         <insert tableName="m_office">
-            <column name="id" valueNumeric="1"/>
             <column name="parent_id"/>
             <column name="hierarchy" value="."/>
             <column name="external_id" value="1"/>

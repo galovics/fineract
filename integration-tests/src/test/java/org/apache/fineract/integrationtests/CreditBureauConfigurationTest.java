@@ -57,7 +57,7 @@ public class CreditBureauConfigurationTest {
 
         // create creditBureauConfiguration
         final Integer configurationId = CreditBureauConfigurationHelper.createCreditBureauConfiguration(this.requestSpec,
-                this.responseSpec);
+                this.responseSpec, Utils.randomNameGenerator("testConfigKey_", 5));
         Assertions.assertNotNull(configurationId);
 
         // update creditBureauConfiguration

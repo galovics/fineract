@@ -35,7 +35,7 @@ public class CreditBureau extends AbstractPersistableCustom {
 
     private String country;
 
-    @Column(name = "implementationKey")
+    @Column(name = "implementation_key")
     private String implementationKey;
 
     public CreditBureau(String name, String product, String country, String implementationKey,

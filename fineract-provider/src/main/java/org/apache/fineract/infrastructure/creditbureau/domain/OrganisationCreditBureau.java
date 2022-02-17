@@ -38,7 +38,7 @@ public class OrganisationCreditBureau extends AbstractPersistableCustom {
     @OneToOne
     private CreditBureau creditbureau;
 
-    @Column(name = "isActive")
+    @Column(name = "is_active")
     private boolean isActive;
 
     @OneToMany(mappedBy = "organisation_creditbureau", cascade = CascadeType.ALL)

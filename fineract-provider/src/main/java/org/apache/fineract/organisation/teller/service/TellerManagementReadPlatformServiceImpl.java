@@ -71,6 +71,7 @@ public class TellerManagementReadPlatformServiceImpl implements TellerManagement
     private final OfficeReadPlatformService officeReadPlatformService;
     private final StaffReadPlatformService staffReadPlatformService;
     private final CurrencyReadPlatformService currencyReadPlatformService;
+    private final DatabaseSpecificSQLGenerator sqlGenerator;
     private final PaginationHelper paginationHelper;
     private final ColumnValidator columnValidator;
 
@@ -84,6 +85,7 @@ public class TellerManagementReadPlatformServiceImpl implements TellerManagement
         this.staffReadPlatformService = staffReadPlatformService;
         this.currencyReadPlatformService = currencyReadPlatformService;
         this.columnValidator = columnValidator;
+        this.sqlGenerator = sqlGenerator;
         this.paginationHelper = paginationHelper;
     }
 
@@ -545,6 +547,16 @@ public class TellerManagementReadPlatformServiceImpl implements TellerManagement
                 + " between c.start_date and date_add(c.end_date, interval 1 day) "
                 + " and renum.enum_value in ('PAY_CHARGE', 'WAIVE_CHARGE') "
                 + " and (cli_txn.payment_detail_id IS NULL OR payType.is_cash_payment = true) ) " + " order by created_date ";
+
+
+        if (searchParameters.isLimited()) {
+            sql += " ";
+            if (searchParameters.isOffset()) {
+                sql += sqlGenerator.limit(searchParameters.getLimit(), searchParameters.getOffset());
+            } else {
+                sql += sqlGenerator.limit(searchParameters.getLimit());
+            }
+        }
 
         if (searchParameters.isLimited()) {
             sql = sql + " limit " + searchParameters.getLimit();

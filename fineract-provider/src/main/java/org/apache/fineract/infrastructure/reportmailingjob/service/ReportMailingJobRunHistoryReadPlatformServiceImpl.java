@@ -77,11 +77,13 @@ public class ReportMailingJobRunHistoryReadPlatformServiceImpl implements Report
             }
         }
 
-        if (searchParameters.isLimited()) {
-            sqlStringBuilder.append(" limit ").append(searchParameters.getLimit());
 
+        if (searchParameters.isLimited()) {
+            sqlStringBuilder.append(" ");
             if (searchParameters.isOffset()) {
-                sqlStringBuilder.append(" offset ").append(searchParameters.getOffset());
+                sqlStringBuilder.append(sqlGenerator.limit(searchParameters.getLimit(), searchParameters.getOffset()));
+            } else {
+                sqlStringBuilder.append(sqlGenerator.limit(searchParameters.getLimit()));
             }
         }
 

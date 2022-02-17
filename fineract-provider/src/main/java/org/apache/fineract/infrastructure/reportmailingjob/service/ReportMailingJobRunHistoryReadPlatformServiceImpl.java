@@ -43,15 +43,15 @@ public class ReportMailingJobRunHistoryReadPlatformServiceImpl implements Report
     private final DatabaseSpecificSQLGenerator sqlGenerator;
     private final ReportMailingJobRunHistoryMapper reportMailingJobRunHistoryMapper;
     private final ColumnValidator columnValidator;
-    private final PaginationHelper<ReportMailingJobRunHistoryData> paginationHelper;
+    private final PaginationHelper paginationHelper;
 
     @Autowired
-    public ReportMailingJobRunHistoryReadPlatformServiceImpl(final RoutingDataSource dataSource, final ColumnValidator columnValidator, DatabaseSpecificSQLGenerator sqlGenerator) {
+    public ReportMailingJobRunHistoryReadPlatformServiceImpl(final RoutingDataSource dataSource, final ColumnValidator columnValidator, DatabaseSpecificSQLGenerator sqlGenerator, PaginationHelper paginationHelper) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.sqlGenerator = sqlGenerator;
         this.reportMailingJobRunHistoryMapper = new ReportMailingJobRunHistoryMapper();
         this.columnValidator = columnValidator;
-        this.paginationHelper = new PaginationHelper<>(sqlGenerator);
+        this.paginationHelper = paginationHelper;
     }
 
     @Override

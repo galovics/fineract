@@ -68,7 +68,7 @@ public class GroupReadPlatformServiceImpl implements GroupReadPlatformService {
     private final CodeValueReadPlatformService codeValueReadPlatformService;
 
     private final AllGroupTypesDataMapper allGroupTypesDataMapper = new AllGroupTypesDataMapper();
-    private final PaginationHelper<GroupGeneralData> paginationHelper;
+    private final PaginationHelper paginationHelper;
     private final DatabaseSpecificSQLGenerator sqlGenerator;
     private final PaginationParametersDataValidator paginationParametersDataValidator;
     private final ColumnValidator columnValidator;
@@ -79,7 +79,7 @@ public class GroupReadPlatformServiceImpl implements GroupReadPlatformService {
     public GroupReadPlatformServiceImpl(final PlatformSecurityContext context, final RoutingDataSource dataSource,
                                         final CenterReadPlatformService centerReadPlatformService, final OfficeReadPlatformService officeReadPlatformService,
                                         final StaffReadPlatformService staffReadPlatformService, final CodeValueReadPlatformService codeValueReadPlatformService,
-                                        final PaginationParametersDataValidator paginationParametersDataValidator, final ColumnValidator columnValidator, DatabaseSpecificSQLGenerator sqlGenerator) {
+                                        final PaginationParametersDataValidator paginationParametersDataValidator, final ColumnValidator columnValidator, DatabaseSpecificSQLGenerator sqlGenerator, PaginationHelper paginationHelper) {
         this.context = context;
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.centerReadPlatformService = centerReadPlatformService;
@@ -88,7 +88,7 @@ public class GroupReadPlatformServiceImpl implements GroupReadPlatformService {
         this.codeValueReadPlatformService = codeValueReadPlatformService;
         this.paginationParametersDataValidator = paginationParametersDataValidator;
         this.columnValidator = columnValidator;
-        this.paginationHelper = new PaginationHelper<>(sqlGenerator);
+        this.paginationHelper = paginationHelper;
         this.sqlGenerator = sqlGenerator;
     }
 

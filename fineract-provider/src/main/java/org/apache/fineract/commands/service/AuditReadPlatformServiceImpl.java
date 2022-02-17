@@ -88,7 +88,7 @@ public class AuditReadPlatformServiceImpl implements AuditReadPlatformService {
     private final ClientReadPlatformService clientReadPlatformService;
     private final LoanProductReadPlatformService loanProductReadPlatformService;
     private final StaffReadPlatformService staffReadPlatformService;
-    private final PaginationHelper<AuditData> paginationHelper;
+    private final PaginationHelper paginationHelper;
     private final DatabaseSpecificSQLGenerator sqlGenerator;
     private final PaginationParametersDataValidator paginationParametersDataValidator;
     private final SavingsProductReadPlatformService savingsProductReadPlatformService;
@@ -102,7 +102,8 @@ public class AuditReadPlatformServiceImpl implements AuditReadPlatformService {
                                         final LoanProductReadPlatformService loanProductReadPlatformService, final StaffReadPlatformService staffReadPlatformService,
                                         final PaginationParametersDataValidator paginationParametersDataValidator,
                                         final SavingsProductReadPlatformService savingsProductReadPlatformService,
-                                        final DepositProductReadPlatformService depositProductReadPlatformService, final ColumnValidator columnValidator, DatabaseSpecificSQLGenerator sqlGenerator) {
+                                        final DepositProductReadPlatformService depositProductReadPlatformService,
+                                        final ColumnValidator columnValidator, DatabaseSpecificSQLGenerator sqlGenerator, PaginationHelper paginationHelper) {
         this.context = context;
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.fromApiJsonHelper = fromApiJsonHelper;
@@ -115,7 +116,7 @@ public class AuditReadPlatformServiceImpl implements AuditReadPlatformService {
         this.savingsProductReadPlatformService = savingsProductReadPlatformService;
         this.depositProductReadPlatformService = depositProductReadPlatformService;
         this.columnValidator = columnValidator;
-        this.paginationHelper = new PaginationHelper<>(sqlGenerator);
+        this.paginationHelper = paginationHelper;
         this.sqlGenerator = sqlGenerator;
     }
 
@@ -444,13 +445,13 @@ public class AuditReadPlatformServiceImpl implements AuditReadPlatformService {
 
         String sql = " SELECT distinct(action_name) as actionName FROM m_permission p ";
         sql += makercheckerCapabilityOnly(useType, currentUser);
-        sql += " order by if(action_name in ('CREATE', 'DELETE', 'UPDATE'), action_name, 'ZZZ'), action_name";
+        sql += " order by (CASE WHEN action_name in ('CREATE', 'DELETE', 'UPDATE') THEN action_name ELSE 'ZZZ' END), action_name";
         final ActionNamesMapper mapper = new ActionNamesMapper();
         final List<String> actionNames = this.jdbcTemplate.query(sql, mapper);
 
         sql = " select distinct(entity_name) as entityName from m_permission p ";
         sql += makercheckerCapabilityOnly(useType, currentUser);
-        sql += " order by if(grouping = 'datatable', 'ZZZ', entity_name), entity_name";
+        sql += " order by (CASE WHEN grouping = 'datatable' THEN 'ZZZ' ELSE entity_name END), entity_name";
         final EntityNamesMapper mapper2 = new EntityNamesMapper();
         final List<String> entityNames = this.jdbcTemplate.query(sql, mapper2);
 

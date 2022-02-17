@@ -19,7 +19,6 @@
 package org.apache.fineract.portfolio.loanaccount.service;
 
 import static org.apache.fineract.portfolio.loanproduct.service.LoanEnumerations.interestType;
-
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -134,7 +133,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class LoanReadPlatformServiceImpl implements LoanReadPlatformService {
 
     private final JdbcTemplate jdbcTemplate;
@@ -150,7 +149,7 @@ public class LoanReadPlatformServiceImpl implements LoanReadPlatformService {
     private final CodeValueReadPlatformService codeValueReadPlatformService;
     private final CalendarReadPlatformService calendarReadPlatformService;
     private final StaffReadPlatformService staffReadPlatformService;
-    private final PaginationHelper<LoanAccountData> paginationHelper;
+    private final PaginationHelper paginationHelper;
     private final LoanMapper loaanLoanMapper;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -176,7 +175,7 @@ public class LoanReadPlatformServiceImpl implements LoanReadPlatformService {
                                        final FloatingRatesReadPlatformService floatingRatesReadPlatformService, final LoanUtilService loanUtilService,
                                        final ConfigurationDomainService configurationDomainService,
                                        final AccountDetailsReadPlatformService accountDetailsReadPlatformService, final LoanRepositoryWrapper loanRepositoryWrapper,
-                                       final ColumnValidator columnValidator, DatabaseSpecificSQLGenerator sqlGenerator) {
+                                       final ColumnValidator columnValidator, DatabaseSpecificSQLGenerator sqlGenerator, PaginationHelper paginationHelper) {
         this.context = context;
         this.loanRepositoryWrapper = loanRepositoryWrapper;
         this.applicationCurrencyRepository = applicationCurrencyRepository;
@@ -200,7 +199,7 @@ public class LoanReadPlatformServiceImpl implements LoanReadPlatformService {
         this.columnValidator = columnValidator;
         this.loaanLoanMapper = new LoanMapper(sqlGenerator);
         this.sqlGenerator = sqlGenerator;
-        this.paginationHelper = new PaginationHelper<>(sqlGenerator);
+        this.paginationHelper = paginationHelper;
     }
 
     @Override
@@ -2256,7 +2255,7 @@ public class LoanReadPlatformServiceImpl implements LoanReadPlatformService {
         public String schema() {
             StringBuilder sqlBuilder = new StringBuilder();
 
-            sqlBuilder.append("if(max(tr.transaction_date)>ls.dueDate,max(tr.transaction_date),ls.dueDate) as transactionDate, ");
+            sqlBuilder.append("(CASE WHEN max(tr.transaction_date)>ls.dueDate THEN max(tr.transaction_date) ELSE ls.dueDate END) as transactionDate, ");
             sqlBuilder.append(
                     "ls.principal_amount - coalesce(ls.principal_writtenoff_derived,0) - coalesce(ls.principal_completed_derived,0) as principalDue, ");
             sqlBuilder.append(

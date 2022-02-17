@@ -71,20 +71,20 @@ public class TellerManagementReadPlatformServiceImpl implements TellerManagement
     private final OfficeReadPlatformService officeReadPlatformService;
     private final StaffReadPlatformService staffReadPlatformService;
     private final CurrencyReadPlatformService currencyReadPlatformService;
-    private final PaginationHelper<CashierTransactionData> paginationHelper;
+    private final PaginationHelper paginationHelper;
     private final ColumnValidator columnValidator;
 
     @Autowired
     public TellerManagementReadPlatformServiceImpl(final PlatformSecurityContext context, final RoutingDataSource dataSource,
                                                    final OfficeReadPlatformService officeReadPlatformService, StaffReadPlatformService staffReadPlatformService,
-                                                   final CurrencyReadPlatformService currencyReadPlatformService, final ColumnValidator columnValidator, DatabaseSpecificSQLGenerator sqlGenerator) {
+                                                   final CurrencyReadPlatformService currencyReadPlatformService, final ColumnValidator columnValidator, DatabaseSpecificSQLGenerator sqlGenerator, PaginationHelper paginationHelper) {
         this.context = context;
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.officeReadPlatformService = officeReadPlatformService;
         this.staffReadPlatformService = staffReadPlatformService;
         this.currencyReadPlatformService = currencyReadPlatformService;
         this.columnValidator = columnValidator;
-        this.paginationHelper = new PaginationHelper<>(sqlGenerator);
+        this.paginationHelper = paginationHelper;
     }
 
     private static final class TellerMapper implements RowMapper<TellerData> {

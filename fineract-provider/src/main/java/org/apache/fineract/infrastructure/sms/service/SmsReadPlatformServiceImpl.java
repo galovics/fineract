@@ -50,16 +50,16 @@ public class SmsReadPlatformServiceImpl implements SmsReadPlatformService {
     private final JdbcTemplate jdbcTemplate;
     private final DatabaseSpecificSQLGenerator sqlGenerator;
     private final SmsMapper smsRowMapper;
-    private final PaginationHelper<SmsData> paginationHelper;
+    private final PaginationHelper paginationHelper;
     private final ColumnValidator columnValidator;
 
     @Autowired
-    public SmsReadPlatformServiceImpl(final RoutingDataSource dataSource, final ColumnValidator columnValidator, DatabaseSpecificSQLGenerator sqlGenerator) {
+    public SmsReadPlatformServiceImpl(final RoutingDataSource dataSource, final ColumnValidator columnValidator, DatabaseSpecificSQLGenerator sqlGenerator, PaginationHelper paginationHelper) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.sqlGenerator = sqlGenerator;
         this.smsRowMapper = new SmsMapper();
         this.columnValidator = columnValidator;
-        this.paginationHelper = new PaginationHelper<>(sqlGenerator);
+        this.paginationHelper = paginationHelper;
     }
 
     private static final class SmsMapper implements RowMapper<SmsData> {

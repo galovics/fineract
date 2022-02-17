@@ -78,20 +78,20 @@ public class JournalEntryReadPlatformServiceImpl implements JournalEntryReadPlat
     private final ColumnValidator columnValidator;
     private final FinancialActivityAccountRepositoryWrapper financialActivityAccountRepositoryWrapper;
 
-    private final PaginationHelper<JournalEntryData> paginationHelper;
+    private final PaginationHelper paginationHelper;
     private final DatabaseSpecificSQLGenerator sqlGenerator;
 
     @Autowired
     public JournalEntryReadPlatformServiceImpl(final RoutingDataSource dataSource,
                                                final GLAccountReadPlatformService glAccountReadPlatformService, final ColumnValidator columnValidator,
                                                final OfficeReadPlatformService officeReadPlatformService,
-                                               final FinancialActivityAccountRepositoryWrapper financialActivityAccountRepositoryWrapper, DatabaseSpecificSQLGenerator sqlGenerator) {
+                                               final FinancialActivityAccountRepositoryWrapper financialActivityAccountRepositoryWrapper, DatabaseSpecificSQLGenerator sqlGenerator, PaginationHelper paginationHelper) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.glAccountReadPlatformService = glAccountReadPlatformService;
         this.officeReadPlatformService = officeReadPlatformService;
         this.financialActivityAccountRepositoryWrapper = financialActivityAccountRepositoryWrapper;
         this.columnValidator = columnValidator;
-        this.paginationHelper = new PaginationHelper<>(sqlGenerator);
+        this.paginationHelper = paginationHelper;
         this.sqlGenerator = sqlGenerator;
     }
 

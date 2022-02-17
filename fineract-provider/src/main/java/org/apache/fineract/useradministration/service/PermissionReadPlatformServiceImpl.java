@@ -120,9 +120,9 @@ public class PermissionReadPlatformServiceImpl implements PermissionReadPlatform
         }
 
         public String rolePermissionSchema() {
-            return "select p.grouping, p.code, p.entity_name as entityName, p.action_name as actionName, if(isnull(rp.role_id), false, true) as selected "
+            return "select p.grouping, p.code, p.entity_name as entityName, p.action_name as actionName, rp.role_id IS NOT NULL as selected "
                     + " from m_permission p " + " left join m_role_permission rp on rp.permission_id = p.id and rp.role_id = ? "
-                    + " order by p.grouping, coalesce(entity_name, ''), p.code";
+                    + " order by p.grouping, COALESCE(entity_name, ''), p.code";
         }
     }
 

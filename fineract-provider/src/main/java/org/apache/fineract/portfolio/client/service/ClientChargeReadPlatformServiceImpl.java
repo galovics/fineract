@@ -46,19 +46,19 @@ import org.springframework.stereotype.Service;
 @Service
 public class ClientChargeReadPlatformServiceImpl implements ClientChargeReadPlatformService {
 
-    private final PaginationHelper<ClientChargeData> paginationHelper;
+    private final PaginationHelper paginationHelper;
     private final JdbcTemplate jdbcTemplate;
     private final DatabaseSpecificSQLGenerator sqlGenerator;
     private final PlatformSecurityContext context;
     private final ClientChargeMapper clientChargeMapper;
 
     @Autowired
-    public ClientChargeReadPlatformServiceImpl(final PlatformSecurityContext context, final RoutingDataSource dataSource, DatabaseSpecificSQLGenerator sqlGenerator) {
+    public ClientChargeReadPlatformServiceImpl(final PlatformSecurityContext context, final RoutingDataSource dataSource, DatabaseSpecificSQLGenerator sqlGenerator, PaginationHelper paginationHelper) {
         this.context = context;
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.sqlGenerator = sqlGenerator;
         this.clientChargeMapper = new ClientChargeMapper();
-        this.paginationHelper = new PaginationHelper<>(sqlGenerator);
+        this.paginationHelper = paginationHelper;
     }
 
     public static final class ClientChargeMapper implements RowMapper<ClientChargeData> {

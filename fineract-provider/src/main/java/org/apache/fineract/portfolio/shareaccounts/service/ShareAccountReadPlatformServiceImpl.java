@@ -19,6 +19,7 @@
 package org.apache.fineract.portfolio.shareaccounts.service;
 
 import java.math.BigDecimal;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -82,7 +83,7 @@ public class ShareAccountReadPlatformServiceImpl implements ShareAccountReadPlat
     private final PurchasedSharesReadPlatformService purchasedSharesReadPlatformService;
     private final JdbcTemplate jdbcTemplate;
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-    private final PaginationHelper<AccountData> shareAccountDataPaginationHelper;
+    private final PaginationHelper shareAccountDataPaginationHelper;
     private final DatabaseSpecificSQLGenerator sqlGenerator;
 
     @Autowired
@@ -92,7 +93,7 @@ public class ShareAccountReadPlatformServiceImpl implements ShareAccountReadPlat
                                                final SavingsAccountReadPlatformService savingsAccountReadPlatformService,
                                                final ClientReadPlatformService clientReadPlatformService,
                                                final ShareAccountChargeReadPlatformService shareAccountChargeReadPlatformService,
-                                               final PurchasedSharesReadPlatformService purchasedSharesReadPlatformService, DatabaseSpecificSQLGenerator sqlGenerator) {
+                                               final PurchasedSharesReadPlatformService purchasedSharesReadPlatformService, DatabaseSpecificSQLGenerator sqlGenerator, PaginationHelper paginationHelper) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.applicationContext = applicationContext;
         this.chargeReadPlatformService = chargeReadPlatformService;
@@ -101,7 +102,7 @@ public class ShareAccountReadPlatformServiceImpl implements ShareAccountReadPlat
         this.clientReadPlatformService = clientReadPlatformService;
         this.shareAccountChargeReadPlatformService = shareAccountChargeReadPlatformService;
         this.purchasedSharesReadPlatformService = purchasedSharesReadPlatformService;
-        this.shareAccountDataPaginationHelper = new PaginationHelper<>(sqlGenerator);
+        this.shareAccountDataPaginationHelper = paginationHelper;
         this.sqlGenerator = sqlGenerator;
     }
 
@@ -224,17 +225,23 @@ public class ShareAccountReadPlatformServiceImpl implements ShareAccountReadPlat
         params.add(id);
         params.add(ShareAccountStatusType.ACTIVE.getValue());
         if (fetchInActiveAccounts) {
+            String formattedStartDate = formatter.format(startDate);
             sb.append(" and (sa.status_enum = ? or (sa.status_enum = ? ");
-            sb.append(" and sa.closed_date >  ?)) ");
+            sb.append(" and sa.closed_date > '" + formattedStartDate + "')) ");
             params.add(ShareAccountStatusType.CLOSED.getValue());
-            params.add(formatter.format(startDate));
         } else {
             sb.append(" and sa.status_enum = ? ");
         }
         sb.append(" and saps.status_enum = ?");
         params.add(PurchasedSharesStatusType.APPROVED.getValue());
         Object[] whereClauseItems = params.toArray();
-        return this.jdbcTemplate.query(sb.toString(), mapper, whereClauseItems);
+        return this.jdbcTemplate.query(con -> {
+            PreparedStatement preparedStatement = con.prepareStatement(sb.toString(), ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+            for (int i = 0; i < whereClauseItems.length; i++) {
+                preparedStatement.setObject(i + 1, whereClauseItems[i]);
+            }
+            return preparedStatement;
+        }, mapper);
     }
 
     public Collection<ShareAccountChargeData> convertChargesToShareAccountCharges(Collection<ChargeData> productCharges) {

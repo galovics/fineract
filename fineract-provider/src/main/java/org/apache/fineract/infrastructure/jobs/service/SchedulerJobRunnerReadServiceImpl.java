@@ -47,14 +47,14 @@ public class SchedulerJobRunnerReadServiceImpl implements SchedulerJobRunnerRead
     private final ColumnValidator columnValidator;
     private final DatabaseSpecificSQLGenerator sqlGenerator;
 
-    private final PaginationHelper<JobDetailHistoryData> paginationHelper;
+    private final PaginationHelper paginationHelper;
 
     @Autowired
-    public SchedulerJobRunnerReadServiceImpl(final RoutingDataSource dataSource, final ColumnValidator columnValidator, DatabaseSpecificSQLGenerator sqlGenerator) {
+    public SchedulerJobRunnerReadServiceImpl(final RoutingDataSource dataSource, final ColumnValidator columnValidator, DatabaseSpecificSQLGenerator sqlGenerator, PaginationHelper paginationHelper) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.columnValidator = columnValidator;
         this.sqlGenerator = sqlGenerator;
-        this.paginationHelper = new PaginationHelper<>(sqlGenerator);
+        this.paginationHelper = paginationHelper;
     }
 
     @Override

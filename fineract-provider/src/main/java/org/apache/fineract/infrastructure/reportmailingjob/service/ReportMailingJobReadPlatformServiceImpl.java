@@ -51,12 +51,14 @@ public class ReportMailingJobReadPlatformServiceImpl implements ReportMailingJob
     private final JdbcTemplate jdbcTemplate;
     private final ColumnValidator columnValidator;
     private final DatabaseSpecificSQLGenerator sqlGenerator;
+    private final PaginationHelper paginationHelper;
 
     @Autowired
-    public ReportMailingJobReadPlatformServiceImpl(final RoutingDataSource dataSource, final ColumnValidator columnValidator, DatabaseSpecificSQLGenerator sqlGenerator) {
+    public ReportMailingJobReadPlatformServiceImpl(final RoutingDataSource dataSource, final ColumnValidator columnValidator, DatabaseSpecificSQLGenerator sqlGenerator, PaginationHelper paginationHelper) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.columnValidator = columnValidator;
         this.sqlGenerator = sqlGenerator;
+        this.paginationHelper = paginationHelper;
     }
 
     @Override
@@ -64,7 +66,6 @@ public class ReportMailingJobReadPlatformServiceImpl implements ReportMailingJob
         final StringBuilder sqlStringBuilder = new StringBuilder(200);
         final List<Object> queryParameters = new ArrayList<>();
         final ReportMailingJobMapper mapper = new ReportMailingJobMapper();
-        final PaginationHelper<ReportMailingJobData> paginationHelper = new PaginationHelper<>(sqlGenerator);
 
         sqlStringBuilder.append("select " + sqlGenerator.calcFoundRows() + " ");
         sqlStringBuilder.append(mapper.reportMailingJobSchema());

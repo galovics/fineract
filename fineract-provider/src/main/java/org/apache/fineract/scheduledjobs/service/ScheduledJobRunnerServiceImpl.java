@@ -311,11 +311,20 @@ public class ScheduledJobRunnerServiceImpl implements ScheduledJobRunnerService 
                 " or (mpl.account_moves_out_of_npa_only_on_arrears_completion = true" +
                 " and laa.overdue_since_date_derived is null)) sl";
         String wherePart = " where loan.id = sl.id ";
-        resetNPASqlBuilder
-                .append("set is_npa = false")
-                .append(" FROM ")
-                .append(fromPart)
-                .append(wherePart);
+
+        if (databaseTypeResolver.isMySQL()) {
+            resetNPASqlBuilder
+                    .append(", ")
+                    .append(fromPart)
+                    .append(" set loan.is_npa = false")
+                    .append(wherePart);
+        } else {
+            resetNPASqlBuilder
+                    .append("set is_npa = false")
+                    .append(" FROM ")
+                    .append(fromPart)
+                    .append(wherePart);
+        }
         jdbcTemplate.update(resetNPASqlBuilder.toString());
 
         final StringBuilder updateSqlBuilder = new StringBuilder(900);
@@ -330,11 +339,19 @@ public class ScheduledJobRunnerServiceImpl implements ScheduledJobRunnerService 
                 " group by loan.id) as sl ";
         wherePart = " where ml.id=sl.id ";
         updateSqlBuilder.append("UPDATE m_loan as ml ");
-        updateSqlBuilder
-                .append(" SET is_npa = true")
-                .append(" FROM ")
-                .append(fromPart)
-                .append(wherePart);
+        if (databaseTypeResolver.isMySQL()) {
+            updateSqlBuilder
+                    .append(", ")
+                    .append(fromPart)
+                    .append(" SET ml.is_npa = true")
+                    .append(wherePart);
+        } else {
+            updateSqlBuilder
+                    .append(" SET is_npa = true")
+                    .append(" FROM ")
+                    .append(fromPart)
+                    .append(wherePart);
+        }
 
         final int result = jdbcTemplate.update(updateSqlBuilder.toString());
 
@@ -478,7 +495,7 @@ public class ScheduledJobRunnerServiceImpl implements ScheduledJobRunnerService 
             final String formattedDate = new SimpleDateFormat("yyyy-MM-dd").format(tbGap);
             final StringBuilder sqlBuilder = new StringBuilder(600);
             sqlBuilder.append("Insert Into m_trial_balance(office_id, account_id, Amount, entry_date, created_date,closing_balance) ")
-                    .append("Select je.office_id, je.account_id, sum(if(je.type_enum=1, (-1) * je.amount, je.amount)) ")
+                    .append("Select je.office_id, je.account_id, SUM(CASE WHEN je.type_enum=1 THEN (-1) * je.amount ELSE je.amount END) ")
                     .append("as Amount, Date(je.entry_date) as 'Entry_Date', je.transaction_date as 'Created_Date',sum(je.amount) as closing_balance ")
                     .append("from acc_gl_journal_entry je WHERE je.transaction_date = ? ")
                     .append("group by je.account_id, je.office_id, je.transaction_date, Date(je.entry_date)");

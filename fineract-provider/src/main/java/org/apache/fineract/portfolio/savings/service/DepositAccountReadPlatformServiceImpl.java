@@ -109,7 +109,7 @@ public class DepositAccountReadPlatformServiceImpl implements DepositAccountRead
     private final DepositAccountForMaturityMapper depositAccountForMaturityRowMapper = new DepositAccountForMaturityMapper();
     private final PaginationParametersDataValidator paginationParametersDataValidator;
     private final DatabaseSpecificSQLGenerator sqlGenerator;
-    private final PaginationHelper<DepositAccountData> paginationHelper;
+    private final PaginationHelper paginationHelper;
     private final SavingsAccountTransactionsMapper transactionsMapper;
     private final ClientReadPlatformService clientReadPlatformService;
     private final GroupReadPlatformService groupReadPlatformService;
@@ -139,7 +139,7 @@ public class DepositAccountReadPlatformServiceImpl implements DepositAccountRead
                                                  final InterestRateChartReadPlatformService productChartReadPlatformService,
                                                  final SavingsAccountReadPlatformService savingsAccountReadPlatformService,
                                                  final DropdownReadPlatformService dropdownReadPlatformService, final CalendarReadPlatformService calendarReadPlatformService,
-                                                 PaymentTypeReadPlatformService paymentTypeReadPlatformService, DatabaseSpecificSQLGenerator sqlGenerator) {
+                                                 PaymentTypeReadPlatformService paymentTypeReadPlatformService, DatabaseSpecificSQLGenerator sqlGenerator, PaginationHelper paginationHelper) {
         this.context = context;
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.accountChartReadPlatformService = chartReadPlatformService;
@@ -159,7 +159,7 @@ public class DepositAccountReadPlatformServiceImpl implements DepositAccountRead
         this.dropdownReadPlatformService = dropdownReadPlatformService;
         this.calendarReadPlatformService = calendarReadPlatformService;
         this.paymentTypeReadPlatformService = paymentTypeReadPlatformService;
-        this.paginationHelper = new PaginationHelper<>(sqlGenerator);
+        this.paginationHelper = paginationHelper;
     }
 
     @Override

@@ -47,15 +47,15 @@ public class ProvisioningEntriesReadPlatformServiceImpl implements ProvisioningE
     private static final Logger LOG = LoggerFactory.getLogger(ProvisioningEntriesReadPlatformServiceImpl.class);
     private final JdbcTemplate jdbcTemplate;
 
-    private final PaginationHelper<LoanProductProvisioningEntryData> loanProductProvisioningEntryDataPaginationHelper;
-    private final PaginationHelper<ProvisioningEntryData> provisioningEntryDataPaginationHelper;
+    private final PaginationHelper loanProductProvisioningEntryDataPaginationHelper;
+    private final PaginationHelper provisioningEntryDataPaginationHelper;
     private final DatabaseSpecificSQLGenerator sqlGenerator;
 
     @Autowired
-    public ProvisioningEntriesReadPlatformServiceImpl(final RoutingDataSource dataSource, DatabaseSpecificSQLGenerator sqlGenerator) {
+    public ProvisioningEntriesReadPlatformServiceImpl(final RoutingDataSource dataSource, DatabaseSpecificSQLGenerator sqlGenerator, PaginationHelper paginationHelper) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
-        this.loanProductProvisioningEntryDataPaginationHelper = new PaginationHelper<>(sqlGenerator);
-        this.provisioningEntryDataPaginationHelper = new PaginationHelper<>(sqlGenerator);
+        this.loanProductProvisioningEntryDataPaginationHelper = paginationHelper;
+        this.provisioningEntryDataPaginationHelper = paginationHelper;
         this.sqlGenerator = sqlGenerator;
     }
 
@@ -73,7 +73,7 @@ public class ProvisioningEntriesReadPlatformServiceImpl implements ProvisioningE
 
         private LoanProductProvisioningEntryMapper(DatabaseSpecificSQLGenerator sqlGenerator) {
             sqlQuery = new StringBuilder().append(
-                    "select if(loan.loan_type_enum=1, mclient.office_id, mgroup.office_id) as office_id, loan.loan_type_enum, pcd.criteria_id as criteriaid, loan.product_id,loan.currency_code,")
+                    "select (CASE WHEN loan.loan_type_enum=1 THEN mclient.office_id ELSE mgroup.office_id END) as office_id, loan.loan_type_enum, pcd.criteria_id as criteriaid, loan.product_id,loan.currency_code,")
                     .append("GREATEST(" + sqlGenerator.dateDiff("?", "sch.duedate") + ", 0) as numberofdaysoverdue,sch.duedate, pcd.category_id, pcd.provision_percentage,")
                     .append("loan.total_outstanding_derived as outstandingbalance, pcd.liability_account, pcd.expense_account from m_loan_repayment_schedule sch")
                     .append(" LEFT JOIN m_loan loan on sch.loan_id = loan.id")

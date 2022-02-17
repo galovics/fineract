@@ -182,7 +182,7 @@ public class Loan extends AbstractPersistableCustom {
     @Column(name = "loan_type_enum", nullable = false)
     private Integer loanType;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false)
     private LoanProduct loanProduct;
 

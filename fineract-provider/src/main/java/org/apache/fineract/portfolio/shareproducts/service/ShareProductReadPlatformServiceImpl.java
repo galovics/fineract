@@ -63,7 +63,7 @@ public class ShareProductReadPlatformServiceImpl implements ProductReadPlatformS
     private final ShareProductDropdownReadPlatformService shareProductDropdownReadPlatformService;
     private final AccountingDropdownReadPlatformService accountingDropdownReadPlatformService;
     private final ProductToGLAccountMappingReadPlatformService accountMappingReadPlatformService;
-    private final PaginationHelper<ProductData> shareProductDataPaginationHelper;
+    private final PaginationHelper shareProductDataPaginationHelper;
     private final DatabaseSpecificSQLGenerator sqlGenerator;
 
     @Autowired
@@ -71,14 +71,14 @@ public class ShareProductReadPlatformServiceImpl implements ProductReadPlatformS
                                                final CurrencyReadPlatformService currencyReadPlatformService, final ChargeReadPlatformService chargeReadPlatformService,
                                                final ShareProductDropdownReadPlatformService shareProductDropdownReadPlatformService,
                                                final AccountingDropdownReadPlatformService accountingDropdownReadPlatformService,
-                                               final ProductToGLAccountMappingReadPlatformService accountMappingReadPlatformService, DatabaseSpecificSQLGenerator sqlGenerator) {
+                                               final ProductToGLAccountMappingReadPlatformService accountMappingReadPlatformService, DatabaseSpecificSQLGenerator sqlGenerator, PaginationHelper paginationHelper) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.currencyReadPlatformService = currencyReadPlatformService;
         this.chargeReadPlatformService = chargeReadPlatformService;
         this.shareProductDropdownReadPlatformService = shareProductDropdownReadPlatformService;
         this.accountingDropdownReadPlatformService = accountingDropdownReadPlatformService;
         this.accountMappingReadPlatformService = accountMappingReadPlatformService;
-        this.shareProductDataPaginationHelper = new PaginationHelper<>(sqlGenerator);
+        this.shareProductDataPaginationHelper = paginationHelper;
         this.sqlGenerator = sqlGenerator;
     }
 

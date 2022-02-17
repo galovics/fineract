@@ -1564,56 +1564,48 @@
     </changeSet>
     <changeSet author="fineract" id="13">
         <insert tableName="m_creditbureau_configuration">
-            <column name="id" valueNumeric="1"/>
             <column name="configkey" value="Password"/>
             <column name="value" value=""/>
             <column name="organisation_creditbureau_id" valueNumeric="1"/>
             <column name="description" value=""/>
         </insert>
         <insert tableName="m_creditbureau_configuration">
-            <column name="id" valueNumeric="2"/>
             <column name="configkey" value="SubscriptionId"/>
             <column name="value" value=""/>
             <column name="organisation_creditbureau_id" valueNumeric="1"/>
             <column name="description" value=""/>
         </insert>
         <insert tableName="m_creditbureau_configuration">
-            <column name="id" valueNumeric="3"/>
             <column name="configkey" value="SubscriptionKey"/>
             <column name="value" value=""/>
             <column name="organisation_creditbureau_id" valueNumeric="1"/>
             <column name="description" value=""/>
         </insert>
         <insert tableName="m_creditbureau_configuration">
-            <column name="id" valueNumeric="4"/>
             <column name="configkey" value="Username"/>
             <column name="value" value=""/>
             <column name="organisation_creditbureau_id" valueNumeric="1"/>
             <column name="description" value=""/>
         </insert>
         <insert tableName="m_creditbureau_configuration">
-            <column name="id" valueNumeric="5"/>
             <column name="configkey" value="tokenurl"/>
             <column name="value" value=""/>
             <column name="organisation_creditbureau_id" valueNumeric="1"/>
             <column name="description" value=""/>
         </insert>
         <insert tableName="m_creditbureau_configuration">
-            <column name="id" valueNumeric="6"/>
             <column name="configkey" value="searchurl"/>
             <column name="value" value=""/>
             <column name="organisation_creditbureau_id" valueNumeric="1"/>
             <column name="description" value=""/>
         </insert>
         <insert tableName="m_creditbureau_configuration">
-            <column name="id" valueNumeric="7"/>
             <column name="configkey" value="creditReporturl"/>
             <column name="value" value=""/>
             <column name="organisation_creditbureau_id" valueNumeric="1"/>
             <column name="description" value=""/>
         </insert>
         <insert tableName="m_creditbureau_configuration">
-            <column name="id" valueNumeric="8"/>
             <column name="configkey" value="addCreditReporturl"/>
             <column name="value" value=""/>
             <column name="organisation_creditbureau_id" valueNumeric="1"/>

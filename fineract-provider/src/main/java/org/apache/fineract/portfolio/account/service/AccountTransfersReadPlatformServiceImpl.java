@@ -69,13 +69,13 @@ public class AccountTransfersReadPlatformServiceImpl implements AccountTransfers
     private final AccountTransfersMapper accountTransfersMapper;
 
     // pagination
-    private final PaginationHelper<AccountTransferData> paginationHelper;
+    private final PaginationHelper paginationHelper;
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     @Autowired
     public AccountTransfersReadPlatformServiceImpl(final RoutingDataSource dataSource,
                                                    final ClientReadPlatformService clientReadPlatformService, final OfficeReadPlatformService officeReadPlatformService,
-                                                   final PortfolioAccountReadPlatformService portfolioAccountReadPlatformService, final ColumnValidator columnValidator, DatabaseSpecificSQLGenerator sqlGenerator) {
+                                                   final PortfolioAccountReadPlatformService portfolioAccountReadPlatformService, final ColumnValidator columnValidator, DatabaseSpecificSQLGenerator sqlGenerator, PaginationHelper paginationHelper) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.clientReadPlatformService = clientReadPlatformService;
         this.officeReadPlatformService = officeReadPlatformService;
@@ -84,7 +84,7 @@ public class AccountTransfersReadPlatformServiceImpl implements AccountTransfers
         this.sqlGenerator = sqlGenerator;
 
         this.accountTransfersMapper = new AccountTransfersMapper();
-        this.paginationHelper = new PaginationHelper<>(sqlGenerator);
+        this.paginationHelper = paginationHelper;
     }
 
     @Override

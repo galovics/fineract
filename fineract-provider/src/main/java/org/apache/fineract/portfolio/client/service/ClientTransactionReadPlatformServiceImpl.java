@@ -49,14 +49,14 @@ public class ClientTransactionReadPlatformServiceImpl implements ClientTransacti
     private final JdbcTemplate jdbcTemplate;
     private final DatabaseSpecificSQLGenerator sqlGenerator;
     private final ClientTransactionMapper clientTransactionMapper;
-    private final PaginationHelper<ClientTransactionData> paginationHelper;
+    private final PaginationHelper paginationHelper;
 
     @Autowired
-    public ClientTransactionReadPlatformServiceImpl(final RoutingDataSource dataSource, DatabaseSpecificSQLGenerator sqlGenerator) {
+    public ClientTransactionReadPlatformServiceImpl(final RoutingDataSource dataSource, DatabaseSpecificSQLGenerator sqlGenerator, PaginationHelper paginationHelper) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.sqlGenerator = sqlGenerator;
         this.clientTransactionMapper = new ClientTransactionMapper();
-        this.paginationHelper = new PaginationHelper<>(sqlGenerator);
+        this.paginationHelper = paginationHelper;
     }
 
     private static final class ClientTransactionMapper implements RowMapper<ClientTransactionData> {

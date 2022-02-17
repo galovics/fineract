@@ -4100,7 +4100,7 @@
             <column defaultValueComputed="NULL" name="minimum_active_period_frequency_enum" type="SMALLINT"/>
             <column defaultValueComputed="NULL" name="lockin_period_frequency" type="DECIMAL(19, 6)"/>
             <column defaultValueComputed="NULL" name="lockin_period_frequency_enum" type="SMALLINT"/>
-            <column defaultValueNumeric="0" name="allow_dividends_inactive_clients" type="SMALLINT"/>
+            <column defaultValueBoolean="false" name="allow_dividends_inactive_clients" type="boolean"/>
             <column defaultValueComputed="NULL" name="created_date" type="datetime"/>
             <column defaultValueComputed="NULL" name="lastmodifiedby_id" type="BIGINT"/>
             <column defaultValueComputed="NULL" name="lastmodified_date" type="datetime"/>
@@ -4250,7 +4250,7 @@
             <column defaultValueComputed="NULL" name="minimum_active_period_frequency_enum" type="SMALLINT"/>
             <column defaultValueComputed="NULL" name="lockin_period_frequency" type="DECIMAL(19, 6)"/>
             <column defaultValueComputed="NULL" name="lockin_period_frequency_enum" type="SMALLINT"/>
-            <column defaultValueNumeric="0" name="allow_dividends_inactive_clients" type="SMALLINT"/>
+            <column defaultValueBoolean="false" name="allow_dividends_inactive_clients" type="boolean"/>
             <column defaultValueComputed="NULL" name="createdby_id" type="BIGINT"/>
             <column defaultValueComputed="NULL" name="created_date" type="datetime"/>
             <column defaultValueComputed="NULL" name="lastmodifiedby_id" type="BIGINT"/>

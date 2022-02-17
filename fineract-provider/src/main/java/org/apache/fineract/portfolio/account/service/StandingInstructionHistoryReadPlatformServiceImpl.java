@@ -58,15 +58,15 @@ public class StandingInstructionHistoryReadPlatformServiceImpl implements Standi
     private final StandingInstructionHistoryMapper standingInstructionHistoryMapper;
 
     // pagination
-    private final PaginationHelper<StandingInstructionHistoryData> paginationHelper;
+    private final PaginationHelper paginationHelper;
 
     @Autowired
-    public StandingInstructionHistoryReadPlatformServiceImpl(final RoutingDataSource dataSource, final ColumnValidator columnValidator, DatabaseSpecificSQLGenerator sqlGenerator) {
+    public StandingInstructionHistoryReadPlatformServiceImpl(final RoutingDataSource dataSource, final ColumnValidator columnValidator, DatabaseSpecificSQLGenerator sqlGenerator, PaginationHelper paginationHelper) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.sqlGenerator = sqlGenerator;
         this.standingInstructionHistoryMapper = new StandingInstructionHistoryMapper();
         this.columnValidator = columnValidator;
-        this.paginationHelper = new PaginationHelper<>(sqlGenerator);
+        this.paginationHelper = paginationHelper;
     }
 
     @Override

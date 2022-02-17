@@ -124,4 +124,24 @@ public class DatabaseSpecificSQLGenerator {
             throw new IllegalStateException("Database type is not supported for last insert id " + databaseTypeResolver.databaseType());
         }
     }
+
+    public String castChar(String sql) {
+        if (databaseTypeResolver.isMySQL()) {
+            return format("CAST(%s AS CHAR)", sql);
+        } else if (databaseTypeResolver.isPostgreSQL()) {
+            return format("%s::CHAR", sql);
+        } else {
+            throw new IllegalStateException("Database type is not supported for casting to character " + databaseTypeResolver.databaseType());
+        }
+    }
+
+    public String currentSchema() {
+        if (databaseTypeResolver.isMySQL()) {
+            return "SCHEMA()";
+        } else if (databaseTypeResolver.isPostgreSQL()) {
+            return "CURRENT_SCHEMA()";
+        } else {
+            throw new IllegalStateException("Database type is not supported for current schema " + databaseTypeResolver.databaseType());
+        }
+    }
 }

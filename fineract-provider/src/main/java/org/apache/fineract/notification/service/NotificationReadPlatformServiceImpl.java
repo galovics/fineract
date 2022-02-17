@@ -44,7 +44,7 @@ public class NotificationReadPlatformServiceImpl implements NotificationReadPlat
     private final JdbcTemplate jdbcTemplate;
     private final PlatformSecurityContext context;
     private final ColumnValidator columnValidator;
-    private final PaginationHelper<NotificationData> paginationHelper;
+    private final PaginationHelper paginationHelper;
     private final DatabaseSpecificSQLGenerator sqlGenerator;
     private final NotificationDataRow notificationDataRow = new NotificationDataRow();
     private final NotificationMapperRow notificationMapperRow = new NotificationMapperRow();
@@ -52,11 +52,11 @@ public class NotificationReadPlatformServiceImpl implements NotificationReadPlat
 
     @Autowired
     public NotificationReadPlatformServiceImpl(final RoutingDataSource dataSource, final PlatformSecurityContext context,
-                                               final ColumnValidator columnValidator, DatabaseSpecificSQLGenerator sqlGenerator) {
+                                               final ColumnValidator columnValidator, DatabaseSpecificSQLGenerator sqlGenerator, PaginationHelper paginationHelper) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.context = context;
         this.columnValidator = columnValidator;
-        this.paginationHelper = new PaginationHelper<>(sqlGenerator);
+        this.paginationHelper = paginationHelper;
         this.sqlGenerator = sqlGenerator;
     }
 

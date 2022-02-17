@@ -83,13 +83,13 @@ public class StandingInstructionReadPlatformServiceImpl implements StandingInstr
     private final StandingInstructionMapper standingInstructionMapper;
 
     // pagination
-    private final PaginationHelper<StandingInstructionData> paginationHelper;
+    private final PaginationHelper paginationHelper;
 
     @Autowired
     public StandingInstructionReadPlatformServiceImpl(final RoutingDataSource dataSource,
                                                       final ClientReadPlatformService clientReadPlatformService, final OfficeReadPlatformService officeReadPlatformService,
                                                       final PortfolioAccountReadPlatformService portfolioAccountReadPlatformService,
-                                                      final DropdownReadPlatformService dropdownReadPlatformService, final ColumnValidator columnValidator, DatabaseSpecificSQLGenerator sqlGenerator) {
+                                                      final DropdownReadPlatformService dropdownReadPlatformService, final ColumnValidator columnValidator, DatabaseSpecificSQLGenerator sqlGenerator, PaginationHelper paginationHelper) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.clientReadPlatformService = clientReadPlatformService;
         this.officeReadPlatformService = officeReadPlatformService;
@@ -98,7 +98,7 @@ public class StandingInstructionReadPlatformServiceImpl implements StandingInstr
         this.sqlGenerator = sqlGenerator;
         this.standingInstructionMapper = new StandingInstructionMapper();
         this.columnValidator = columnValidator;
-        this.paginationHelper = new PaginationHelper<>(sqlGenerator);
+        this.paginationHelper = paginationHelper;
     }
 
     @Override

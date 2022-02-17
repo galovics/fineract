@@ -61,19 +61,19 @@ public class SmsCampaignReadPlatformServiceImpl implements SmsCampaignReadPlatfo
     private final SmsCampaignDropdownReadPlatformService smsCampaignDropdownReadPlatformService;
     private final SmsCampaignMapper smsCampaignMapper;
     private final CalendarDropdownReadPlatformService calendarDropdownReadPlatformService;
-    private final PaginationHelper<SmsCampaignData> paginationHelper;
+    private final PaginationHelper paginationHelper;
 
     @Autowired
     public SmsCampaignReadPlatformServiceImpl(final RoutingDataSource dataSource,
                                               SmsCampaignDropdownReadPlatformService smsCampaignDropdownReadPlatformService,
-                                              final CalendarDropdownReadPlatformService calendarDropdownReadPlatformService, DatabaseSpecificSQLGenerator sqlGenerator) {
+                                              final CalendarDropdownReadPlatformService calendarDropdownReadPlatformService, DatabaseSpecificSQLGenerator sqlGenerator, PaginationHelper paginationHelper) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.sqlGenerator = sqlGenerator;
         this.businessRuleMapper = new BusinessRuleMapper(sqlGenerator);
         this.smsCampaignDropdownReadPlatformService = smsCampaignDropdownReadPlatformService;
         this.smsCampaignMapper = new SmsCampaignMapper();
         this.calendarDropdownReadPlatformService = calendarDropdownReadPlatformService;
-        this.paginationHelper = new PaginationHelper<>(sqlGenerator);
+        this.paginationHelper = paginationHelper;
     }
 
     @Override

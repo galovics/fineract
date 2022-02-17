@@ -104,7 +104,7 @@ public class SavingsAccountReadPlatformServiceImpl implements SavingsAccountRead
     // private final SavingsAccountAnnualFeeMapper annualFeeMapper;
 
     // pagination
-    private final PaginationHelper<SavingsAccountData> paginationHelper;
+    private final PaginationHelper paginationHelper;
 
     private final EntityDatatableChecksReadService entityDatatableChecksReadService;
     private final ColumnValidator columnValidator;
@@ -115,7 +115,7 @@ public class SavingsAccountReadPlatformServiceImpl implements SavingsAccountRead
                                                  final SavingsProductReadPlatformService savingProductReadPlatformService,
                                                  final StaffReadPlatformService staffReadPlatformService, final SavingsDropdownReadPlatformService dropdownReadPlatformService,
                                                  final ChargeReadPlatformService chargeReadPlatformService,
-                                                 final EntityDatatableChecksReadService entityDatatableChecksReadService, final ColumnValidator columnValidator, DatabaseSpecificSQLGenerator sqlGenerator) {
+                                                 final EntityDatatableChecksReadService entityDatatableChecksReadService, final ColumnValidator columnValidator, DatabaseSpecificSQLGenerator sqlGenerator, PaginationHelper paginationHelper) {
         this.context = context;
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.clientReadPlatformService = clientReadPlatformService;
@@ -131,7 +131,7 @@ public class SavingsAccountReadPlatformServiceImpl implements SavingsAccountRead
         this.chargeReadPlatformService = chargeReadPlatformService;
         this.entityDatatableChecksReadService = entityDatatableChecksReadService;
         this.columnValidator = columnValidator;
-        this.paginationHelper = new PaginationHelper<>(sqlGenerator);
+        this.paginationHelper = paginationHelper;
     }
 
     @Override

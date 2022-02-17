@@ -49,13 +49,13 @@ public class EmailReadPlatformServiceImpl implements EmailReadPlatformService {
     private final JdbcTemplate jdbcTemplate;
     private final DatabaseSpecificSQLGenerator sqlGenerator;
     private final EmailMapper emailRowMapper = new EmailMapper();
-    private final PaginationHelper<EmailData> paginationHelper;
+    private final PaginationHelper paginationHelper;
 
     @Autowired
-    public EmailReadPlatformServiceImpl(final RoutingDataSource dataSource, DatabaseSpecificSQLGenerator sqlGenerator) {
+    public EmailReadPlatformServiceImpl(final RoutingDataSource dataSource, DatabaseSpecificSQLGenerator sqlGenerator, PaginationHelper paginationHelper) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.sqlGenerator = sqlGenerator;
-        this.paginationHelper = new PaginationHelper<>(sqlGenerator);
+        this.paginationHelper = paginationHelper;
     }
 
     private static final class EmailMapper implements RowMapper<EmailData> {

@@ -44,17 +44,17 @@ public class DepositAccountOnHoldTransactionReadPlatformServiceImpl implements D
     private final JdbcTemplate jdbcTemplate;
     private final DatabaseSpecificSQLGenerator sqlGenerator;
     private final ColumnValidator columnValidator;
-    private final PaginationHelper<DepositAccountOnHoldTransactionData> paginationHelper;
+    private final PaginationHelper paginationHelper;
     private final DepositAccountOnHoldTransactionsMapper mapper;
 
     @Autowired
     public DepositAccountOnHoldTransactionReadPlatformServiceImpl(final RoutingDataSource dataSource,
-                                                                  final ColumnValidator columnValidator, DatabaseSpecificSQLGenerator sqlGenerator) {
+                                                                  final ColumnValidator columnValidator, DatabaseSpecificSQLGenerator sqlGenerator, PaginationHelper paginationHelper) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.sqlGenerator = sqlGenerator;
         this.mapper = new DepositAccountOnHoldTransactionsMapper();
         this.columnValidator = columnValidator;
-        this.paginationHelper = new PaginationHelper<>(sqlGenerator);
+        this.paginationHelper = paginationHelper;
     }
 
     @Override

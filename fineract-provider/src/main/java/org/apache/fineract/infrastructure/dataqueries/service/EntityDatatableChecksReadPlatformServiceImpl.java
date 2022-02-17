@@ -60,7 +60,7 @@ public class EntityDatatableChecksReadPlatformServiceImpl implements EntityDatat
     private final ReadWriteNonCoreDataService readWriteNonCoreDataService;
     private final LoanProductReadPlatformService loanProductReadPlatformService;
     private final SavingsProductReadPlatformService savingsProductReadPlatformService;
-    private final PaginationHelper<EntityDataTableChecksData> paginationHelper;
+    private final PaginationHelper paginationHelper;
 
     @Autowired
     public EntityDatatableChecksReadPlatformServiceImpl(final RoutingDataSource dataSource,
@@ -68,7 +68,7 @@ public class EntityDatatableChecksReadPlatformServiceImpl implements EntityDatat
                                                         final SavingsProductReadPlatformService savingsProductReadPlatformService,
                                                         final EntityDatatableChecksRepository entityDatatableChecksRepository,
                                                         final ReadWriteNonCoreDataService readWriteNonCoreDataService,
-                                                        DatabaseSpecificSQLGenerator sqlGenerator) {
+                                                        DatabaseSpecificSQLGenerator sqlGenerator, PaginationHelper paginationHelper) {
 
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.sqlGenerator = sqlGenerator;
@@ -78,7 +78,7 @@ public class EntityDatatableChecksReadPlatformServiceImpl implements EntityDatat
         this.savingsProductReadPlatformService = savingsProductReadPlatformService;
         this.entityDatatableChecksRepository = entityDatatableChecksRepository;
         this.readWriteNonCoreDataService = readWriteNonCoreDataService;
-        this.paginationHelper = new PaginationHelper<>(sqlGenerator);
+        this.paginationHelper = paginationHelper;
     }
 
     @Override

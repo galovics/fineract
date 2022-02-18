@@ -26,6 +26,8 @@ import java.util.List;
 import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
 import org.apache.fineract.infrastructure.core.service.RoutingDataSource;
+import org.apache.fineract.infrastructure.core.service.database.DatabaseSpecificSQLGenerator;
+import org.apache.fineract.infrastructure.core.service.database.DatabaseTypeResolver;
 import org.apache.fineract.infrastructure.dataqueries.data.GenericResultsetData;
 import org.apache.fineract.infrastructure.dataqueries.data.ResultsetColumnHeaderData;
 import org.apache.fineract.infrastructure.dataqueries.data.ResultsetColumnValueData;
@@ -45,11 +47,15 @@ public class GenericDataServiceImpl implements GenericDataService {
 
     private final JdbcTemplate jdbcTemplate;
     private final DataSource dataSource;
+    private final DatabaseSpecificSQLGenerator sqlGenerator;
+    private final DatabaseTypeResolver databaseTypeResolver;
     private static final Logger LOG = LoggerFactory.getLogger(GenericDataServiceImpl.class);
 
     @Autowired
-    public GenericDataServiceImpl(final RoutingDataSource dataSource) {
+    public GenericDataServiceImpl(final RoutingDataSource dataSource, DatabaseSpecificSQLGenerator sqlGenerator, DatabaseTypeResolver databaseTypeResolver) {
         this.dataSource = dataSource;
+        this.sqlGenerator = sqlGenerator;
+        this.databaseTypeResolver = databaseTypeResolver;
         this.jdbcTemplate = new JdbcTemplate(this.dataSource);
 
     }
@@ -205,14 +211,14 @@ public class GenericDataServiceImpl implements GenericDataService {
 
         columnDefinitions.beforeFirst();
         while (columnDefinitions.next()) {
-            final String columnName = columnDefinitions.getString("COLUMN_NAME");
-            final String isNullable = columnDefinitions.getString("IS_NULLABLE");
-            final String isPrimaryKey = columnDefinitions.getString("COLUMN_KEY");
-            final String columnType = columnDefinitions.getString("DATA_TYPE");
-            final Long columnLength = columnDefinitions.getLong("CHARACTER_MAXIMUM_LENGTH");
+            final String columnName = columnDefinitions.getString(1);
+            final String isNullable = columnDefinitions.getString(2);
+            final String isPrimaryKey = columnDefinitions.getString(5);
+            final String columnType = columnDefinitions.getString(3);
+            final Long columnLength = columnDefinitions.getLong(4);
 
-            final boolean columnNullable = "YES".equalsIgnoreCase(isNullable);
-            final boolean columnIsPrimaryKey = "PRI".equalsIgnoreCase(isPrimaryKey);
+            final boolean columnNullable = "YES".equalsIgnoreCase(isNullable) || "TRUE".equalsIgnoreCase(isNullable);
+            final boolean columnIsPrimaryKey = "PRI".equalsIgnoreCase(isPrimaryKey) || "TRUE".equalsIgnoreCase(isPrimaryKey);
 
             List<ResultsetColumnValueData> columnValues = new ArrayList<>();
             String codeName = null;
@@ -296,10 +302,10 @@ public class GenericDataServiceImpl implements GenericDataService {
     }
 
     private SqlRowSet getDatatableMetaData(final String datatable) {
-
-        final String sql = "select COLUMN_NAME, IS_NULLABLE, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH, COLUMN_KEY"
-                + " from INFORMATION_SCHEMA.COLUMNS " + " where TABLE_SCHEMA = schema() and TABLE_NAME = '" + datatable
-                + "'order by ORDINAL_POSITION";
+        // TODO: Move this into DatabaseQueryService
+        String sql = (databaseTypeResolver.isPostgreSQL() ?
+                ("SELECT attname AS COLUMN_NAME, not attnotnull AS IS_NULLABLE, atttypid::regtype  AS DATATYPE, attlen AS CHARACTER_MAXIMUM_LENGTH, attnum = 1 AS COLUMN_KEY FROM pg_attribute WHERE attrelid = '\"" + datatable + "\"'::regclass AND attnum > 0 AND NOT attisdropped ORDER BY attnum") :
+                ("SELECT c.COLUMN_NAME, c.IS_NULLABLE, c.DATA_TYPE, c.CHARACTER_MAXIMUM_LENGTH, c.COLUMN_KEY FROM INFORMATION_SCHEMA.COLUMNS c WHERE TABLE_SCHEMA = schema() AND TABLE_NAME = '" + datatable + "' ORDER BY ORDINAL_POSITION"));
 
         final SqlRowSet columnDefinitions = this.jdbcTemplate.queryForRowSet(sql);
         if (columnDefinitions.next()) {

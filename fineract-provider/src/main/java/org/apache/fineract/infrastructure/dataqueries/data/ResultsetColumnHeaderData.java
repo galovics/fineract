@@ -27,7 +27,6 @@ import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityEx
  * Immutable data object representing a resultset column.
  */
 public final class ResultsetColumnHeaderData implements Serializable {
-
     private final String columnName;
     private String columnType;
     private final Long columnLength;
@@ -166,7 +165,10 @@ public final class ResultsetColumnHeaderData implements Serializable {
     }
 
     private boolean isDateTime() {
-        return "datetime".equalsIgnoreCase(this.columnType);
+        return "datetime".equalsIgnoreCase(this.columnType) ||
+                "timestamp without time zone".equalsIgnoreCase(this.columnType) ||
+                "timestamptz".equalsIgnoreCase(this.columnType) ||
+                "timestamp with time zone".equalsIgnoreCase(this.columnType);
     }
 
     public boolean isString() {
@@ -174,7 +176,7 @@ public final class ResultsetColumnHeaderData implements Serializable {
     }
 
     private boolean isChar() {
-        return "char".equalsIgnoreCase(this.columnType);
+        return "char".equalsIgnoreCase(this.columnType) || "CHARACTER VARYING".equalsIgnoreCase(this.columnType);
     }
 
     private boolean isVarchar() {
@@ -190,7 +192,8 @@ public final class ResultsetColumnHeaderData implements Serializable {
     }
 
     private boolean isInteger() {
-        return "integer".equalsIgnoreCase(this.columnType);
+        return "integer".equalsIgnoreCase(this.columnType) ||
+                "int4".equalsIgnoreCase(this.columnType);
     }
 
     private boolean isSmallInt() {
@@ -206,7 +209,8 @@ public final class ResultsetColumnHeaderData implements Serializable {
     }
 
     private boolean isBigInt() {
-        return "bigint".equalsIgnoreCase(this.columnType);
+        return "bigint".equalsIgnoreCase(this.columnType) ||
+                "int8".equalsIgnoreCase(this.columnType);
     }
 
     private boolean isLong() {

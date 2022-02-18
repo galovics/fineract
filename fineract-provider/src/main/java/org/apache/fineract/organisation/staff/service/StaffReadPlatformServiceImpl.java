@@ -242,9 +242,9 @@ public class StaffReadPlatformServiceImpl implements StaffReadPlatformService {
         // (Both active and Inactive) employees
         if (status != null) {
             if (status.equalsIgnoreCase("active")) {
-                extraCriteria.addCriteria(" s.is_active =", 1);
+                extraCriteria.addCriteria(" s.is_active =", true);
             } else if (status.equalsIgnoreCase("inActive")) {
-                extraCriteria.addCriteria(" s.is_active =", 0);
+                extraCriteria.addCriteria(" s.is_active =", false);
             } else {
                 if (!status.equalsIgnoreCase("all")) {
                     throw new UnrecognizedQueryParamException("status", status, new Object[] { "all", "active", "inactive" });

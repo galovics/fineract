@@ -207,6 +207,7 @@ public class LoanScheduleCalculationPlatformServiceImpl implements LoanScheduleC
     }
 
     @Override
+    @Transactional(readOnly = true)
     public LoanScheduleData generateLoanScheduleForVariableInstallmentRequest(Long loanId, final String json) {
         final Loan loan = this.loanAssembler.assembleFrom(loanId);
         this.loanScheduleAssembler.assempleVariableScheduleFrom(loan, json);

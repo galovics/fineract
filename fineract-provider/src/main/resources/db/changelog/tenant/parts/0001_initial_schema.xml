@@ -8850,12 +8850,6 @@
                                  referencedColumnNames="id" referencedTableName="scheduled_email_campaign"
                                  validate="true"/>
     </changeSet>
-    <changeSet author="fineract" id="886">
-        <addForeignKeyConstraint baseColumnNames="parent_id" baseTableName="stretchy_parameter"
-                                 constraintName="fk_stretchy_parameter_001" deferrable="false" initiallyDeferred="false"
-                                 onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id"
-                                 referencedTableName="stretchy_parameter" validate="true"/>
-    </changeSet>
     <changeSet author="fineract" id="887">
         <addForeignKeyConstraint baseColumnNames="template_id" baseTableName="m_hook" constraintName="fk_template_id"
                                  deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT"

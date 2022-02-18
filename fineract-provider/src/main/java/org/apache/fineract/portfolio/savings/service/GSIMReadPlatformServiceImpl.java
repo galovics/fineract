@@ -210,7 +210,7 @@ public class GSIMReadPlatformServiceImpl implements GSIMReadPlatformService {
         final GSIMMapper rm = new GSIMMapper();
         final String sql = "select " + rm.schema() + " where gsim.group_id=?";
 
-        return this.jdbcTemplate.query(sql, rm, new Object[] { groupId });
+        return this.jdbcTemplate.query(sql, rm, new Object[] { Long.parseLong(groupId) });
     }
 
     @Override

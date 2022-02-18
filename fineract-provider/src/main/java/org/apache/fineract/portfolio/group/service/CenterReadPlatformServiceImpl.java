@@ -507,7 +507,7 @@ public class CenterReadPlatformServiceImpl implements CenterReadPlatformService 
 
     @Override
     public Collection<GroupGeneralData> retrieveAssociatedGroups(final Long centerId) {
-        final String sql = "select " + this.groupDataMapper.schema() + " where g.parent_id = ? ";
+        final String sql = "select " + this.groupDataMapper.schema() + " where g.parent_id = ? order by g.id";
         return this.jdbcTemplate.query(sql, this.groupDataMapper, new Object[] { centerId });
     }
 

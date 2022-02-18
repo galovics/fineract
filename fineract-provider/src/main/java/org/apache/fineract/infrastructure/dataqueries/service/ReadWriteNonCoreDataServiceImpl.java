@@ -277,7 +277,7 @@ public class ReadWriteNonCoreDataServiceImpl implements ReadWriteNonCoreDataServ
             // add the registered table to the config if it is a ppi
             if (this.isSurveyCategory(category)) {
                 this.namedParameterJdbcTemplate
-                        .update("insert into c_configuration (name, value, enabled ) values( :dataTableName , '0','0')", paramMap);
+                        .update("insert into c_configuration (name, value, enabled ) values( :dataTableName , '0',false)", paramMap);
             }
 
         } catch (final JpaSystemException | DataIntegrityViolationException dve) {
@@ -1360,22 +1360,22 @@ public class ReadWriteNonCoreDataServiceImpl implements ReadWriteNonCoreDataServ
          * means it relates to an m_client that is in a group (still an m_client account)
          */
         if (appTable.equalsIgnoreCase("m_loan")) {
-            scopedSQL = "select  distinctrow x.* from ("
+            scopedSQL = "select distinct x.* from ("
                     + " (select o.id as officeId, l.group_id as groupId, l.client_id as clientId, null as savingsId, l.id as loanId, null as entityId from m_loan l "
                     + " join m_client c on c.id = l.client_id " + " join m_office o on o.id = c.office_id and o.hierarchy like '"
                     + currentUser.getOffice().getHierarchy() + "%'" + " where l.id = " + appTableId + ")" + " union all "
                     + " (select o.id as officeId, l.group_id as groupId, l.client_id as clientId, null as savingsId, l.id as loanId, null as entityId from m_loan l "
                     + " join m_group g on g.id = l.group_id " + " join m_office o on o.id = g.office_id and o.hierarchy like '"
-                    + currentUser.getOffice().getHierarchy() + "%'" + " where l.id = " + appTableId + ")" + " ) x";
+                    + currentUser.getOffice().getHierarchy() + "%'" + " where l.id = " + appTableId + ")" + " ) as x";
         }
         if (appTable.equalsIgnoreCase("m_savings_account")) {
-            scopedSQL = "select  distinctrow x.* from ("
+            scopedSQL = "select distinct x.* from ("
                     + " (select o.id as officeId, s.group_id as groupId, s.client_id as clientId, s.id as savingsId, null as loanId, null as entityId from m_savings_account s "
                     + " join m_client c on c.id = s.client_id " + " join m_office o on o.id = c.office_id and o.hierarchy like '"
                     + currentUser.getOffice().getHierarchy() + "%'" + " where s.id = " + appTableId + ")" + " union all "
                     + " (select o.id as officeId, s.group_id as groupId, s.client_id as clientId, s.id as savingsId, null as loanId, null as entityId from m_savings_account s "
                     + " join m_group g on g.id = s.group_id " + " join m_office o on o.id = g.office_id and o.hierarchy like '"
-                    + currentUser.getOffice().getHierarchy() + "%'" + " where s.id = " + appTableId + ")" + " ) x";
+                    + currentUser.getOffice().getHierarchy() + "%'" + " where s.id = " + appTableId + ")" + " ) as x";
         }
         if (appTable.equalsIgnoreCase("m_client")) {
             scopedSQL = "select o.id as officeId, null as groupId, c.id as clientId, null as savingsId, null as loanId, null as entityId from m_client c "
@@ -1815,7 +1815,7 @@ public class ReadWriteNonCoreDataServiceImpl implements ReadWriteNonCoreDataServ
                 }
                 paramValue = tmpBoolean.toString();
             } else if (columnHeader.isString()) {
-                if (paramValue.length() > columnHeader.getColumnLength()) {
+                if (columnHeader.getColumnLength() > 0 && paramValue.length() > columnHeader.getColumnLength()) {
                     final ApiParameterError error = ApiParameterError.parameterError(
                             "validation.msg.datatable.entry.column.exceeds.maxlength",
                             "The column `" + columnHeader.getColumnName() + "` exceeds its defined max-length ",

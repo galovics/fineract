@@ -19,6 +19,7 @@
 package org.apache.fineract.infrastructure.core.service.migration;
 
 import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
+
 import com.zaxxer.hikari.HikariDataSource;
 import java.util.List;
 import java.util.function.Function;
@@ -55,9 +56,9 @@ public class TenantDatabaseUpgradeService implements InitializingBean {
 
     @Autowired
     public TenantDatabaseUpgradeService(final TenantDetailsService detailsService,
-                                        @Qualifier("hikariTenantDataSource") final HikariDataSource tenantDataSource, final FineractProperties fineractProperties,
-                                        TenantDatabaseStateVerifier databaseStateVerifier, ExtendedSpringLiquibaseFactory liquibaseFactory,
-                                        TenantDataSourceFactory tenantDataSourceFactory) {
+            @Qualifier("hikariTenantDataSource") final HikariDataSource tenantDataSource, final FineractProperties fineractProperties,
+            TenantDatabaseStateVerifier databaseStateVerifier, ExtendedSpringLiquibaseFactory liquibaseFactory,
+            TenantDataSourceFactory tenantDataSourceFactory) {
         this.tenantDetailsService = detailsService;
         this.tenantDataSource = tenantDataSource;
         this.fineractProperties = fineractProperties;
@@ -128,7 +129,7 @@ public class TenantDatabaseUpgradeService implements InitializingBean {
     }
 
     private void applyInitialLiquibase(DataSource dataSource, ExtendedSpringLiquibase liquibase, String id,
-                                       Function<DataSource, Boolean> isUpgradableFn) throws LiquibaseException {
+            Function<DataSource, Boolean> isUpgradableFn) throws LiquibaseException {
         if (databaseStateVerifier.isFlywayPresent(dataSource)) {
             if (isUpgradableFn.apply(dataSource)) {
                 LOG.warn("Cannot proceed with upgrading database {}", id);

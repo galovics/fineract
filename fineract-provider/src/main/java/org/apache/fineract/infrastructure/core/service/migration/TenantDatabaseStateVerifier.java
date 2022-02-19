@@ -33,9 +33,9 @@ public class TenantDatabaseStateVerifier {
     private static final int TENANT_STORE_LATEST_FLYWAY_VERSION = 6;
     private static final String TENANT_STORE_LATEST_FLYWAY_SCRIPT_NAME = "V6__add_unique_tenant_identifier.sql";
     private static final int TENANT_STORE_LATEST_FLYWAY_SCRIPT_CHECKSUM = -43094919;
-    private static final int TENANT_LATEST_FLYWAY_VERSION = 390;
-    private static final String TENANT_LATEST_FLYWAY_SCRIPT_NAME = "V390__clientdoc-code.sql";
-    private static final int TENANT_LATEST_FLYWAY_SCRIPT_CHECKSUM = 364931011;
+    private static final int TENANT_LATEST_FLYWAY_VERSION = 392;
+    private static final String TENANT_LATEST_FLYWAY_SCRIPT_NAME = "V392__interest_recovery_conf_for_rescedule.sql";
+    private static final int TENANT_LATEST_FLYWAY_SCRIPT_CHECKSUM = 1102395052;
 
     private final LiquibaseProperties liquibaseProperties;
     private final DatabaseIndependentQueryService dbQueryService;

@@ -16,13 +16,34 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.fineract.infrastructure.core.service.database;
+package org.apache.fineract.portfolio.tax.data;
 
-import javax.sql.DataSource;
+import java.math.BigDecimal;
+import org.apache.fineract.organisation.monetary.domain.Money;
 
-public interface DatabaseQueryService {
+public class TaxDetailsData {
 
-    boolean isSupported(DataSource dataSource);
+    private TaxComponentData taxComponent;
 
-    boolean isTablePresent(DataSource dataSource, String tableName);
+    private BigDecimal amount;
+
+    protected TaxDetailsData() {}
+
+    public TaxDetailsData(final TaxComponentData taxComponent, final BigDecimal amount) {
+        this.taxComponent = taxComponent;
+        this.amount = amount;
+    }
+
+    public TaxComponentData getTaxComponent() {
+        return this.taxComponent;
+    }
+
+    public BigDecimal getAmount() {
+        return this.amount;
+    }
+
+    public void updateAmount(Money amount) {
+        this.amount = amount.getAmount();
+    }
+
 }

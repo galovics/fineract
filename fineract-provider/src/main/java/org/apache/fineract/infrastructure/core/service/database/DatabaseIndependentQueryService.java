@@ -19,6 +19,7 @@
 package org.apache.fineract.infrastructure.core.service.database;
 
 import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
+
 import java.sql.SQLException;
 import java.util.Collection;
 import javax.sql.DataSource;
@@ -27,6 +28,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class DatabaseIndependentQueryService implements DatabaseQueryService {
+
     private final Collection<DatabaseQueryService> queryServices;
 
     @Autowired

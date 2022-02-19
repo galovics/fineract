@@ -20,6 +20,7 @@ package org.apache.fineract.infrastructure.core.service.database;
 
 import static java.lang.String.format;
 import static org.apache.fineract.infrastructure.core.domain.FineractPlatformTenantConnection.toProtocol;
+
 import java.util.Set;
 import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -28,6 +29,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class MySQLQueryService implements DatabaseQueryService {
+
     private final Set<String> supportedProtocols = Set.of("jdbc:mariadb", "jdbc:mysql");
 
     @Override

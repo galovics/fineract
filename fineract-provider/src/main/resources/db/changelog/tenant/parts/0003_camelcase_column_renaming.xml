@@ -33,5 +33,6 @@
         <renameColumn tableName="m_creditreport" oldColumnName="nationalId" newColumnName="national_id"/>
         <renameColumn tableName="m_creditreport" oldColumnName="creditReports" newColumnName="credit_reports"/>
         <renameColumn tableName="m_organisation_creditbureau" oldColumnName="isActive" newColumnName="is_active"/>
+        <renameColumn tableName="scheduled_email_campaign" oldColumnName="businessRule_id" newColumnName="business_rule_id"/>
     </changeSet>
 </databaseChangeLog>

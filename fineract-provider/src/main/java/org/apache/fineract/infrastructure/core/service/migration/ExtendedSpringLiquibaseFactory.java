@@ -34,9 +34,8 @@ public class ExtendedSpringLiquibaseFactory {
     private final DatabaseAwareMigrationContextProvider databaseAwareMigrationContextProvider;
 
     @Autowired
-    public ExtendedSpringLiquibaseFactory(LiquibaseProperties liquibaseProperties, ResourceLoader resourceLoader,
-                                          Environment environment,
-                                          DatabaseAwareMigrationContextProvider databaseAwareMigrationContextProvider) {
+    public ExtendedSpringLiquibaseFactory(LiquibaseProperties liquibaseProperties, ResourceLoader resourceLoader, Environment environment,
+            DatabaseAwareMigrationContextProvider databaseAwareMigrationContextProvider) {
         this.liquibaseProperties = liquibaseProperties;
         this.resourceLoader = resourceLoader;
         this.environment = environment;

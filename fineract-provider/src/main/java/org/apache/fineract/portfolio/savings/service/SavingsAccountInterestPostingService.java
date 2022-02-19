@@ -16,13 +16,16 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.fineract.infrastructure.core.service.database;
+package org.apache.fineract.portfolio.savings.service;
 
-import javax.sql.DataSource;
+import java.math.MathContext;
+import java.time.LocalDate;
+import org.apache.fineract.portfolio.savings.data.SavingsAccountData;
 
-public interface DatabaseQueryService {
+public interface SavingsAccountInterestPostingService {
 
-    boolean isSupported(DataSource dataSource);
+    SavingsAccountData postInterest(MathContext mc, LocalDate interestPostingUpToDate, boolean isInterestTransfer,
+            boolean isSavingsInterestPostingAtCurrentPeriodEnd, Integer financialYearBeginningMonth, LocalDate postInterestOnDate,
+            boolean backdatedTxnsAllowedTill, SavingsAccountData savingsAccountData);
 
-    boolean isTablePresent(DataSource dataSource, String tableName);
 }

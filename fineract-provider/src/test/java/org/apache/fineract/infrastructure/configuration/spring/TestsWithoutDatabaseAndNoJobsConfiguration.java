@@ -19,6 +19,7 @@
 package org.apache.fineract.infrastructure.configuration.spring;
 
 import static org.mockito.Mockito.mock;
+
 import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.core.boot.AbstractApplicationConfiguration;
 import org.apache.fineract.infrastructure.core.config.FineractProperties;

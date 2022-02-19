@@ -3870,6 +3870,9 @@
             <column defaultValueBoolean="false" name="is_manual" type="boolean"/>
             <column defaultValueComputed="NULL" name="release_id_of_hold_amount" type="BIGINT"/>
             <column defaultValueComputed="NULL" name="is_loan_disbursement" type="boolean"/>
+            <column name="ref_no" type="VARCHAR(128)">
+                <constraints unique="true"/>
+            </column>
         </createTable>
     </changeSet>
     <changeSet author="fineract" id="157">
@@ -4909,7 +4912,7 @@
             <column name="campaign_type" type="INT">
                 <constraints nullable="false"/>
             </column>
-            <column name="business_rule_id" type="INT">
+            <column name="businessRule_id" type="INT">
                 <constraints nullable="false"/>
             </column>
             <column name="param_value" type="TEXT"/>
@@ -8849,6 +8852,12 @@
                                  initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT"
                                  referencedColumnNames="id" referencedTableName="scheduled_email_campaign"
                                  validate="true"/>
+    </changeSet>
+    <changeSet author="fineract" id="886">
+        <addForeignKeyConstraint baseColumnNames="parent_id" baseTableName="stretchy_parameter"
+                                 constraintName="fk_stretchy_parameter_001" deferrable="false" initiallyDeferred="false"
+                                 onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id"
+                                 referencedTableName="stretchy_parameter" validate="true"/>
     </changeSet>
     <changeSet author="fineract" id="887">
         <addForeignKeyConstraint baseColumnNames="template_id" baseTableName="m_hook" constraintName="fk_template_id"

@@ -19,6 +19,7 @@
 package org.apache.fineract.infrastructure.core.service.database;
 
 import static org.apache.fineract.infrastructure.core.domain.FineractPlatformTenantConnection.toProtocol;
+
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.sql.DataSource;
@@ -28,6 +29,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class DatabaseTypeResolver {
+
     private final Map<String, DatabaseType> protocolMapping = Map.of(
             "jdbc:mariadb", DatabaseType.MYSQL,
             "jdbc:mysql", DatabaseType.MYSQL,

@@ -8834,13 +8834,13 @@
                                  initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT"
                                  referencedColumnNames="id" referencedTableName="m_staff" validate="true"/>
     </changeSet>
-    <changeSet author="fineract" id="883">
+    <changeSet author="fineract" id="883-mysql" context="mysql">
         <addForeignKeyConstraint baseColumnNames="report_id" baseTableName="stretchy_report_parameter"
                                  constraintName="fk_report_parameter_001" deferrable="false" initiallyDeferred="false"
                                  onDelete="CASCADE" onUpdate="NO ACTION" referencedColumnNames="id"
                                  referencedTableName="stretchy_report" validate="true"/>
     </changeSet>
-    <changeSet author="fineract" id="884">
+    <changeSet author="fineract" id="884-mysql" context="mysql">
         <addForeignKeyConstraint baseColumnNames="parameter_id" baseTableName="stretchy_report_parameter"
                                  constraintName="fk_report_parameter_002" deferrable="false" initiallyDeferred="false"
                                  onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id"

@@ -409,7 +409,7 @@
             <column name="value" valueNumeric="0"/>
             <column name="date_value"/>
             <column name="string_value"/>
-            <column name="enabled" valueNumeric="0"/>
+            <column name="enabled" valueBoolean="false"/>
             <column name="is_trap_door" valueBoolean="false"/>
             <column name="description"
                     value="If enabled, when interest amount is greater than EMI, the additional interest is recovered first before principal"/>
@@ -420,7 +420,7 @@
             <column name="value" valueNumeric="0"/>
             <column name="date_value"/>
             <column name="string_value"/>
-            <column name="enabled" valueNumeric="0"/>
+            <column name="enabled" valueBoolean="false"/>
             <column name="is_trap_door" valueBoolean="false"/>
             <column name="description"
                     value="If enabled, it donot consider principal of an unpaid installment for calculating interest of next installment. this is for testing back-dated loan schedule"/>

@@ -273,10 +273,10 @@ public class SavingsAccountReadPlatformServiceImpl implements SavingsAccountRead
                 + "join (select a.id from m_savings_account a where a.id > ? and a.status_enum = ? limit ?) b on b.id = sa.id ";
         if (backdatedTxnsAllowedTill) {
             sql = sql
-                    + "where if (sa.interest_posted_till_date is not null, tr.transaction_date >= sa.interest_posted_till_date, tr.transaction_date >= sa.activatedon_date) ";
+                    + "where (CASE WHEN sa.interest_posted_till_date is not null THEN tr.transaction_date >= sa.interest_posted_till_date ELSE tr.transaction_date >= sa.activatedon_date END) ";
         }
 
-        sql = sql + "and apm.product_type=2 and sa.interest_posted_till_date<" + java.sql.Date.valueOf(currentDate);
+        sql = sql + "and apm.product_type=2 and sa.interest_posted_till_date < '" + java.sql.Date.valueOf(currentDate) + "'";
         sql = sql + " order by sa.id, tr.transaction_date, tr.created_date, tr.id";
 
         List<SavingsAccountData> savingsAccountDataList = this.jdbcTemplate.query(sql, this.savingAccountMapperForInterestPosting,
@@ -300,20 +300,12 @@ public class SavingsAccountReadPlatformServiceImpl implements SavingsAccountRead
             sqlBuilder.append("sa.status_enum as statusEnum, ");
             sqlBuilder.append("sa.sub_status_enum as subStatusEnum, ");
             sqlBuilder.append("sa.submittedon_date as submittedOnDate,");
-
             sqlBuilder.append("sa.rejectedon_date as rejectedOnDate,");
-
             sqlBuilder.append("sa.withdrawnon_date as withdrawnOnDate,");
-
             sqlBuilder.append("sa.approvedon_date as approvedOnDate,");
-
             sqlBuilder.append("sa.activatedon_date as activatedOnDate,");
-
             sqlBuilder.append("sa.closedon_date as closedOnDate,");
-
-            sqlBuilder.append(
-                    "sa.currency_code as currencyCode, sa.currency_digits as currencyDigits, sa.currency_multiplesof as inMultiplesOf, ");
-
+            sqlBuilder.append("sa.currency_code as currencyCode, sa.currency_digits as currencyDigits, sa.currency_multiplesof as inMultiplesOf, ");
             sqlBuilder.append("sa.nominal_annual_interest_rate as nominalAnnualInterestRate, ");
             sqlBuilder.append("sa.interest_compounding_period_enum as interestCompoundingPeriodType, ");
             sqlBuilder.append("sa.interest_posting_period_enum as interestPostingPeriodType, ");
@@ -347,9 +339,9 @@ public class SavingsAccountReadPlatformServiceImpl implements SavingsAccountRead
             sqlBuilder.append("sa.total_savings_amount_on_hold as onHoldAmount, ");
             sqlBuilder.append("sa.interest_posted_till_date as interestPostedTillDate, ");
             sqlBuilder.append("tg.id as taxGroupId, ");
-            sqlBuilder.append("(select IFNULL(max(sat.transaction_date),sa.activatedon_date) ");
+            sqlBuilder.append("(select COALESCE(max(sat.transaction_date),sa.activatedon_date) ");
             sqlBuilder.append("from m_savings_account_transaction as sat ");
-            sqlBuilder.append("where sat.is_reversed = 0 ");
+            sqlBuilder.append("where sat.is_reversed = false ");
             sqlBuilder.append("and sat.transaction_type_enum in (1,2) ");
             sqlBuilder.append("and sat.savings_account_id = sa.id) as lastActiveTransactionDate, ");
             sqlBuilder.append("sp.id as productId, ");
@@ -368,12 +360,10 @@ public class SavingsAccountReadPlatformServiceImpl implements SavingsAccountRead
             sqlBuilder.append("pd.receipt_number as receiptNumber, pd.bank_number as bankNumber,pd.routing_code as routingCode, ");
             sqlBuilder.append("pt.value as paymentTypeName, ");
             sqlBuilder.append("msacpb.amount as paidByAmount, msacpb.id as chargesPaidById, ");
-            sqlBuilder.append(
-                    "msac.id as chargeId, msac.amount as chargeAmount, msac.charge_time_enum as chargeTimeType, msac.is_penalty as isPenaltyCharge, ");
+            sqlBuilder.append("msac.id as chargeId, msac.amount as chargeAmount, msac.charge_time_enum as chargeTimeType, msac.is_penalty as isPenaltyCharge, ");
             sqlBuilder.append("txd.id as taxDetailsId, txd.amount as taxAmount, ");
             sqlBuilder.append("apm.gl_account_id as glAccountIdForInterestOnSavings, apm1.gl_account_id as glAccountIdForSavingsControl, ");
-            sqlBuilder.append(
-                    "mtc.id as taxComponentId, mtc.debit_account_id as debitAccountId, mtc.credit_account_id as creditAccountId, mtc.percentage as taxPercentage ");
+            sqlBuilder.append("mtc.id as taxComponentId, mtc.debit_account_id as debitAccountId, mtc.credit_account_id as creditAccountId, mtc.percentage as taxPercentage ");
             sqlBuilder.append("from m_savings_account sa ");
             sqlBuilder.append("join m_savings_product sp ON sa.product_id = sp.id ");
             sqlBuilder.append("join m_currency curr on curr.code = sa.currency_code ");

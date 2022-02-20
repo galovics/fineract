@@ -52,7 +52,8 @@ public class EmailReadPlatformServiceImpl implements EmailReadPlatformService {
     private final PaginationHelper paginationHelper;
 
     @Autowired
-    public EmailReadPlatformServiceImpl(final RoutingDataSource dataSource, DatabaseSpecificSQLGenerator sqlGenerator, PaginationHelper paginationHelper) {
+    public EmailReadPlatformServiceImpl(final RoutingDataSource dataSource, DatabaseSpecificSQLGenerator sqlGenerator,
+            PaginationHelper paginationHelper) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.sqlGenerator = sqlGenerator;
         this.paginationHelper = paginationHelper;

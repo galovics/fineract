@@ -65,8 +65,9 @@ public class SmsCampaignReadPlatformServiceImpl implements SmsCampaignReadPlatfo
 
     @Autowired
     public SmsCampaignReadPlatformServiceImpl(final RoutingDataSource dataSource,
-                                              SmsCampaignDropdownReadPlatformService smsCampaignDropdownReadPlatformService,
-                                              final CalendarDropdownReadPlatformService calendarDropdownReadPlatformService, DatabaseSpecificSQLGenerator sqlGenerator, PaginationHelper paginationHelper) {
+            SmsCampaignDropdownReadPlatformService smsCampaignDropdownReadPlatformService,
+            final CalendarDropdownReadPlatformService calendarDropdownReadPlatformService, DatabaseSpecificSQLGenerator sqlGenerator,
+            PaginationHelper paginationHelper) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.sqlGenerator = sqlGenerator;
         this.businessRuleMapper = new BusinessRuleMapper(sqlGenerator);
@@ -102,8 +103,7 @@ public class SmsCampaignReadPlatformServiceImpl implements SmsCampaignReadPlatfo
                 sqlBuilder.append(sqlGenerator.limit(searchParameters.getLimit()));
             }
         }
-        return this.paginationHelper.fetchPage(jdbcTemplate, sqlBuilder.toString(), new Object[] { visible },
-                this.smsCampaignMapper);
+        return this.paginationHelper.fetchPage(jdbcTemplate, sqlBuilder.toString(), new Object[] { visible }, this.smsCampaignMapper);
     }
 
     @Override

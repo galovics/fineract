@@ -52,7 +52,8 @@ public class GenericDataServiceImpl implements GenericDataService {
     private static final Logger LOG = LoggerFactory.getLogger(GenericDataServiceImpl.class);
 
     @Autowired
-    public GenericDataServiceImpl(final RoutingDataSource dataSource, DatabaseSpecificSQLGenerator sqlGenerator, DatabaseTypeResolver databaseTypeResolver) {
+    public GenericDataServiceImpl(final RoutingDataSource dataSource, DatabaseSpecificSQLGenerator sqlGenerator,
+            DatabaseTypeResolver databaseTypeResolver) {
         this.dataSource = dataSource;
         this.sqlGenerator = sqlGenerator;
         this.databaseTypeResolver = databaseTypeResolver;
@@ -303,9 +304,11 @@ public class GenericDataServiceImpl implements GenericDataService {
 
     private SqlRowSet getDatatableMetaData(final String datatable) {
         // TODO: Move this into DatabaseQueryService
-        String sql = (databaseTypeResolver.isPostgreSQL() ?
-                ("SELECT attname AS COLUMN_NAME, not attnotnull AS IS_NULLABLE, atttypid::regtype  AS DATATYPE, attlen AS CHARACTER_MAXIMUM_LENGTH, attnum = 1 AS COLUMN_KEY FROM pg_attribute WHERE attrelid = '\"" + datatable + "\"'::regclass AND attnum > 0 AND NOT attisdropped ORDER BY attnum") :
-                ("SELECT c.COLUMN_NAME, c.IS_NULLABLE, c.DATA_TYPE, c.CHARACTER_MAXIMUM_LENGTH, c.COLUMN_KEY FROM INFORMATION_SCHEMA.COLUMNS c WHERE TABLE_SCHEMA = schema() AND TABLE_NAME = '" + datatable + "' ORDER BY ORDINAL_POSITION"));
+        String sql = (databaseTypeResolver.isPostgreSQL()
+                ? ("SELECT attname AS COLUMN_NAME, not attnotnull AS IS_NULLABLE, atttypid::regtype  AS DATATYPE, attlen AS CHARACTER_MAXIMUM_LENGTH, attnum = 1 AS COLUMN_KEY FROM pg_attribute WHERE attrelid = '\""
+                        + datatable + "\"'::regclass AND attnum > 0 AND NOT attisdropped ORDER BY attnum")
+                : ("SELECT c.COLUMN_NAME, c.IS_NULLABLE, c.DATA_TYPE, c.CHARACTER_MAXIMUM_LENGTH, c.COLUMN_KEY FROM INFORMATION_SCHEMA.COLUMNS c WHERE TABLE_SCHEMA = schema() AND TABLE_NAME = '"
+                        + datatable + "' ORDER BY ORDINAL_POSITION"));
 
         final SqlRowSet columnDefinitions = this.jdbcTemplate.queryForRowSet(sql);
         if (columnDefinitions.next()) {

@@ -128,7 +128,8 @@ public class SavingsAccountReadPlatformServiceImpl implements SavingsAccountRead
             final StaffReadPlatformService staffReadPlatformService, final SavingsDropdownReadPlatformService dropdownReadPlatformService,
             final ChargeReadPlatformService chargeReadPlatformService,
             final EntityDatatableChecksReadService entityDatatableChecksReadService, final ColumnValidator columnValidator,
-            final SavingsAccountAssembler savingAccountAssembler, PaginationHelper paginationHelper, DatabaseSpecificSQLGenerator sqlGenerator) {
+            final SavingsAccountAssembler savingAccountAssembler, PaginationHelper paginationHelper,
+            DatabaseSpecificSQLGenerator sqlGenerator) {
         this.context = context;
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.clientReadPlatformService = clientReadPlatformService;
@@ -235,8 +236,7 @@ public class SavingsAccountReadPlatformServiceImpl implements SavingsAccountRead
             }
         }
         final Object[] finalObjectArray = Arrays.copyOf(objectArray, arrayPos);
-        return this.paginationHelper.fetchPage(this.jdbcTemplate, sqlBuilder.toString(), finalObjectArray,
-                this.savingAccountMapper);
+        return this.paginationHelper.fetchPage(this.jdbcTemplate, sqlBuilder.toString(), finalObjectArray, this.savingAccountMapper);
     }
 
     @Override
@@ -305,7 +305,8 @@ public class SavingsAccountReadPlatformServiceImpl implements SavingsAccountRead
             sqlBuilder.append("sa.approvedon_date as approvedOnDate,");
             sqlBuilder.append("sa.activatedon_date as activatedOnDate,");
             sqlBuilder.append("sa.closedon_date as closedOnDate,");
-            sqlBuilder.append("sa.currency_code as currencyCode, sa.currency_digits as currencyDigits, sa.currency_multiplesof as inMultiplesOf, ");
+            sqlBuilder.append(
+                    "sa.currency_code as currencyCode, sa.currency_digits as currencyDigits, sa.currency_multiplesof as inMultiplesOf, ");
             sqlBuilder.append("sa.nominal_annual_interest_rate as nominalAnnualInterestRate, ");
             sqlBuilder.append("sa.interest_compounding_period_enum as interestCompoundingPeriodType, ");
             sqlBuilder.append("sa.interest_posting_period_enum as interestPostingPeriodType, ");
@@ -360,10 +361,12 @@ public class SavingsAccountReadPlatformServiceImpl implements SavingsAccountRead
             sqlBuilder.append("pd.receipt_number as receiptNumber, pd.bank_number as bankNumber,pd.routing_code as routingCode, ");
             sqlBuilder.append("pt.value as paymentTypeName, ");
             sqlBuilder.append("msacpb.amount as paidByAmount, msacpb.id as chargesPaidById, ");
-            sqlBuilder.append("msac.id as chargeId, msac.amount as chargeAmount, msac.charge_time_enum as chargeTimeType, msac.is_penalty as isPenaltyCharge, ");
+            sqlBuilder.append(
+                    "msac.id as chargeId, msac.amount as chargeAmount, msac.charge_time_enum as chargeTimeType, msac.is_penalty as isPenaltyCharge, ");
             sqlBuilder.append("txd.id as taxDetailsId, txd.amount as taxAmount, ");
             sqlBuilder.append("apm.gl_account_id as glAccountIdForInterestOnSavings, apm1.gl_account_id as glAccountIdForSavingsControl, ");
-            sqlBuilder.append("mtc.id as taxComponentId, mtc.debit_account_id as debitAccountId, mtc.credit_account_id as creditAccountId, mtc.percentage as taxPercentage ");
+            sqlBuilder.append(
+                    "mtc.id as taxComponentId, mtc.debit_account_id as debitAccountId, mtc.credit_account_id as creditAccountId, mtc.percentage as taxPercentage ");
             sqlBuilder.append("from m_savings_account sa ");
             sqlBuilder.append("join m_savings_product sp ON sa.product_id = sp.id ");
             sqlBuilder.append("join m_currency curr on curr.code = sa.currency_code ");
@@ -1659,10 +1662,11 @@ public class SavingsAccountReadPlatformServiceImpl implements SavingsAccountRead
         sql.append(" inner join m_savings_product as sp on (sa.product_id = sp.id and sp.is_dormancy_tracking_active = true) ");
         sql.append(" where sa.status_enum = 300 ");
         sql.append(" and sa.sub_status_enum = 0 ");
-        String compareDate = "(select COALESCE(max(sat.transaction_date), sa.activatedon_date) " +
-                "from m_savings_account_transaction as sat where sat.is_reversed = false" +
-                " and sat.transaction_type_enum in (1,2) and sat.savings_account_id = sa.id)";
-        sql.append(" and ").append(sqlGenerator.dateDiff("'" + formattedTenantLocalDate + "'", compareDate)).append(" >= sp.days_to_inactive ");
+        String compareDate = "(select COALESCE(max(sat.transaction_date), sa.activatedon_date) "
+                + "from m_savings_account_transaction as sat where sat.is_reversed = false"
+                + " and sat.transaction_type_enum in (1,2) and sat.savings_account_id = sa.id)";
+        sql.append(" and ").append(sqlGenerator.dateDiff("'" + formattedTenantLocalDate + "'", compareDate))
+                .append(" >= sp.days_to_inactive ");
 
         try {
             ret = this.jdbcTemplate.queryForList(sql.toString(), Long.class);
@@ -1684,7 +1688,9 @@ public class SavingsAccountReadPlatformServiceImpl implements SavingsAccountRead
         sql.append(" inner join m_savings_product as sp on (sa.product_id = sp.id and sp.is_dormancy_tracking_active = true) ");
         sql.append(" where sa.status_enum = 300 ");
         sql.append(" and sa.sub_status_enum = 100 ");
-        sql.append(" and " + sqlGenerator.dateDiff("'" + currentDate + "'", "(select COALESCE(max(sat.transaction_date),sa.activatedon_date) from m_savings_account_transaction as sat where sat.is_reversed = false and sat.transaction_type_enum in (1,2) and sat.savings_account_id = sa.id)") + " ");
+        sql.append(" and " + sqlGenerator.dateDiff("'" + currentDate + "'",
+                "(select COALESCE(max(sat.transaction_date),sa.activatedon_date) from m_savings_account_transaction as sat where sat.is_reversed = false and sat.transaction_type_enum in (1,2) and sat.savings_account_id = sa.id)")
+                + " ");
         sql.append(" >= sp.days_to_dormancy ");
 
         try {
@@ -1706,7 +1712,9 @@ public class SavingsAccountReadPlatformServiceImpl implements SavingsAccountRead
         sql.append(" inner join m_savings_product as sp on (sa.product_id = sp.id and sp.is_dormancy_tracking_active = true) ");
         sql.append(" where sa.status_enum = 300 ");
         sql.append(" and sa.sub_status_enum = 200 ");
-        sql.append(" and " + sqlGenerator.dateDiff("?", "(select COALESCE(max(sat.transaction_date),sa.activatedon_date) from m_savings_account_transaction as sat where sat.is_reversed = false and sat.transaction_type_enum in (1,2) and sat.savings_account_id = sa.id)") + " ");
+        sql.append(" and " + sqlGenerator.dateDiff("?",
+                "(select COALESCE(max(sat.transaction_date),sa.activatedon_date) from m_savings_account_transaction as sat where sat.is_reversed = false and sat.transaction_type_enum in (1,2) and sat.savings_account_id = sa.id)")
+                + " ");
         sql.append(" >= sp.days_to_escheat ");
 
         try {

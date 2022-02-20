@@ -88,12 +88,13 @@ public class ShareAccountReadPlatformServiceImpl implements ShareAccountReadPlat
 
     @Autowired
     public ShareAccountReadPlatformServiceImpl(final RoutingDataSource dataSource, final ApplicationContext applicationContext,
-                                               final ChargeReadPlatformService chargeReadPlatformService,
-                                               final ShareProductDropdownReadPlatformService shareProductDropdownReadPlatformService,
-                                               final SavingsAccountReadPlatformService savingsAccountReadPlatformService,
-                                               final ClientReadPlatformService clientReadPlatformService,
-                                               final ShareAccountChargeReadPlatformService shareAccountChargeReadPlatformService,
-                                               final PurchasedSharesReadPlatformService purchasedSharesReadPlatformService, DatabaseSpecificSQLGenerator sqlGenerator, PaginationHelper paginationHelper) {
+            final ChargeReadPlatformService chargeReadPlatformService,
+            final ShareProductDropdownReadPlatformService shareProductDropdownReadPlatformService,
+            final SavingsAccountReadPlatformService savingsAccountReadPlatformService,
+            final ClientReadPlatformService clientReadPlatformService,
+            final ShareAccountChargeReadPlatformService shareAccountChargeReadPlatformService,
+            final PurchasedSharesReadPlatformService purchasedSharesReadPlatformService, DatabaseSpecificSQLGenerator sqlGenerator,
+            PaginationHelper paginationHelper) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.applicationContext = applicationContext;
         this.chargeReadPlatformService = chargeReadPlatformService;
@@ -204,8 +205,7 @@ public class ShareAccountReadPlatformServiceImpl implements ShareAccountReadPlat
         }
 
         Object[] whereClauseItemsitems = new Object[] { ShareAccountStatusType.ACTIVE.getValue() };
-        return this.shareAccountDataPaginationHelper.fetchPage(this.jdbcTemplate, sqlBuilder.toString(),
-                whereClauseItemsitems, mapper);
+        return this.shareAccountDataPaginationHelper.fetchPage(this.jdbcTemplate, sqlBuilder.toString(), whereClauseItemsitems, mapper);
     }
 
     @Override
@@ -236,7 +236,8 @@ public class ShareAccountReadPlatformServiceImpl implements ShareAccountReadPlat
         params.add(PurchasedSharesStatusType.APPROVED.getValue());
         Object[] whereClauseItems = params.toArray();
         return this.jdbcTemplate.query(con -> {
-            PreparedStatement preparedStatement = con.prepareStatement(sb.toString(), ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+            PreparedStatement preparedStatement = con.prepareStatement(sb.toString(), ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
             for (int i = 0; i < whereClauseItems.length; i++) {
                 preparedStatement.setObject(i + 1, whereClauseItems[i]);
             }

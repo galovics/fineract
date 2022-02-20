@@ -102,11 +102,11 @@ public class CenterReadPlatformServiceImpl implements CenterReadPlatformService 
 
     @Autowired
     public CenterReadPlatformServiceImpl(final PlatformSecurityContext context, final RoutingDataSource dataSource,
-                                         final ClientReadPlatformService clientReadPlatformService, final OfficeReadPlatformService officeReadPlatformService,
-                                         final StaffReadPlatformService staffReadPlatformService, final CodeValueReadPlatformService codeValueReadPlatformService,
-                                         final PaginationParametersDataValidator paginationParametersDataValidator,
-                                         final ConfigurationDomainService configurationDomainService, final CalendarReadPlatformService calendarReadPlatformService,
-                                         final ColumnValidator columnValidator, DatabaseSpecificSQLGenerator sqlGenerator, PaginationHelper paginationHelper) {
+            final ClientReadPlatformService clientReadPlatformService, final OfficeReadPlatformService officeReadPlatformService,
+            final StaffReadPlatformService staffReadPlatformService, final CodeValueReadPlatformService codeValueReadPlatformService,
+            final PaginationParametersDataValidator paginationParametersDataValidator,
+            final ConfigurationDomainService configurationDomainService, final CalendarReadPlatformService calendarReadPlatformService,
+            final ColumnValidator columnValidator, DatabaseSpecificSQLGenerator sqlGenerator, PaginationHelper paginationHelper) {
         this.context = context;
         this.clientReadPlatformService = clientReadPlatformService;
         this.jdbcTemplate = new JdbcTemplate(dataSource);
@@ -352,7 +352,6 @@ public class CenterReadPlatformServiceImpl implements CenterReadPlatformService 
 
         }
 
-
         if (searchParameters.isLimited()) {
             sqlBuilder.append(" ");
             if (searchParameters.isOffset()) {
@@ -362,8 +361,7 @@ public class CenterReadPlatformServiceImpl implements CenterReadPlatformService 
             }
         }
 
-        return this.paginationHelper.fetchPage(this.jdbcTemplate, sqlBuilder.toString(), extraCriteria.getArguments(),
-                this.centerMapper);
+        return this.paginationHelper.fetchPage(this.jdbcTemplate, sqlBuilder.toString(), extraCriteria.getArguments(), this.centerMapper);
     }
 
     @Override
@@ -387,7 +385,6 @@ public class CenterReadPlatformServiceImpl implements CenterReadPlatformService 
                 this.columnValidator.validateSqlInjection(sqlBuilder.toString(), searchParameters.getOrderBy(),
                         searchParameters.getSortOrder());
             }
-
 
             if (searchParameters.isLimited()) {
                 sqlBuilder.append(" ");

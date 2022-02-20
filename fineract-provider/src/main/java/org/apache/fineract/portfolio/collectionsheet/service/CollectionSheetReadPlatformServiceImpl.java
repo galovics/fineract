@@ -101,14 +101,14 @@ public class CollectionSheetReadPlatformServiceImpl implements CollectionSheetRe
 
     @Autowired
     public CollectionSheetReadPlatformServiceImpl(final PlatformSecurityContext context, final RoutingDataSource dataSource,
-                                                  final CenterReadPlatformService centerReadPlatformService, final GroupReadPlatformService groupReadPlatformService,
-                                                  final CollectionSheetGenerateCommandFromApiJsonDeserializer collectionSheetGenerateCommandFromApiJsonDeserializer,
-                                                  final CalendarRepositoryWrapper calendarRepositoryWrapper,
-                                                  final AttendanceDropdownReadPlatformService attendanceDropdownReadPlatformService,
-                                                  final CodeValueReadPlatformService codeValueReadPlatformService,
-                                                  final PaymentTypeReadPlatformService paymentTypeReadPlatformService,
-                                                  final CalendarReadPlatformService calendarReadPlatformService, final ConfigurationDomainService configurationDomainService,
-                                                  final CalendarInstanceRepository calendarInstanceRepository, DatabaseSpecificSQLGenerator sqlGenerator) {
+            final CenterReadPlatformService centerReadPlatformService, final GroupReadPlatformService groupReadPlatformService,
+            final CollectionSheetGenerateCommandFromApiJsonDeserializer collectionSheetGenerateCommandFromApiJsonDeserializer,
+            final CalendarRepositoryWrapper calendarRepositoryWrapper,
+            final AttendanceDropdownReadPlatformService attendanceDropdownReadPlatformService,
+            final CodeValueReadPlatformService codeValueReadPlatformService,
+            final PaymentTypeReadPlatformService paymentTypeReadPlatformService,
+            final CalendarReadPlatformService calendarReadPlatformService, final ConfigurationDomainService configurationDomainService,
+            final CalendarInstanceRepository calendarInstanceRepository, DatabaseSpecificSQLGenerator sqlGenerator) {
         this.context = context;
         this.centerReadPlatformService = centerReadPlatformService;
         this.namedParameterjdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
@@ -233,7 +233,9 @@ public class CollectionSheetReadPlatformServiceImpl implements CollectionSheetRe
                     .append("gl.level_name As levelName, ").append("cl.id As clientId, ").append("ln.id As loanId, ")
                     .append("ln.account_no As accountId, ").append("ln.loan_status_id As accountStatusId, ")
                     .append("pl.short_name As productShortName, ").append("ln.product_id As productId, ")
-                    .append("ln.currency_code as currencyCode, ln.currency_digits as currencyDigits, ln.currency_multiplesof as inMultiplesOf, rc." + sqlGenerator.escape("name") + " as currencyName, rc.display_symbol as currencyDisplaySymbol, rc.internationalized_name_code as currencyNameCode, ")
+                    .append("ln.currency_code as currencyCode, ln.currency_digits as currencyDigits, ln.currency_multiplesof as inMultiplesOf, rc."
+                            + sqlGenerator.escape("name")
+                            + " as currencyName, rc.display_symbol as currencyDisplaySymbol, rc.internationalized_name_code as currencyNameCode, ")
                     .append("(CASE WHEN ln.loan_status_id = 200  THEN  ln.principal_amount  ELSE  null END) As disbursementAmount, ")
                     .append("sum(COALESCE((CASE WHEN ln.loan_status_id = 300 THEN ls.principal_amount ELSE  0.0 END), 0.0) - COALESCE((CASE WHEN ln.loan_status_id = 300 THEN  ls.principal_completed_derived ELSE  0.0 END), 0.0)) As principalDue, ")
                     .append("ln.principal_repaid_derived As principalPaid, ")
@@ -729,15 +731,16 @@ public class CollectionSheetReadPlatformServiceImpl implements CollectionSheetRe
 
         private final String sql;
 
-        IndividualCollectionSheetFaltDataMapper(final boolean checkForOfficeId, final boolean checkforStaffId, DatabaseSpecificSQLGenerator sqlGenerator) {
+        IndividualCollectionSheetFaltDataMapper(final boolean checkForOfficeId, final boolean checkforStaffId,
+                DatabaseSpecificSQLGenerator sqlGenerator) {
             StringBuilder sb = new StringBuilder();
             sb.append("SELECT loandata.*, sum(lc.amount_outstanding_derived) as chargesDue ");
             sb.append("from (SELECT cl.display_name As clientName, ");
             sb.append("cl.id As clientId, ln.id As loanId, ln.account_no As accountId, ln.loan_status_id As accountStatusId,");
             sb.append(" pl.short_name As productShortName, ln.product_id As productId, ");
             sb.append("ln.currency_code as currencyCode, ln.currency_digits as currencyDigits, ln.currency_multiplesof as inMultiplesOf, ");
-            sb.append(
-                    "rc." + sqlGenerator.escape("name") + " as currencyName, rc.display_symbol as currencyDisplaySymbol, rc.internationalized_name_code as currencyNameCode, ");
+            sb.append("rc." + sqlGenerator.escape("name")
+                    + " as currencyName, rc.display_symbol as currencyDisplaySymbol, rc.internationalized_name_code as currencyNameCode, ");
             sb.append("(CASE WHEN ln.loan_status_id = 200 THEN ln.principal_amount ELSE null END) As disbursementAmount, ");
             sb.append(
                     "sum(COALESCE((CASE WHEN ln.loan_status_id = 300 THEN ls.principal_amount ELSE 0.0 END), 0.0) - COALESCE((CASE WHEN ln.loan_status_id = 300 THEN ls.principal_completed_derived ELSE 0.0 END), 0.0)) As principalDue, ");
@@ -819,7 +822,8 @@ public class CollectionSheetReadPlatformServiceImpl implements CollectionSheetRe
 
         private final String sql;
 
-        IndividualMandatorySavingsCollectionsheetExtractor(final boolean checkForOfficeId, final boolean checkforStaffId, DatabaseSpecificSQLGenerator sqlGenerator) {
+        IndividualMandatorySavingsCollectionsheetExtractor(final boolean checkForOfficeId, final boolean checkforStaffId,
+                DatabaseSpecificSQLGenerator sqlGenerator) {
 
             final StringBuilder sb = new StringBuilder(400);
             sb.append(
@@ -827,8 +831,8 @@ public class CollectionSheetReadPlatformServiceImpl implements CollectionSheetRe
             sb.append("sa.id As savingsId, sa.account_no As accountId, sa.status_enum As accountStatusId, ");
             sb.append("sp.short_name As productShortName, sp.id As productId, ");
             sb.append("sa.currency_code as currencyCode, sa.currency_digits as currencyDigits, sa.currency_multiplesof as inMultiplesOf, ");
-            sb.append(
-                    "rc." + sqlGenerator.escape("name") + " as currencyName, rc.display_symbol as currencyDisplaySymbol, rc.internationalized_name_code as currencyNameCode, ");
+            sb.append("rc." + sqlGenerator.escape("name")
+                    + " as currencyName, rc.display_symbol as currencyDisplaySymbol, rc.internationalized_name_code as currencyNameCode, ");
             sb.append("SUM(COALESCE(mss.deposit_amount,0) - coalesce(mss.deposit_amount_completed_derived,0)) as dueAmount ");
             sb.append("FROM m_savings_account sa ");
             sb.append("JOIN m_client cl ON cl.id = sa.client_id ");

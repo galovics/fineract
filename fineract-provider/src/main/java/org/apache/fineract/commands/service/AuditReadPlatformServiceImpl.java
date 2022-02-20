@@ -97,13 +97,13 @@ public class AuditReadPlatformServiceImpl implements AuditReadPlatformService {
 
     @Autowired
     public AuditReadPlatformServiceImpl(final PlatformSecurityContext context, final RoutingDataSource dataSource,
-                                        final FromJsonHelper fromApiJsonHelper, final AppUserReadPlatformService appUserReadPlatformService,
-                                        final OfficeReadPlatformService officeReadPlatformService, final ClientReadPlatformService clientReadPlatformService,
-                                        final LoanProductReadPlatformService loanProductReadPlatformService, final StaffReadPlatformService staffReadPlatformService,
-                                        final PaginationParametersDataValidator paginationParametersDataValidator,
-                                        final SavingsProductReadPlatformService savingsProductReadPlatformService,
-                                        final DepositProductReadPlatformService depositProductReadPlatformService,
-                                        final ColumnValidator columnValidator, DatabaseSpecificSQLGenerator sqlGenerator, PaginationHelper paginationHelper) {
+            final FromJsonHelper fromApiJsonHelper, final AppUserReadPlatformService appUserReadPlatformService,
+            final OfficeReadPlatformService officeReadPlatformService, final ClientReadPlatformService clientReadPlatformService,
+            final LoanProductReadPlatformService loanProductReadPlatformService, final StaffReadPlatformService staffReadPlatformService,
+            final PaginationParametersDataValidator paginationParametersDataValidator,
+            final SavingsProductReadPlatformService savingsProductReadPlatformService,
+            final DepositProductReadPlatformService depositProductReadPlatformService, final ColumnValidator columnValidator,
+            DatabaseSpecificSQLGenerator sqlGenerator, PaginationHelper paginationHelper) {
         this.context = context;
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.fromApiJsonHelper = fromApiJsonHelper;

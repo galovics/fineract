@@ -74,8 +74,9 @@ public class AccountTransfersReadPlatformServiceImpl implements AccountTransfers
 
     @Autowired
     public AccountTransfersReadPlatformServiceImpl(final RoutingDataSource dataSource,
-                                                   final ClientReadPlatformService clientReadPlatformService, final OfficeReadPlatformService officeReadPlatformService,
-                                                   final PortfolioAccountReadPlatformService portfolioAccountReadPlatformService, final ColumnValidator columnValidator, DatabaseSpecificSQLGenerator sqlGenerator, PaginationHelper paginationHelper) {
+            final ClientReadPlatformService clientReadPlatformService, final OfficeReadPlatformService officeReadPlatformService,
+            final PortfolioAccountReadPlatformService portfolioAccountReadPlatformService, final ColumnValidator columnValidator,
+            DatabaseSpecificSQLGenerator sqlGenerator, PaginationHelper paginationHelper) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.clientReadPlatformService = clientReadPlatformService;
         this.officeReadPlatformService = officeReadPlatformService;
@@ -243,8 +244,7 @@ public class AccountTransfersReadPlatformServiceImpl implements AccountTransfers
             }
         }
 
-        return this.paginationHelper.fetchPage(this.jdbcTemplate, sqlBuilder.toString(), finalObjectArray,
-                this.accountTransfersMapper);
+        return this.paginationHelper.fetchPage(this.jdbcTemplate, sqlBuilder.toString(), finalObjectArray, this.accountTransfersMapper);
     }
 
     @Override
@@ -440,8 +440,7 @@ public class AccountTransfersReadPlatformServiceImpl implements AccountTransfers
         }
 
         final Object[] finalObjectArray = { id };
-        return this.paginationHelper.fetchPage(this.jdbcTemplate, sqlBuilder.toString(), finalObjectArray,
-                this.accountTransfersMapper);
+        return this.paginationHelper.fetchPage(this.jdbcTemplate, sqlBuilder.toString(), finalObjectArray, this.accountTransfersMapper);
     }
 
     @Override

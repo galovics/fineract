@@ -30,11 +30,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class DatabaseTypeResolver {
 
-    private final Map<String, DatabaseType> protocolMapping = Map.of(
-            "jdbc:mariadb", DatabaseType.MYSQL,
-            "jdbc:mysql", DatabaseType.MYSQL,
-            "jdbc:postgresql", DatabaseType.POSTGRESQL
-    );
+    private final Map<String, DatabaseType> protocolMapping = Map.of("jdbc:mariadb", DatabaseType.MYSQL, "jdbc:mysql", DatabaseType.MYSQL,
+            "jdbc:postgresql", DatabaseType.POSTGRESQL);
 
     private final Map<DataSource, DatabaseType> dataSourceCache = new ConcurrentHashMap<>();
 

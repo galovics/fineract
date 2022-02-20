@@ -27,10 +27,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class DatabaseAwareMigrationContextProvider {
-    private final Map<DatabaseType, String> contextMapping = Map.of(
-            DatabaseType.MYSQL, "mysql",
-            DatabaseType.POSTGRESQL, "postgresql"
-    );
+
+    private final Map<DatabaseType, String> contextMapping = Map.of(DatabaseType.MYSQL, "mysql", DatabaseType.POSTGRESQL, "postgresql");
 
     private final DatabaseTypeResolver databaseTypeResolver;
 

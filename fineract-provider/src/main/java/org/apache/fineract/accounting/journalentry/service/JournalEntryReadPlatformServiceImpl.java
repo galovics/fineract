@@ -83,9 +83,10 @@ public class JournalEntryReadPlatformServiceImpl implements JournalEntryReadPlat
 
     @Autowired
     public JournalEntryReadPlatformServiceImpl(final RoutingDataSource dataSource,
-                                               final GLAccountReadPlatformService glAccountReadPlatformService, final ColumnValidator columnValidator,
-                                               final OfficeReadPlatformService officeReadPlatformService,
-                                               final FinancialActivityAccountRepositoryWrapper financialActivityAccountRepositoryWrapper, DatabaseSpecificSQLGenerator sqlGenerator, PaginationHelper paginationHelper) {
+            final GLAccountReadPlatformService glAccountReadPlatformService, final ColumnValidator columnValidator,
+            final OfficeReadPlatformService officeReadPlatformService,
+            final FinancialActivityAccountRepositoryWrapper financialActivityAccountRepositoryWrapper,
+            DatabaseSpecificSQLGenerator sqlGenerator, PaginationHelper paginationHelper) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.glAccountReadPlatformService = glAccountReadPlatformService;
         this.officeReadPlatformService = officeReadPlatformService;

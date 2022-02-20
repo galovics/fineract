@@ -50,7 +50,8 @@ public class ShareAccountDividendReadPlatformServiceImpl implements ShareAccount
     private final DatabaseSpecificSQLGenerator sqlGenerator;
 
     @Autowired
-    public ShareAccountDividendReadPlatformServiceImpl(final RoutingDataSource dataSource, final ColumnValidator columnValidator, DatabaseSpecificSQLGenerator sqlGenerator, PaginationHelper paginationHelper) {
+    public ShareAccountDividendReadPlatformServiceImpl(final RoutingDataSource dataSource, final ColumnValidator columnValidator,
+            DatabaseSpecificSQLGenerator sqlGenerator, PaginationHelper paginationHelper) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.columnValidator = columnValidator;
         this.paginationHelper = paginationHelper;
@@ -95,7 +96,6 @@ public class ShareAccountDividendReadPlatformServiceImpl implements ShareAccount
             }
         }
 
-
         if (searchParameters.isLimited()) {
             sqlBuilder.append(" ");
             if (searchParameters.isOffset()) {
@@ -106,8 +106,7 @@ public class ShareAccountDividendReadPlatformServiceImpl implements ShareAccount
         }
 
         Object[] paramsObj = params.toArray();
-        return this.paginationHelper.fetchPage(this.jdbcTemplate, sqlBuilder.toString(), paramsObj,
-                shareAccountDividendMapper);
+        return this.paginationHelper.fetchPage(this.jdbcTemplate, sqlBuilder.toString(), paramsObj, shareAccountDividendMapper);
     }
 
     private static final class ShareAccountDividendMapper implements RowMapper<ShareAccountDividendData> {

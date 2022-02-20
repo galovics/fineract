@@ -68,10 +68,11 @@ public class ShareProductReadPlatformServiceImpl implements ProductReadPlatformS
 
     @Autowired
     public ShareProductReadPlatformServiceImpl(final RoutingDataSource dataSource,
-                                               final CurrencyReadPlatformService currencyReadPlatformService, final ChargeReadPlatformService chargeReadPlatformService,
-                                               final ShareProductDropdownReadPlatformService shareProductDropdownReadPlatformService,
-                                               final AccountingDropdownReadPlatformService accountingDropdownReadPlatformService,
-                                               final ProductToGLAccountMappingReadPlatformService accountMappingReadPlatformService, DatabaseSpecificSQLGenerator sqlGenerator, PaginationHelper paginationHelper) {
+            final CurrencyReadPlatformService currencyReadPlatformService, final ChargeReadPlatformService chargeReadPlatformService,
+            final ShareProductDropdownReadPlatformService shareProductDropdownReadPlatformService,
+            final AccountingDropdownReadPlatformService accountingDropdownReadPlatformService,
+            final ProductToGLAccountMappingReadPlatformService accountMappingReadPlatformService, DatabaseSpecificSQLGenerator sqlGenerator,
+            PaginationHelper paginationHelper) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.currencyReadPlatformService = currencyReadPlatformService;
         this.chargeReadPlatformService = chargeReadPlatformService;
@@ -98,8 +99,7 @@ public class ShareProductReadPlatformServiceImpl implements ProductReadPlatformS
         }
 
         Object[] whereClauseItemsitems = new Object[] {};
-        return this.shareProductDataPaginationHelper.fetchPage(this.jdbcTemplate, sqlBuilder.toString(),
-                whereClauseItemsitems, mapper);
+        return this.shareProductDataPaginationHelper.fetchPage(this.jdbcTemplate, sqlBuilder.toString(), whereClauseItemsitems, mapper);
     }
 
     @Override

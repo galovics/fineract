@@ -48,8 +48,8 @@ public class DepositAccountOnHoldTransactionReadPlatformServiceImpl implements D
     private final DepositAccountOnHoldTransactionsMapper mapper;
 
     @Autowired
-    public DepositAccountOnHoldTransactionReadPlatformServiceImpl(final RoutingDataSource dataSource,
-                                                                  final ColumnValidator columnValidator, DatabaseSpecificSQLGenerator sqlGenerator, PaginationHelper paginationHelper) {
+    public DepositAccountOnHoldTransactionReadPlatformServiceImpl(final RoutingDataSource dataSource, final ColumnValidator columnValidator,
+            DatabaseSpecificSQLGenerator sqlGenerator, PaginationHelper paginationHelper) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.sqlGenerator = sqlGenerator;
         this.mapper = new DepositAccountOnHoldTransactionsMapper();
@@ -81,7 +81,6 @@ public class DepositAccountOnHoldTransactionReadPlatformServiceImpl implements D
                 this.columnValidator.validateSqlInjection(sqlBuilder.toString(), searchParameters.getSortOrder());
             }
         }
-
 
         if (searchParameters.isLimited()) {
             sqlBuilder.append(" ");

@@ -42,7 +42,8 @@ public class PermissionReadPlatformServiceImpl implements PermissionReadPlatform
     private final PlatformSecurityContext context;
 
     @Autowired
-    public PermissionReadPlatformServiceImpl(final PlatformSecurityContext context, final RoutingDataSource dataSource, DatabaseSpecificSQLGenerator sqlGenerator) {
+    public PermissionReadPlatformServiceImpl(final PlatformSecurityContext context, final RoutingDataSource dataSource,
+            DatabaseSpecificSQLGenerator sqlGenerator) {
         this.context = context;
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.sqlGenerator = sqlGenerator;
@@ -115,7 +116,8 @@ public class PermissionReadPlatformServiceImpl implements PermissionReadPlatform
              */
 
             return "select p.grouping, p.code, p.entity_name as entityName, p.action_name as actionName, p.can_maker_checker as selected"
-                    + " from m_permission p " + " where " + sqlGenerator.escape("grouping") + " != 'special' and code not like 'READ_%' and code not like '%\\_CHECKER'"
+                    + " from m_permission p " + " where " + sqlGenerator.escape("grouping")
+                    + " != 'special' and code not like 'READ_%' and code not like '%\\_CHECKER'"
                     + " order by p.grouping, coalesce(entity_name, ''), p.code";
         }
 

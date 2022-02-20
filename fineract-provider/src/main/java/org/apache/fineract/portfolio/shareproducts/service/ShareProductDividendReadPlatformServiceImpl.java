@@ -51,7 +51,8 @@ public class ShareProductDividendReadPlatformServiceImpl implements ShareProduct
     private final DatabaseSpecificSQLGenerator sqlGenerator;
 
     @Autowired
-    public ShareProductDividendReadPlatformServiceImpl(final RoutingDataSource dataSource, final ColumnValidator columnValidator, DatabaseSpecificSQLGenerator sqlGenerator, PaginationHelper paginationHelper) {
+    public ShareProductDividendReadPlatformServiceImpl(final RoutingDataSource dataSource, final ColumnValidator columnValidator,
+            DatabaseSpecificSQLGenerator sqlGenerator, PaginationHelper paginationHelper) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.columnValidator = columnValidator;
         this.paginationHelper = paginationHelper;
@@ -82,7 +83,6 @@ public class ShareProductDividendReadPlatformServiceImpl implements ShareProduct
             }
         }
 
-
         if (searchParameters.isLimited()) {
             sqlBuilder.append(" ");
             if (searchParameters.isOffset()) {
@@ -93,8 +93,7 @@ public class ShareProductDividendReadPlatformServiceImpl implements ShareProduct
         }
 
         Object[] paramsObj = params.toArray();
-        return this.paginationHelper.fetchPage(this.jdbcTemplate, sqlBuilder.toString(), paramsObj,
-                shareProductDividendMapper);
+        return this.paginationHelper.fetchPage(this.jdbcTemplate, sqlBuilder.toString(), paramsObj, shareProductDividendMapper);
     }
 
     private static final class ShareProductDividendMapper implements RowMapper<ShareProductDividendPayOutData> {

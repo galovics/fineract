@@ -20,6 +20,7 @@ package org.apache.fineract.infrastructure.core.service.database;
 
 import static java.lang.String.format;
 import static org.apache.fineract.infrastructure.core.domain.FineractPlatformTenantConnection.toProtocol;
+
 import java.util.Objects;
 import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -27,6 +28,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class PostgreSQLQueryService implements DatabaseQueryService {
+
     @Override
     public boolean isSupported(DataSource dataSource) {
         String protocol = toProtocol(dataSource);
@@ -36,11 +38,8 @@ public class PostgreSQLQueryService implements DatabaseQueryService {
     @Override
     public boolean isTablePresent(DataSource dataSource, String tableName) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-        Integer result = jdbcTemplate.queryForObject(
-                format("SELECT COUNT(table_name) " +
-                        "FROM information_schema.tables " +
-                        "WHERE table_schema = 'public' " +
-                        "AND table_name = '%s';", tableName), Integer.class);
+        Integer result = jdbcTemplate.queryForObject(format("SELECT COUNT(table_name) " + "FROM information_schema.tables "
+                + "WHERE table_schema = 'public' " + "AND table_name = '%s';", tableName), Integer.class);
         return Objects.equals(result, 1);
     }
 }

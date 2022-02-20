@@ -72,9 +72,10 @@ public class LoanAccrualWritePlatformServiceImpl implements LoanAccrualWritePlat
 
     @Autowired
     public LoanAccrualWritePlatformServiceImpl(final RoutingDataSource dataSource, final LoanReadPlatformService loanReadPlatformService,
-                                               final JournalEntryWritePlatformService journalEntryWritePlatformService,
-                                               final LoanChargeReadPlatformService loanChargeReadPlatformService, final AppUserRepositoryWrapper userRepository,
-                                               final LoanRepositoryWrapper loanRepositoryWrapper, final ApplicationCurrencyRepositoryWrapper applicationCurrencyRepository, DatabaseSpecificSQLGenerator sqlGenerator) {
+            final JournalEntryWritePlatformService journalEntryWritePlatformService,
+            final LoanChargeReadPlatformService loanChargeReadPlatformService, final AppUserRepositoryWrapper userRepository,
+            final LoanRepositoryWrapper loanRepositoryWrapper, final ApplicationCurrencyRepositoryWrapper applicationCurrencyRepository,
+            DatabaseSpecificSQLGenerator sqlGenerator) {
         this.loanReadPlatformService = loanReadPlatformService;
         this.dataSource = dataSource;
         this.sqlGenerator = sqlGenerator;

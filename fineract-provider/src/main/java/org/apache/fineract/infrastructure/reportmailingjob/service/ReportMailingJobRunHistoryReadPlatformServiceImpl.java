@@ -46,7 +46,8 @@ public class ReportMailingJobRunHistoryReadPlatformServiceImpl implements Report
     private final PaginationHelper paginationHelper;
 
     @Autowired
-    public ReportMailingJobRunHistoryReadPlatformServiceImpl(final RoutingDataSource dataSource, final ColumnValidator columnValidator, DatabaseSpecificSQLGenerator sqlGenerator, PaginationHelper paginationHelper) {
+    public ReportMailingJobRunHistoryReadPlatformServiceImpl(final RoutingDataSource dataSource, final ColumnValidator columnValidator,
+            DatabaseSpecificSQLGenerator sqlGenerator, PaginationHelper paginationHelper) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.sqlGenerator = sqlGenerator;
         this.reportMailingJobRunHistoryMapper = new ReportMailingJobRunHistoryMapper();
@@ -77,7 +78,6 @@ public class ReportMailingJobRunHistoryReadPlatformServiceImpl implements Report
             }
         }
 
-
         if (searchParameters.isLimited()) {
             sqlStringBuilder.append(" ");
             if (searchParameters.isOffset()) {
@@ -87,8 +87,8 @@ public class ReportMailingJobRunHistoryReadPlatformServiceImpl implements Report
             }
         }
 
-        return this.paginationHelper.fetchPage(this.jdbcTemplate, sqlStringBuilder.toString(),
-                queryParameters.toArray(), this.reportMailingJobRunHistoryMapper);
+        return this.paginationHelper.fetchPage(this.jdbcTemplate, sqlStringBuilder.toString(), queryParameters.toArray(),
+                this.reportMailingJobRunHistoryMapper);
     }
 
     private static final class ReportMailingJobRunHistoryMapper implements RowMapper<ReportMailingJobRunHistoryData> {

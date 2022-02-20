@@ -90,11 +90,12 @@ public class StandingInstructionWritePlatformServiceImpl implements StandingInst
 
     @Autowired
     public StandingInstructionWritePlatformServiceImpl(final StandingInstructionDataValidator standingInstructionDataValidator,
-                                                       final StandingInstructionAssembler standingInstructionAssembler,
-                                                       final AccountTransferDetailRepository accountTransferDetailRepository,
-                                                       final StandingInstructionRepository standingInstructionRepository,
-                                                       final StandingInstructionReadPlatformService standingInstructionReadPlatformService,
-                                                       final AccountTransfersWritePlatformService accountTransfersWritePlatformService, final RoutingDataSource dataSource, DatabaseSpecificSQLGenerator sqlGenerator) {
+            final StandingInstructionAssembler standingInstructionAssembler,
+            final AccountTransferDetailRepository accountTransferDetailRepository,
+            final StandingInstructionRepository standingInstructionRepository,
+            final StandingInstructionReadPlatformService standingInstructionReadPlatformService,
+            final AccountTransfersWritePlatformService accountTransfersWritePlatformService, final RoutingDataSource dataSource,
+            DatabaseSpecificSQLGenerator sqlGenerator) {
         this.standingInstructionDataValidator = standingInstructionDataValidator;
         this.standingInstructionAssembler = standingInstructionAssembler;
         this.accountTransferDetailRepository = accountTransferDetailRepository;
@@ -264,7 +265,8 @@ public class StandingInstructionWritePlatformServiceImpl implements StandingInst
         boolean transferCompleted = true;
         StringBuilder errorLog = new StringBuilder();
         StringBuilder updateQuery = new StringBuilder(
-                "INSERT INTO m_account_transfer_standing_instructions_history (standing_instruction_id, " + sqlGenerator.escape("status") + ", amount,execution_time, error_log) VALUES (");
+                "INSERT INTO m_account_transfer_standing_instructions_history (standing_instruction_id, " + sqlGenerator.escape("status")
+                        + ", amount,execution_time, error_log) VALUES (");
         try {
             this.accountTransfersWritePlatformService.transferFunds(accountTransferDTO);
         } catch (final PlatformApiDataValidationException e) {

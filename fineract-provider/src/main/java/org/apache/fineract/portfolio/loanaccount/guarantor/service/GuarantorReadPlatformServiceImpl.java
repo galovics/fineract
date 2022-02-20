@@ -59,7 +59,7 @@ public class GuarantorReadPlatformServiceImpl implements GuarantorReadPlatformSe
 
     @Autowired
     public GuarantorReadPlatformServiceImpl(final RoutingDataSource dataSource, final ClientReadPlatformService clientReadPlatformService,
-                                            final StaffReadPlatformService staffReadPlatformService, final LoanRepositoryWrapper loanRepositoryWrapper) {
+            final StaffReadPlatformService staffReadPlatformService, final LoanRepositoryWrapper loanRepositoryWrapper) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.clientReadPlatformService = clientReadPlatformService;
         this.staffReadPlatformService = staffReadPlatformService;
@@ -78,14 +78,13 @@ public class GuarantorReadPlatformServiceImpl implements GuarantorReadPlatformSe
         String sql = "select " + rm.schema();
         sql += " where loan_id = ?  group by g.id,gfd.id, gt.id, sa.id, oht.id, cv.id";
         String finalSql = sql;
-        final List<GuarantorData> guarantorDatas = this.jdbcTemplate.query(
-                con -> {
-                    PreparedStatement preparedStatement = con.prepareStatement(finalSql, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
-                    preparedStatement.setInt(1, AccountAssociationType.GUARANTOR_ACCOUNT_ASSOCIATION.getValue());
-                    preparedStatement.setLong(2, loanId);
-                    return preparedStatement;
-                },
-                rm);
+        final List<GuarantorData> guarantorDatas = this.jdbcTemplate.query(con -> {
+            PreparedStatement preparedStatement = con.prepareStatement(finalSql, ResultSet.TYPE_SCROLL_SENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            preparedStatement.setInt(1, AccountAssociationType.GUARANTOR_ACCOUNT_ASSOCIATION.getValue());
+            preparedStatement.setLong(2, loanId);
+            return preparedStatement;
+        }, rm);
 
         final List<GuarantorData> mergedGuarantorDatas = new ArrayList<>();
 
@@ -102,7 +101,8 @@ public class GuarantorReadPlatformServiceImpl implements GuarantorReadPlatformSe
         sql += " where g.loan_id = ? and g.id = ? group by g.id, gfd.id, gt.id, sa.id, oht.id, cv.id";
         String finalSql = sql;
         final GuarantorData guarantorData = this.jdbcTemplate.query(con -> {
-            PreparedStatement preparedStatement = con.prepareStatement(finalSql, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+            PreparedStatement preparedStatement = con.prepareStatement(finalSql, ResultSet.TYPE_SCROLL_SENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
             preparedStatement.setInt(1, AccountAssociationType.GUARANTOR_ACCOUNT_ASSOCIATION.getValue());
             preparedStatement.setLong(2, loanId);
             preparedStatement.setLong(3, guarantorId);
@@ -119,19 +119,19 @@ public class GuarantorReadPlatformServiceImpl implements GuarantorReadPlatformSe
 
         private final StringBuilder sqlBuilder = new StringBuilder(
                 " g.id as id, g.loan_id as loanId, g.client_reln_cv_id clientRelationshipTypeId, g.entity_id as entityId, g.type_enum guarantorType ,g.firstname as firstname, g.lastname as lastname, g.dob as dateOfBirth, g.address_line_1 as addressLine1, g.address_line_2 as addressLine2, g.city as city, g.state as state, g.country as country, g.zip as zip, g.house_phone_number as housePhoneNumber, g.mobile_number as mobilePhoneNumber, g.comment as comment, ")
-                .append(" g.is_active as guarantorStatus,")//
-                .append(" cv.code_value as typeName, ")//
-                .append("gfd.amount,")//
-                .append(this.guarantorFundingMapper.schema())//
-                .append(",")//
-                .append(this.guarantorTransactionMapper.schema())//
-                .append(" FROM m_guarantor g") //
-                .append(" left JOIN m_code_value cv on g.client_reln_cv_id = cv.id")//
-                .append(" left JOIN m_guarantor_funding_details gfd on g.id = gfd.guarantor_id")//
-                .append(" left JOIN m_portfolio_account_associations aa on gfd.account_associations_id = aa.id and aa.is_active = true and aa.association_type_enum = ?")//
-                .append(" left JOIN m_savings_account sa on sa.id = aa.linked_savings_account_id ")//
-                .append(" left join m_guarantor_transaction gt on gt.guarantor_fund_detail_id = gfd.id") //
-                .append(" left join m_deposit_account_on_hold_transaction oht on oht.id = gt.deposit_on_hold_transaction_id");
+                        .append(" g.is_active as guarantorStatus,")//
+                        .append(" cv.code_value as typeName, ")//
+                        .append("gfd.amount,")//
+                        .append(this.guarantorFundingMapper.schema())//
+                        .append(",")//
+                        .append(this.guarantorTransactionMapper.schema())//
+                        .append(" FROM m_guarantor g") //
+                        .append(" left JOIN m_code_value cv on g.client_reln_cv_id = cv.id")//
+                        .append(" left JOIN m_guarantor_funding_details gfd on g.id = gfd.guarantor_id")//
+                        .append(" left JOIN m_portfolio_account_associations aa on gfd.account_associations_id = aa.id and aa.is_active = true and aa.association_type_enum = ?")//
+                        .append(" left JOIN m_savings_account sa on sa.id = aa.linked_savings_account_id ")//
+                        .append(" left join m_guarantor_transaction gt on gt.guarantor_fund_detail_id = gfd.id") //
+                        .append(" left join m_deposit_account_on_hold_transaction oht on oht.id = gt.deposit_on_hold_transaction_id");
 
         public String schema() {
             return this.sqlBuilder.toString();
@@ -304,7 +304,7 @@ public class GuarantorReadPlatformServiceImpl implements GuarantorReadPlatformSe
         final ObligeeMapper rm = new ObligeeMapper();
         String sql = rm.schema();
         try {
-            return this.jdbcTemplate.query(sql, rm, new Object[] {clientId});
+            return this.jdbcTemplate.query(sql, rm, new Object[] { clientId });
         } catch (final EmptyResultDataAccessException e) {
             return null;
         }

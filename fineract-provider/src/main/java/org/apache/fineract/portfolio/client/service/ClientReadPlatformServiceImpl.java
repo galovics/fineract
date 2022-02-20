@@ -105,14 +105,15 @@ public class ClientReadPlatformServiceImpl implements ClientReadPlatformService 
 
     @Autowired
     public ClientReadPlatformServiceImpl(final PlatformSecurityContext context, final RoutingDataSource dataSource,
-                                         final OfficeReadPlatformService officeReadPlatformService, final StaffReadPlatformService staffReadPlatformService,
-                                         final CodeValueReadPlatformService codeValueReadPlatformService,
-                                         final SavingsProductReadPlatformService savingsProductReadPlatformService,
-                                         final AddressReadPlatformService addressReadPlatformService,
-                                         final ClientFamilyMembersReadPlatformService clientFamilyMembersReadPlatformService,
-                                         final ConfigurationReadPlatformService configurationReadPlatformService,
-                                         final EntityDatatableChecksReadService entityDatatableChecksReadService, final ColumnValidator columnValidator,
-                                         final ClientCollateralManagementRepositoryWrapper clientCollateralManagementRepositoryWrapper, DatabaseSpecificSQLGenerator sqlGenerator, PaginationHelper paginationHelper) {
+            final OfficeReadPlatformService officeReadPlatformService, final StaffReadPlatformService staffReadPlatformService,
+            final CodeValueReadPlatformService codeValueReadPlatformService,
+            final SavingsProductReadPlatformService savingsProductReadPlatformService,
+            final AddressReadPlatformService addressReadPlatformService,
+            final ClientFamilyMembersReadPlatformService clientFamilyMembersReadPlatformService,
+            final ConfigurationReadPlatformService configurationReadPlatformService,
+            final EntityDatatableChecksReadService entityDatatableChecksReadService, final ColumnValidator columnValidator,
+            final ClientCollateralManagementRepositoryWrapper clientCollateralManagementRepositoryWrapper,
+            DatabaseSpecificSQLGenerator sqlGenerator, PaginationHelper paginationHelper) {
         this.context = context;
         this.officeReadPlatformService = officeReadPlatformService;
         this.jdbcTemplate = new JdbcTemplate(dataSource);
@@ -238,7 +239,6 @@ public class ClientReadPlatformServiceImpl implements ClientReadPlatformService 
                 }
             }
 
-
             if (searchParameters.isLimited()) {
                 sqlBuilder.append(" ");
                 if (searchParameters.isOffset()) {
@@ -248,8 +248,7 @@ public class ClientReadPlatformServiceImpl implements ClientReadPlatformService 
                 }
             }
         }
-        return this.paginationHelper.fetchPage(this.jdbcTemplate, sqlBuilder.toString(), paramList.toArray(),
-                this.clientMapper);
+        return this.paginationHelper.fetchPage(this.jdbcTemplate, sqlBuilder.toString(), paramList.toArray(), this.clientMapper);
     }
 
     private String buildSqlStringFromClientCriteria(String schemaSql, final SearchParameters searchParameters, List<Object> paramList) {

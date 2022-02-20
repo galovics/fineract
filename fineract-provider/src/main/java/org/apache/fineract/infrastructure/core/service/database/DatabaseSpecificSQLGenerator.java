@@ -19,11 +19,13 @@
 package org.apache.fineract.infrastructure.core.service.database;
 
 import static java.lang.String.format;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class DatabaseSpecificSQLGenerator {
+
     private final DatabaseTypeResolver databaseTypeResolver;
 
     @Autowired
@@ -131,7 +133,8 @@ public class DatabaseSpecificSQLGenerator {
         } else if (databaseTypeResolver.isPostgreSQL()) {
             return format("%s::CHAR", sql);
         } else {
-            throw new IllegalStateException("Database type is not supported for casting to character " + databaseTypeResolver.databaseType());
+            throw new IllegalStateException(
+                    "Database type is not supported for casting to character " + databaseTypeResolver.databaseType());
         }
     }
 

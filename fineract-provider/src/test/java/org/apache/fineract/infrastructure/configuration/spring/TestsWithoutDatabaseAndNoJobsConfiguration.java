@@ -47,6 +47,7 @@ public class TestsWithoutDatabaseAndNoJobsConfiguration extends AbstractApplicat
     @Bean
     public DatabaseTypeResolver databaseTypeResolver() {
         return new DatabaseTypeResolver(null) {
+
             @Override
             public DatabaseType databaseType() {
                 return DatabaseType.MYSQL;

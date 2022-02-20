@@ -146,13 +146,13 @@ public class InteropServiceImpl implements InteropService {
 
     @Autowired
     public InteropServiceImpl(PlatformSecurityContext securityContext, InteropDataValidator interopDataValidator,
-                              SavingsAccountRepository savingsAccountRepository, SavingsAccountTransactionRepository savingsAccountTransactionRepository,
-                              ApplicationCurrencyRepository applicationCurrencyRepository, NoteRepository noteRepository,
-                              PaymentTypeRepository paymentTypeRepository, InteropIdentifierRepository identifierRepository, LoanRepository loanRepository,
-                              SavingsHelper savingsHelper, SavingsAccountTransactionSummaryWrapper savingsAccountTransactionSummaryWrapper,
-                              SavingsAccountDomainService savingsAccountService, final RoutingDataSource dataSource,
-                              final PortfolioCommandSourceWritePlatformService commandsSourceWritePlatformService,
-                              final DefaultToApiJsonSerializer<LoanAccountData> toApiJsonSerializer, DatabaseSpecificSQLGenerator sqlGenerator) {
+            SavingsAccountRepository savingsAccountRepository, SavingsAccountTransactionRepository savingsAccountTransactionRepository,
+            ApplicationCurrencyRepository applicationCurrencyRepository, NoteRepository noteRepository,
+            PaymentTypeRepository paymentTypeRepository, InteropIdentifierRepository identifierRepository, LoanRepository loanRepository,
+            SavingsHelper savingsHelper, SavingsAccountTransactionSummaryWrapper savingsAccountTransactionSummaryWrapper,
+            SavingsAccountDomainService savingsAccountService, final RoutingDataSource dataSource,
+            final PortfolioCommandSourceWritePlatformService commandsSourceWritePlatformService,
+            final DefaultToApiJsonSerializer<LoanAccountData> toApiJsonSerializer, DatabaseSpecificSQLGenerator sqlGenerator) {
         this.securityContext = securityContext;
         this.dataValidator = interopDataValidator;
         this.savingsAccountRepository = savingsAccountRepository;

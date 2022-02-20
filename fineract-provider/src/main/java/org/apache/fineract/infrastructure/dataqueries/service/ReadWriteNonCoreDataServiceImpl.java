@@ -124,10 +124,10 @@ public class ReadWriteNonCoreDataServiceImpl implements ReadWriteNonCoreDataServ
 
     @Autowired(required = true)
     public ReadWriteNonCoreDataServiceImpl(final RoutingDataSource dataSource, final PlatformSecurityContext context,
-                                           final FromJsonHelper fromJsonHelper, final GenericDataService genericDataService,
-                                           final DatatableCommandFromApiJsonDeserializer fromApiJsonDeserializer, final CodeReadPlatformService codeReadPlatformService,
-                                           final ConfigurationDomainService configurationDomainService, final DataTableValidator dataTableValidator,
-                                           final ColumnValidator columnValidator, DatabaseTypeResolver databaseTypeResolver, DatabaseSpecificSQLGenerator sqlGenerator) {
+            final FromJsonHelper fromJsonHelper, final GenericDataService genericDataService,
+            final DatatableCommandFromApiJsonDeserializer fromApiJsonDeserializer, final CodeReadPlatformService codeReadPlatformService,
+            final ConfigurationDomainService configurationDomainService, final DataTableValidator dataTableValidator,
+            final ColumnValidator columnValidator, DatabaseTypeResolver databaseTypeResolver, DatabaseSpecificSQLGenerator sqlGenerator) {
         this.dataSource = dataSource;
         this.databaseTypeResolver = databaseTypeResolver;
         this.sqlGenerator = sqlGenerator;
@@ -496,7 +496,8 @@ public class ReadWriteNonCoreDataServiceImpl implements ReadWriteNonCoreDataServ
     }
 
     private void assertDataTableExists(final String datatableName) {
-        final String sql = "select (CASE WHEN exists (select 1 from information_schema.tables where table_schema = " + sqlGenerator.currentSchema() + " and table_name = ?) THEN 'true' ELSE 'false' END)";
+        final String sql = "select (CASE WHEN exists (select 1 from information_schema.tables where table_schema = "
+                + sqlGenerator.currentSchema() + " and table_name = ?) THEN 'true' ELSE 'false' END)";
         final String dataTableExistsString = this.jdbcTemplate.queryForObject(sql, String.class, new Object[] { datatableName });
         final boolean dataTableExists = Boolean.valueOf(dataTableExistsString);
         if (!dataTableExists) {
@@ -542,7 +543,8 @@ public class ReadWriteNonCoreDataServiceImpl implements ReadWriteNonCoreDataServ
                 codeMappings.put(dataTableNameAlias + "_" + name, this.codeReadPlatformService.retriveCode(code).getCodeId());
                 String fkName = "fk_" + dataTableNameAlias + "_" + name;
                 constrainBuilder.append(", CONSTRAINT ").append(sqlGenerator.escape(fkName)).append(" ")
-                        .append("FOREIGN KEY (" + sqlGenerator.escape(name) + ") ").append("REFERENCES ").append(sqlGenerator.escape(CODE_VALUES_TABLE)).append(" (id)");
+                        .append("FOREIGN KEY (" + sqlGenerator.escape(name) + ") ").append("REFERENCES ")
+                        .append(sqlGenerator.escape(CODE_VALUES_TABLE)).append(" (id)");
             } else {
                 name = datatableColumnNameToCodeValueName(name, code);
             }
@@ -618,7 +620,8 @@ public class ReadWriteNonCoreDataServiceImpl implements ReadWriteNonCoreDataServ
             sqlBuilder = sqlBuilder.append("CREATE TABLE " + sqlGenerator.escape(datatableName) + " (");
 
             if (multiRow) {
-                sqlBuilder = sqlBuilder.append("id BIGINT NOT NULL AUTO_INCREMENT, ").append(sqlGenerator.escape(fkColumnName) + " BIGINT NOT NULL, ");
+                sqlBuilder = sqlBuilder.append("id BIGINT NOT NULL AUTO_INCREMENT, ")
+                        .append(sqlGenerator.escape(fkColumnName) + " BIGINT NOT NULL, ");
             } else {
                 sqlBuilder = sqlBuilder.append(sqlGenerator.escape(fkColumnName) + " BIGINT NOT NULL, ");
             }
@@ -634,12 +637,16 @@ public class ReadWriteNonCoreDataServiceImpl implements ReadWriteNonCoreDataServ
             String fullFkName = "fk_" + fkName;
             if (multiRow) {
                 sqlBuilder = sqlBuilder.append(", PRIMARY KEY (id)")
-                        .append(", KEY " + sqlGenerator.escape("fk_" + apptableName.substring(2) + "_id") + " (" + sqlGenerator.escape(fkColumnName) + ")")
-                        .append(", CONSTRAINT " + sqlGenerator.escape(fullFkName) + " ").append("FOREIGN KEY (" + sqlGenerator.escape(fkColumnName) + ") ")
+                        .append(", KEY " + sqlGenerator.escape("fk_" + apptableName.substring(2) + "_id") + " ("
+                                + sqlGenerator.escape(fkColumnName) + ")")
+                        .append(", CONSTRAINT " + sqlGenerator.escape(fullFkName) + " ")
+                        .append("FOREIGN KEY (" + sqlGenerator.escape(fkColumnName) + ") ")
                         .append("REFERENCES " + sqlGenerator.escape(actualAppTableName) + " (id)");
             } else {
-                sqlBuilder = sqlBuilder.append(", PRIMARY KEY (" + sqlGenerator.escape(fkColumnName) + ")").append(", CONSTRAINT " + sqlGenerator.escape(fullFkName) + " ")
-                        .append("FOREIGN KEY (" + sqlGenerator.escape(fkColumnName) + ") ").append("REFERENCES " + sqlGenerator.escape(actualAppTableName) + " (id)");
+                sqlBuilder = sqlBuilder.append(", PRIMARY KEY (" + sqlGenerator.escape(fkColumnName) + ")")
+                        .append(", CONSTRAINT " + sqlGenerator.escape(fullFkName) + " ")
+                        .append("FOREIGN KEY (" + sqlGenerator.escape(fkColumnName) + ") ")
+                        .append("REFERENCES " + sqlGenerator.escape(actualAppTableName) + " (id)");
             }
 
             sqlBuilder.append(constrainBuilder);
@@ -715,8 +722,8 @@ public class ReadWriteNonCoreDataServiceImpl implements ReadWriteNonCoreDataServ
                         constrainBuilder.append(", DROP FOREIGN KEY ").append(sqlGenerator.escape(fkName)).append(" ");
                         codeMappings.put(dataTableNameAlias + "_" + newName, (long) codeId);
                         constrainBuilder.append(",ADD CONSTRAINT ").append(sqlGenerator.escape(newFkName)).append(" ")
-                                .append("FOREIGN KEY (" + sqlGenerator.escape(newName) + ") ").append("REFERENCES ").append(sqlGenerator.escape(CODE_VALUES_TABLE))
-                                .append(" (id)");
+                                .append("FOREIGN KEY (" + sqlGenerator.escape(newName) + ") ").append("REFERENCES ")
+                                .append(sqlGenerator.escape(CODE_VALUES_TABLE)).append(" (id)");
                     }
 
                 } else {
@@ -729,8 +736,8 @@ public class ReadWriteNonCoreDataServiceImpl implements ReadWriteNonCoreDataServ
                     if (newCode != null) {
                         codeMappings.put(dataTableNameAlias + "_" + newName, this.codeReadPlatformService.retriveCode(newCode).getCodeId());
                         if (code == null || !StringUtils.equalsIgnoreCase(name, newName)) {
-                            constrainBuilder.append(",ADD CONSTRAINT  ").append(sqlGenerator.escape(newFkName))
-                                    .append(" ").append("FOREIGN KEY (" + sqlGenerator.escape(newName) + ") ").append("REFERENCES ")
+                            constrainBuilder.append(",ADD CONSTRAINT  ").append(sqlGenerator.escape(newFkName)).append(" ")
+                                    .append("FOREIGN KEY (" + sqlGenerator.escape(newName) + ") ").append("REFERENCES ")
                                     .append(sqlGenerator.escape(CODE_VALUES_TABLE)).append(" (id)");
                         }
                     }
@@ -804,7 +811,8 @@ public class ReadWriteNonCoreDataServiceImpl implements ReadWriteNonCoreDataServ
                 String fkName = "fk_" + dataTableNameAlias + "_" + name;
                 codeMappings.put(dataTableNameAlias + "_" + name, this.codeReadPlatformService.retriveCode(code).getCodeId());
                 constrainBuilder.append(",ADD CONSTRAINT  ").append(sqlGenerator.escape(fkName)).append(" ")
-                        .append("FOREIGN KEY (" + sqlGenerator.escape(name) + ") ").append("REFERENCES ").append(sqlGenerator.escape(CODE_VALUES_TABLE)).append(" (id)");
+                        .append("FOREIGN KEY (" + sqlGenerator.escape(name) + ") ").append("REFERENCES ")
+                        .append(sqlGenerator.escape(CODE_VALUES_TABLE)).append(" (id)");
             } else {
                 name = datatableColumnNameToCodeValueName(name, code);
             }
@@ -903,7 +911,8 @@ public class ReadWriteNonCoreDataServiceImpl implements ReadWriteNonCoreDataServ
         if (StringUtils.isNotEmpty(type)) {
             if (mandatory && stringDataTypes.contains(type.toLowerCase())) {
                 StringBuilder sqlBuilder = new StringBuilder();
-                sqlBuilder.append("UPDATE " + sqlGenerator.escape(datatableName) + " SET " + sqlGenerator.escape(name) + " = '' WHERE " + sqlGenerator.escape(name) + " IS NULL");
+                sqlBuilder.append("UPDATE " + sqlGenerator.escape(datatableName) + " SET " + sqlGenerator.escape(name) + " = '' WHERE "
+                        + sqlGenerator.escape(name) + " IS NULL");
 
                 this.jdbcTemplate.update(sqlBuilder.toString());
             }
@@ -958,17 +967,22 @@ public class ReadWriteNonCoreDataServiceImpl implements ReadWriteNonCoreDataServ
                     String fullNewFk = "fk_" + newFKName;
                     String fullNewConstraint = "fk_" + newConstraintName;
                     if (mapColumnNameDefinition.containsKey("id")) {
-                        sqlBuilder = sqlBuilder.append("ALTER TABLE " + sqlGenerator.escape(datatableName) + " ").append("DROP KEY " + sqlGenerator.escape(fullOldFk) + ",")
+                        sqlBuilder = sqlBuilder.append("ALTER TABLE " + sqlGenerator.escape(datatableName) + " ")
+                                .append("DROP KEY " + sqlGenerator.escape(fullOldFk) + ",")
                                 .append("DROP FOREIGN KEY " + sqlGenerator.escape(fullOldConstraint) + ",")
-                                .append("CHANGE COLUMN " + sqlGenerator.escape(oldFKName) + " " + sqlGenerator.escape(newFKName) + " BIGINT NOT NULL,")
+                                .append("CHANGE COLUMN " + sqlGenerator.escape(oldFKName) + " " + sqlGenerator.escape(newFKName)
+                                        + " BIGINT NOT NULL,")
                                 .append("ADD KEY " + sqlGenerator.escape(fullNewFk) + " (" + sqlGenerator.escape(newFKName) + "),")
-                                .append("ADD CONSTRAINT " + sqlGenerator.escape(fullNewConstraint) + " ").append("FOREIGN KEY (" + sqlGenerator.escape(newFKName) + ") ")
+                                .append("ADD CONSTRAINT " + sqlGenerator.escape(fullNewConstraint) + " ")
+                                .append("FOREIGN KEY (" + sqlGenerator.escape(newFKName) + ") ")
                                 .append("REFERENCES " + sqlGenerator.escape(actualAppTableName) + " (id)");
                     } else {
                         sqlBuilder = sqlBuilder.append("ALTER TABLE " + sqlGenerator.escape(datatableName) + " ")
                                 .append("DROP FOREIGN KEY " + sqlGenerator.escape(fullOldConstraint) + ",")
-                                .append("CHANGE COLUMN " + sqlGenerator.escape(oldFKName) + " " + sqlGenerator.escape(newFKName) + " BIGINT NOT NULL,")
-                                .append("ADD CONSTRAINT " + sqlGenerator.escape(fullNewConstraint) + " ").append("FOREIGN KEY (" + sqlGenerator.escape(newFKName) + ") ")
+                                .append("CHANGE COLUMN " + sqlGenerator.escape(oldFKName) + " " + sqlGenerator.escape(newFKName)
+                                        + " BIGINT NOT NULL,")
+                                .append("ADD CONSTRAINT " + sqlGenerator.escape(fullNewConstraint) + " ")
+                                .append("FOREIGN KEY (" + sqlGenerator.escape(newFKName) + ") ")
                                 .append("REFERENCES " + sqlGenerator.escape(actualAppTableName) + " (id)");
                     }
 
@@ -1122,7 +1136,7 @@ public class ReadWriteNonCoreDataServiceImpl implements ReadWriteNonCoreDataServ
             } else {
                 sqlArray = new String[1];
             }
-            final String sql = "DROP TABLE " + sqlGenerator.escape(datatableName) ;
+            final String sql = "DROP TABLE " + sqlGenerator.escape(datatableName);
             sqlArray[0] = sql;
             this.jdbcTemplate.batchUpdate(sqlArray);
         } catch (final JpaSystemException | DataIntegrityViolationException e) {
@@ -1522,8 +1536,8 @@ public class ReadWriteNonCoreDataServiceImpl implements ReadWriteNonCoreDataServ
             }
         }
 
-        addSql = "insert into " + sqlGenerator.escape(datatable) + " (" + sqlGenerator.escape(fkName) + " " + insertColumns + ")" + " select " + appTableId + " as id"
-                + selectColumns;
+        addSql = "insert into " + sqlGenerator.escape(datatable) + " (" + sqlGenerator.escape(fkName) + " " + insertColumns + ")"
+                + " select " + appTableId + " as id" + selectColumns;
 
         LOG.info("{}", addSql);
 
@@ -1571,9 +1585,9 @@ public class ReadWriteNonCoreDataServiceImpl implements ReadWriteNonCoreDataServ
 
         scoresId = scoresId.replaceAll(" ,$", "");
 
-        String vaddSql = "insert into " + sqlGenerator.escape(datatable) + " (" + sqlGenerator.escape(fkName) + " " + insertColumns + ", score )" + " select " + appTableId
-                + " as id" + selectColumns + " , ( SELECT SUM( code_score ) FROM m_code_value WHERE m_code_value.id IN (" + scoresId
-                + " ) ) as score";
+        String vaddSql = "insert into " + sqlGenerator.escape(datatable) + " (" + sqlGenerator.escape(fkName) + " " + insertColumns
+                + ", score )" + " select " + appTableId + " as id" + selectColumns
+                + " , ( SELECT SUM( code_score ) FROM m_code_value WHERE m_code_value.id IN (" + scoresId + " ) ) as score";
 
         LOG.info("{}", vaddSql);
 
@@ -1873,8 +1887,8 @@ public class ReadWriteNonCoreDataServiceImpl implements ReadWriteNonCoreDataServ
     @Override
     public Long countDatatableEntries(final String datatableName, final Long appTableId, String foreignKeyColumn) {
 
-        final String sqlString = "SELECT COUNT(" + sqlGenerator.escape(foreignKeyColumn) + ") FROM " + sqlGenerator.escape(datatableName) + " WHERE " + sqlGenerator.escape(foreignKeyColumn) + "="
-                + appTableId;
+        final String sqlString = "SELECT COUNT(" + sqlGenerator.escape(foreignKeyColumn) + ") FROM " + sqlGenerator.escape(datatableName)
+                + " WHERE " + sqlGenerator.escape(foreignKeyColumn) + "=" + appTableId;
         final Long count = this.jdbcTemplate.queryForObject(sqlString, Long.class);
         return count;
     }

@@ -26,12 +26,12 @@ import org.springframework.transaction.support.DefaultTransactionStatus;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 public class OpenJpaTransactionManager extends JpaTransactionManager {
+
     @Override
     protected void doCommit(DefaultTransactionStatus status) {
         JdbcTransactionObjectSupport txObject = (JdbcTransactionObjectSupport) status.getTransaction();
         if (txObject.isReadOnly()) {
-            EntityManagerHolder holder = (EntityManagerHolder)
-                    TransactionSynchronizationManager.getResource(obtainEntityManagerFactory());
+            EntityManagerHolder holder = (EntityManagerHolder) TransactionSynchronizationManager.getResource(obtainEntityManagerFactory());
             if (holder != null) {
                 EntityManager entityManager = holder.getEntityManager();
                 entityManager.clear();

@@ -29,6 +29,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class PaginationHelper {
+
     private final DatabaseSpecificSQLGenerator sqlGenerator;
     private final DatabaseTypeResolver databaseTypeResolver;
 
@@ -38,8 +39,7 @@ public class PaginationHelper {
         this.databaseTypeResolver = databaseTypeResolver;
     }
 
-    public <E> Page<E> fetchPage(final JdbcTemplate jt, final String sqlFetchRows, final Object[] args,
-                             final RowMapper<E> rowMapper) {
+    public <E> Page<E> fetchPage(final JdbcTemplate jt, final String sqlFetchRows, final Object[] args, final RowMapper<E> rowMapper) {
 
         final List<E> items = jt.query(sqlFetchRows, rowMapper, args);
 

@@ -77,8 +77,9 @@ public class TellerManagementReadPlatformServiceImpl implements TellerManagement
 
     @Autowired
     public TellerManagementReadPlatformServiceImpl(final PlatformSecurityContext context, final RoutingDataSource dataSource,
-                                                   final OfficeReadPlatformService officeReadPlatformService, StaffReadPlatformService staffReadPlatformService,
-                                                   final CurrencyReadPlatformService currencyReadPlatformService, final ColumnValidator columnValidator, DatabaseSpecificSQLGenerator sqlGenerator, PaginationHelper paginationHelper) {
+            final OfficeReadPlatformService officeReadPlatformService, StaffReadPlatformService staffReadPlatformService,
+            final CurrencyReadPlatformService currencyReadPlatformService, final ColumnValidator columnValidator,
+            DatabaseSpecificSQLGenerator sqlGenerator, PaginationHelper paginationHelper) {
         this.context = context;
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.officeReadPlatformService = officeReadPlatformService;
@@ -547,7 +548,6 @@ public class TellerManagementReadPlatformServiceImpl implements TellerManagement
                 + " between c.start_date and date_add(c.end_date, interval 1 day) "
                 + " and renum.enum_value in ('PAY_CHARGE', 'WAIVE_CHARGE') "
                 + " and (cli_txn.payment_detail_id IS NULL OR payType.is_cash_payment = true) ) " + " order by created_date ";
-
 
         if (searchParameters.isLimited()) {
             sql += " ";

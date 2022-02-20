@@ -129,17 +129,18 @@ public class DepositAccountReadPlatformServiceImpl implements DepositAccountRead
 
     @Autowired
     public DepositAccountReadPlatformServiceImpl(final PlatformSecurityContext context, final RoutingDataSource dataSource,
-                                                 final DepositAccountInterestRateChartReadPlatformService chartReadPlatformService,
-                                                 final PaginationParametersDataValidator paginationParametersDataValidator,
-                                                 final ClientReadPlatformService clientReadPlatformService, final GroupReadPlatformService groupReadPlatformService,
-                                                 final DepositProductReadPlatformService depositProductReadPlatformService,
-                                                 final SavingsDropdownReadPlatformService savingsDropdownReadPlatformService,
-                                                 final ChargeReadPlatformService chargeReadPlatformService, final StaffReadPlatformService staffReadPlatformService,
-                                                 final DepositsDropdownReadPlatformService depositsDropdownReadPlatformService,
-                                                 final InterestRateChartReadPlatformService productChartReadPlatformService,
-                                                 final SavingsAccountReadPlatformService savingsAccountReadPlatformService,
-                                                 final DropdownReadPlatformService dropdownReadPlatformService, final CalendarReadPlatformService calendarReadPlatformService,
-                                                 PaymentTypeReadPlatformService paymentTypeReadPlatformService, DatabaseSpecificSQLGenerator sqlGenerator, PaginationHelper paginationHelper) {
+            final DepositAccountInterestRateChartReadPlatformService chartReadPlatformService,
+            final PaginationParametersDataValidator paginationParametersDataValidator,
+            final ClientReadPlatformService clientReadPlatformService, final GroupReadPlatformService groupReadPlatformService,
+            final DepositProductReadPlatformService depositProductReadPlatformService,
+            final SavingsDropdownReadPlatformService savingsDropdownReadPlatformService,
+            final ChargeReadPlatformService chargeReadPlatformService, final StaffReadPlatformService staffReadPlatformService,
+            final DepositsDropdownReadPlatformService depositsDropdownReadPlatformService,
+            final InterestRateChartReadPlatformService productChartReadPlatformService,
+            final SavingsAccountReadPlatformService savingsAccountReadPlatformService,
+            final DropdownReadPlatformService dropdownReadPlatformService, final CalendarReadPlatformService calendarReadPlatformService,
+            PaymentTypeReadPlatformService paymentTypeReadPlatformService, DatabaseSpecificSQLGenerator sqlGenerator,
+            PaginationHelper paginationHelper) {
         this.context = context;
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.accountChartReadPlatformService = chartReadPlatformService;
@@ -200,9 +201,8 @@ public class DepositAccountReadPlatformServiceImpl implements DepositAccountRead
         sqlBuilder.append(" where sa.deposit_type_enum = ? ");
         sqlBuilder.append(paginationParameters.paginationSql());
 
-
-        return this.paginationHelper.fetchPage(this.jdbcTemplate, sqlBuilder.toString(),
-                new Object[] { depositAccountType.getValue() }, depositAccountMapper);
+        return this.paginationHelper.fetchPage(this.jdbcTemplate, sqlBuilder.toString(), new Object[] { depositAccountType.getValue() },
+                depositAccountMapper);
     }
 
     @Override
@@ -226,8 +226,8 @@ public class DepositAccountReadPlatformServiceImpl implements DepositAccountRead
         sqlBuilder.append(" WHERE da.deposit_type_enum in (?, ?) and da.status_enum = ?");
 
         return this.jdbcTemplate.query(sqlBuilder.toString(), this.depositAccountForMaturityRowMapper,
-                new Object[] { DepositAccountType.FIXED_DEPOSIT.getValue(),
-                        DepositAccountType.RECURRING_DEPOSIT.getValue(), SavingsAccountStatusType.ACTIVE.getValue() });
+                new Object[] { DepositAccountType.FIXED_DEPOSIT.getValue(), DepositAccountType.RECURRING_DEPOSIT.getValue(),
+                        SavingsAccountStatusType.ACTIVE.getValue() });
     }
 
     @Override
@@ -531,7 +531,8 @@ public class DepositAccountReadPlatformServiceImpl implements DepositAccountRead
         sb.append(" inner join m_deposit_account_recurring_detail rd on rd.savings_account_id = dat.savings_account_id ");
         sb.append(" inner join m_calendar_instance mci on mci.entity_type_enum = ? and mci.entity_id = dat.savings_account_id  ");
         sb.append(" inner join m_calendar mc  on mc.id = mci.calendar_id and mc.calendar_type_enum = ?");
-        sb.append(" inner join m_mandatory_savings_schedule ms on ms.savings_account_id = dat.savings_account_id and ms.duedate > '" + today + "'");
+        sb.append(" inner join m_mandatory_savings_schedule ms on ms.savings_account_id = dat.savings_account_id and ms.duedate > '" + today
+                + "'");
         sb.append(" where dat.deposit_period is null");
         sb.append(" group by ms.savings_account_id, rd.mandatory_recommended_deposit_amount, mc.recurrence, rd.savings_account_id");
 
@@ -1383,6 +1384,7 @@ public class DepositAccountReadPlatformServiceImpl implements DepositAccountRead
     }
 
     private static final class DepositAccountForMaturityMapper implements RowMapper<DepositAccountData> {
+
         private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
         public String schema() {
@@ -1423,8 +1425,8 @@ public class DepositAccountReadPlatformServiceImpl implements DepositAccountRead
             sqlBuilder.append("curr.name as currencyName, curr.internationalized_name_code as currencyNameCode, ");
             sqlBuilder.append("curr.display_symbol as currencyDisplaySymbol, ");
             sqlBuilder.append("sa.account_balance_derived as runningBalance, ");
-            sqlBuilder
-                    .append("mss.duedate as duedate, (mss.deposit_amount - coalesce(mss.deposit_amount_completed_derived,0)) as dueamount, ");
+            sqlBuilder.append(
+                    "mss.duedate as duedate, (mss.deposit_amount - coalesce(mss.deposit_amount_completed_derived,0)) as dueamount, ");
             sqlBuilder.append("coalesce(sac.amount_outstanding_derived,0.0) AS outstandingChargeAmount ");
             sqlBuilder.append("from m_savings_account sa ");
             sqlBuilder.append("join m_mandatory_savings_schedule mss  on mss.savings_account_id=sa.id and mss.completed_derived = false ");

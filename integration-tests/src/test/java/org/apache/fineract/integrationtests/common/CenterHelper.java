@@ -68,7 +68,8 @@ public final class CenterHelper {
         return new Gson().fromJson(jsonData, new TypeToken<ArrayList<CenterDomain>>() {}.getType());
     }
 
-    public static ArrayList<CenterDomain> listCentersOrdered(final RequestSpecification requestSpec, final ResponseSpecification responseSpec) {
+    public static ArrayList<CenterDomain> listCentersOrdered(final RequestSpecification requestSpec,
+            final ResponseSpecification responseSpec) {
         final String GET_CENTER = CENTERS_URL + "?limit=-1&orderBy=id&sortOrder=asc&" + Utils.TENANT_IDENTIFIER;
         LOG.info("------------------------ RETRIEVING CENTERS-------------------------");
         Object get = Utils.performServerGet(requestSpec, responseSpec, GET_CENTER, "");

@@ -68,9 +68,9 @@ public class DepositAccountInterestRateChartReadPlatformServiceImpl implements D
 
     @Autowired
     public DepositAccountInterestRateChartReadPlatformServiceImpl(PlatformSecurityContext context, final RoutingDataSource dataSource,
-                                                                  InterestRateChartDropdownReadPlatformService chartDropdownReadPlatformService,
-                                                                  final InterestIncentiveDropdownReadPlatformService interestIncentiveDropdownReadPlatformService,
-                                                                  final CodeValueReadPlatformService codeValueReadPlatformService, DatabaseSpecificSQLGenerator sqlGenerator) {
+            InterestRateChartDropdownReadPlatformService chartDropdownReadPlatformService,
+            final InterestIncentiveDropdownReadPlatformService interestIncentiveDropdownReadPlatformService,
+            final CodeValueReadPlatformService codeValueReadPlatformService, DatabaseSpecificSQLGenerator sqlGenerator) {
         this.context = context;
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.chartDropdownReadPlatformService = chartDropdownReadPlatformService;
@@ -155,7 +155,8 @@ public class DepositAccountInterestRateChartReadPlatformServiceImpl implements D
         sql.append("END");
 
         Collection<DepositAccountInterestRateChartData> chartDatas = this.jdbcTemplate.query(con -> {
-            PreparedStatement preparedStatement = con.prepareStatement(sql.toString(), ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+            PreparedStatement preparedStatement = con.prepareStatement(sql.toString(), ResultSet.TYPE_SCROLL_SENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
             preparedStatement.setLong(1, accountId);
             return preparedStatement;
         }, this.chartExtractor);

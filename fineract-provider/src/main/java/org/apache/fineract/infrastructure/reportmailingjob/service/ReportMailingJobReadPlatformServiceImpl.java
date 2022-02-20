@@ -54,7 +54,8 @@ public class ReportMailingJobReadPlatformServiceImpl implements ReportMailingJob
     private final PaginationHelper paginationHelper;
 
     @Autowired
-    public ReportMailingJobReadPlatformServiceImpl(final RoutingDataSource dataSource, final ColumnValidator columnValidator, DatabaseSpecificSQLGenerator sqlGenerator, PaginationHelper paginationHelper) {
+    public ReportMailingJobReadPlatformServiceImpl(final RoutingDataSource dataSource, final ColumnValidator columnValidator,
+            DatabaseSpecificSQLGenerator sqlGenerator, PaginationHelper paginationHelper) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.columnValidator = columnValidator;
         this.sqlGenerator = sqlGenerator;
@@ -91,8 +92,7 @@ public class ReportMailingJobReadPlatformServiceImpl implements ReportMailingJob
             }
         }
 
-        return paginationHelper.fetchPage(this.jdbcTemplate, sqlStringBuilder.toString(), queryParameters.toArray(),
-                mapper);
+        return paginationHelper.fetchPage(this.jdbcTemplate, sqlStringBuilder.toString(), queryParameters.toArray(), mapper);
     }
 
     @Override

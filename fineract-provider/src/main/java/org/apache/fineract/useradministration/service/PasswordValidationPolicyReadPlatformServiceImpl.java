@@ -83,8 +83,8 @@ public class PasswordValidationPolicyReadPlatformServiceImpl implements Password
         }
 
         public String schema() {
-            return " pvp.id as id, pvp.active as active, pvp.description as description, pvp." + sqlGenerator.escape("key") + " as " + sqlGenerator.escape("key") + ""
-                    + " from m_password_validation_policy pvp";
+            return " pvp.id as id, pvp.active as active, pvp.description as description, pvp." + sqlGenerator.escape("key") + " as "
+                    + sqlGenerator.escape("key") + "" + " from m_password_validation_policy pvp";
         }
     }
 

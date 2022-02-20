@@ -64,11 +64,11 @@ public class EntityDatatableChecksReadPlatformServiceImpl implements EntityDatat
 
     @Autowired
     public EntityDatatableChecksReadPlatformServiceImpl(final RoutingDataSource dataSource,
-                                                        final LoanProductReadPlatformService loanProductReadPlatformService,
-                                                        final SavingsProductReadPlatformService savingsProductReadPlatformService,
-                                                        final EntityDatatableChecksRepository entityDatatableChecksRepository,
-                                                        final ReadWriteNonCoreDataService readWriteNonCoreDataService,
-                                                        DatabaseSpecificSQLGenerator sqlGenerator, PaginationHelper paginationHelper) {
+            final LoanProductReadPlatformService loanProductReadPlatformService,
+            final SavingsProductReadPlatformService savingsProductReadPlatformService,
+            final EntityDatatableChecksRepository entityDatatableChecksRepository,
+            final ReadWriteNonCoreDataService readWriteNonCoreDataService, DatabaseSpecificSQLGenerator sqlGenerator,
+            PaginationHelper paginationHelper) {
 
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.sqlGenerator = sqlGenerator;
@@ -115,8 +115,7 @@ public class EntityDatatableChecksReadPlatformServiceImpl implements EntityDatat
                 sqlBuilder.append(sqlGenerator.limit(searchParameters.getLimit()));
             }
         }
-        return this.paginationHelper.fetchPage(jdbcTemplate, sqlBuilder.toString(), paramList.toArray(),
-                entityDataTableChecksMapper);
+        return this.paginationHelper.fetchPage(jdbcTemplate, sqlBuilder.toString(), paramList.toArray(), entityDataTableChecksMapper);
 
     }
 

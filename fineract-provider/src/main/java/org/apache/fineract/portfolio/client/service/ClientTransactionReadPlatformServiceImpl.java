@@ -52,7 +52,8 @@ public class ClientTransactionReadPlatformServiceImpl implements ClientTransacti
     private final PaginationHelper paginationHelper;
 
     @Autowired
-    public ClientTransactionReadPlatformServiceImpl(final RoutingDataSource dataSource, DatabaseSpecificSQLGenerator sqlGenerator, PaginationHelper paginationHelper) {
+    public ClientTransactionReadPlatformServiceImpl(final RoutingDataSource dataSource, DatabaseSpecificSQLGenerator sqlGenerator,
+            PaginationHelper paginationHelper) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.sqlGenerator = sqlGenerator;
         this.clientTransactionMapper = new ClientTransactionMapper();
@@ -140,7 +141,8 @@ public class ClientTransactionReadPlatformServiceImpl implements ClientTransacti
     public Page<ClientTransactionData> retrieveAllTransactions(Long clientId, SearchParameters searchParameters) {
         Object[] parameters = new Object[1];
         final StringBuilder sqlBuilder = new StringBuilder();
-        sqlBuilder.append("select " + sqlGenerator.calcFoundRows() + " ").append(this.clientTransactionMapper.schema()).append(" where c.id = ? ");
+        sqlBuilder.append("select " + sqlGenerator.calcFoundRows() + " ").append(this.clientTransactionMapper.schema())
+                .append(" where c.id = ? ");
         parameters[0] = clientId;
         sqlBuilder.append(" order by tr.transaction_date DESC, tr.created_date DESC, tr.id DESC ");
 
@@ -155,8 +157,7 @@ public class ClientTransactionReadPlatformServiceImpl implements ClientTransacti
             }
         }
 
-        return this.paginationHelper.fetchPage(this.jdbcTemplate, sqlBuilder.toString(), parameters,
-                this.clientTransactionMapper);
+        return this.paginationHelper.fetchPage(this.jdbcTemplate, sqlBuilder.toString(), parameters, this.clientTransactionMapper);
     }
 
     @Override

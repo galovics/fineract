@@ -64,8 +64,9 @@ public class LoanProductReadPlatformServiceImpl implements LoanProductReadPlatfo
 
     @Autowired
     public LoanProductReadPlatformServiceImpl(final PlatformSecurityContext context,
-                                              final ChargeReadPlatformService chargeReadPlatformService, final RoutingDataSource dataSource,
-                                              final FineractEntityAccessUtil fineractEntityAccessUtil, final RateReadService rateReadService, DatabaseSpecificSQLGenerator sqlGenerator) {
+            final ChargeReadPlatformService chargeReadPlatformService, final RoutingDataSource dataSource,
+            final FineractEntityAccessUtil fineractEntityAccessUtil, final RateReadService rateReadService,
+            DatabaseSpecificSQLGenerator sqlGenerator) {
         this.context = context;
         this.chargeReadPlatformService = chargeReadPlatformService;
         this.jdbcTemplate = new JdbcTemplate(dataSource);

@@ -87,9 +87,10 @@ public class StandingInstructionReadPlatformServiceImpl implements StandingInstr
 
     @Autowired
     public StandingInstructionReadPlatformServiceImpl(final RoutingDataSource dataSource,
-                                                      final ClientReadPlatformService clientReadPlatformService, final OfficeReadPlatformService officeReadPlatformService,
-                                                      final PortfolioAccountReadPlatformService portfolioAccountReadPlatformService,
-                                                      final DropdownReadPlatformService dropdownReadPlatformService, final ColumnValidator columnValidator, DatabaseSpecificSQLGenerator sqlGenerator, PaginationHelper paginationHelper) {
+            final ClientReadPlatformService clientReadPlatformService, final OfficeReadPlatformService officeReadPlatformService,
+            final PortfolioAccountReadPlatformService portfolioAccountReadPlatformService,
+            final DropdownReadPlatformService dropdownReadPlatformService, final ColumnValidator columnValidator,
+            DatabaseSpecificSQLGenerator sqlGenerator, PaginationHelper paginationHelper) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.clientReadPlatformService = clientReadPlatformService;
         this.officeReadPlatformService = officeReadPlatformService;
@@ -328,8 +329,7 @@ public class StandingInstructionReadPlatformServiceImpl implements StandingInstr
         }
 
         final Object[] finalObjectArray = paramObj.toArray();
-        return this.paginationHelper.fetchPage(this.jdbcTemplate, sqlBuilder.toString(), finalObjectArray,
-                this.standingInstructionMapper);
+        return this.paginationHelper.fetchPage(this.jdbcTemplate, sqlBuilder.toString(), finalObjectArray, this.standingInstructionMapper);
     }
 
     @Override
@@ -337,9 +337,10 @@ public class StandingInstructionReadPlatformServiceImpl implements StandingInstr
         final StringBuilder sqlBuilder = new StringBuilder(200);
         sqlBuilder.append("select ");
         sqlBuilder.append(this.standingInstructionMapper.schema());
-        sqlBuilder.append(
-                " where atsi.status=? and " + sqlGenerator.currentDate() + " >= atsi.valid_from and (atsi.valid_till IS NULL or " + sqlGenerator.currentDate() + " < atsi.valid_till) ")
-                .append(" and  (atsi.last_run_date <> " +  sqlGenerator.currentDate()+ " or atsi.last_run_date IS NULL)")
+        sqlBuilder
+                .append(" where atsi.status=? and " + sqlGenerator.currentDate() + " >= atsi.valid_from and (atsi.valid_till IS NULL or "
+                        + sqlGenerator.currentDate() + " < atsi.valid_till) ")
+                .append(" and  (atsi.last_run_date <> " + sqlGenerator.currentDate() + " or atsi.last_run_date IS NULL)")
                 .append(" ORDER BY atsi.priority DESC");
         return this.jdbcTemplate.query(sqlBuilder.toString(), this.standingInstructionMapper, status);
     }
@@ -359,7 +360,8 @@ public class StandingInstructionReadPlatformServiceImpl implements StandingInstr
     @Override
     public StandingInstructionDuesData retriveLoanDuesData(final Long loanId) {
         final StandingInstructionLoanDuesMapper rm = new StandingInstructionLoanDuesMapper();
-        final String sql = "select " + rm.schema() + " where ml.id= ? and ls.duedate <= " + sqlGenerator.currentDate() + " and ls.completed_derived <> 1";
+        final String sql = "select " + rm.schema() + " where ml.id= ? and ls.duedate <= " + sqlGenerator.currentDate()
+                + " and ls.completed_derived <> 1";
         return this.jdbcTemplate.queryForObject(sql, rm, new Object[] { loanId });
     }
 

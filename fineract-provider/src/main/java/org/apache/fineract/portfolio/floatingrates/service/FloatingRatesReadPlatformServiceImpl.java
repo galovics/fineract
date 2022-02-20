@@ -127,8 +127,8 @@ public class FloatingRatesReadPlatformServiceImpl implements FloatingRatesReadPl
             List<FloatingRatePeriodData> ratePeriods = null;
             if (addRatePeriods) {
                 FloatingRatePeriodRowMapper ratePeriodMapper = new FloatingRatePeriodRowMapper();
-                final String sql = "select " + ratePeriodMapper.schema() + " where period.is_active = true and period.floating_rates_id = ? "
-                        + " order by period.from_date desc ";
+                final String sql = "select " + ratePeriodMapper.schema()
+                        + " where period.is_active = true and period.floating_rates_id = ? " + " order by period.from_date desc ";
                 ratePeriods = jdbcTemplate.query(sql, ratePeriodMapper, new Object[] { id });
             }
             return new FloatingRateData(id, name, isBaseLendingRate, isActive, createdBy, createdOn, modifiedBy, modifiedOn, ratePeriods,

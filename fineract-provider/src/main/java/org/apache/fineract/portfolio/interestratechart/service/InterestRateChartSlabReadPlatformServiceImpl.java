@@ -58,9 +58,9 @@ public class InterestRateChartSlabReadPlatformServiceImpl implements InterestRat
 
     @Autowired
     public InterestRateChartSlabReadPlatformServiceImpl(PlatformSecurityContext context, final RoutingDataSource dataSource,
-                                                        InterestRateChartDropdownReadPlatformService chartDropdownReadPlatformService,
-                                                        final InterestIncentiveDropdownReadPlatformService interestIncentiveDropdownReadPlatformService,
-                                                        final CodeValueReadPlatformService codeValueReadPlatformService, DatabaseSpecificSQLGenerator sqlGenerator) {
+            InterestRateChartDropdownReadPlatformService chartDropdownReadPlatformService,
+            final InterestIncentiveDropdownReadPlatformService interestIncentiveDropdownReadPlatformService,
+            final CodeValueReadPlatformService codeValueReadPlatformService, DatabaseSpecificSQLGenerator sqlGenerator) {
         this.context = context;
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.chartDropdownReadPlatformService = chartDropdownReadPlatformService;

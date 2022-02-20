@@ -19,6 +19,7 @@
 package org.apache.fineract.portfolio.savings.service;
 
 import static org.apache.fineract.portfolio.savings.domain.SavingsAccountStatusType.ACTIVE;
+
 import java.time.LocalDate;
 import java.util.ArrayDeque;
 import java.util.ArrayList;

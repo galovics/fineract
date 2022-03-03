@@ -32,6 +32,9 @@ import org.apache.fineract.organisation.monetary.domain.Money;
 @Entity
 @Table(name = "m_loan_transaction_repayment_schedule_mapping")
 public class LoanTransactionToRepaymentScheduleMapping extends AbstractPersistableCustom {
+    @ManyToOne(optional = false, cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "loan_transaction_id", nullable = false)
+    private LoanTransaction loanTransaction;
 
     @ManyToOne(optional = false, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "loan_repayment_schedule_id", nullable = false)
@@ -56,9 +59,10 @@ public class LoanTransactionToRepaymentScheduleMapping extends AbstractPersistab
 
     }
 
-    private LoanTransactionToRepaymentScheduleMapping(final LoanRepaymentScheduleInstallment installment, final BigDecimal principalPortion,
+    private LoanTransactionToRepaymentScheduleMapping(final LoanTransaction loanTransaction, final LoanRepaymentScheduleInstallment installment, final BigDecimal principalPortion,
             final BigDecimal interestPortion, final BigDecimal feeChargesPortion, final BigDecimal penaltyChargesPortion,
             final BigDecimal amount) {
+        this.loanTransaction = loanTransaction;
         this.installment = installment;
         this.principalPortion = principalPortion;
         this.interestPortion = interestPortion;
@@ -67,9 +71,9 @@ public class LoanTransactionToRepaymentScheduleMapping extends AbstractPersistab
         this.amount = amount;
     }
 
-    public static LoanTransactionToRepaymentScheduleMapping createFrom(final LoanRepaymentScheduleInstallment installment,
+    public static LoanTransactionToRepaymentScheduleMapping createFrom(final LoanTransaction loanTransaction, final LoanRepaymentScheduleInstallment installment,
             final Money principalPortion, final Money interestPortion, final Money feeChargesPortion, final Money penaltyChargesPortion) {
-        return new LoanTransactionToRepaymentScheduleMapping(installment, defaultToNullIfZero(principalPortion),
+        return new LoanTransactionToRepaymentScheduleMapping(loanTransaction, installment, defaultToNullIfZero(principalPortion),
                 defaultToNullIfZero(interestPortion), defaultToNullIfZero(feeChargesPortion), defaultToNullIfZero(penaltyChargesPortion),
                 defaultToNullIfZero(principalPortion.plus(interestPortion).plus(feeChargesPortion).plus(penaltyChargesPortion)));
     }
@@ -136,6 +140,10 @@ public class LoanTransactionToRepaymentScheduleMapping extends AbstractPersistab
 
     public Money getPenaltyChargesPortion(final MonetaryCurrency currency) {
         return Money.of(currency, this.penaltyChargesPortion);
+    }
+
+    public LoanTransaction getLoanTransaction() {
+        return loanTransaction;
     }
 
     public BigDecimal getPrincipalPortion() {

@@ -19,11 +19,11 @@
 
 package org.apache.fineract.infrastructure.core.config;
 
+import java.util.List;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.core.domain.AuditorAwareImpl;
-import org.apache.fineract.infrastructure.openjpa.OpenJpaTransactionManager;
-import org.apache.fineract.infrastructure.openjpa.OpenJpaVendorAdapter;
+import org.apache.fineract.infrastructure.core.persistence.EntityScanningPersistenceUnitPostProcessor;
 import org.apache.fineract.useradministration.domain.AppUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -34,6 +34,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.EclipseLinkJpaVendorAdapter;
 import org.springframework.transaction.support.TransactionTemplate;
 
 @Configuration
@@ -52,15 +53,18 @@ public class PersistenceConfig {
         // NOTE: very important to set this explicitly when building Docker images with Jib; otherwise complains about
         // duplicate resources
         em.setPersistenceXmlLocation("classpath:META-INF/persistence.xml");
-        em.setJpaVendorAdapter(new OpenJpaVendorAdapter());
+        em.setJpaVendorAdapter(new EclipseLinkJpaVendorAdapter());
         em.setPersistenceUnitName("jpa-pu");
+        EntityScanningPersistenceUnitPostProcessor scanningPostProcessor = new EntityScanningPersistenceUnitPostProcessor();
+        scanningPostProcessor.setPackages(List.of("org.apache.fineract"));
+        em.setPersistenceUnitPostProcessors(scanningPostProcessor);
         em.afterPropertiesSet();
         return em;
     }
 
     @Bean
-    public OpenJpaTransactionManager transactionManager(EntityManagerFactory emf) {
-        OpenJpaTransactionManager jtm = new OpenJpaTransactionManager();
+    public JpaTransactionManager transactionManager(EntityManagerFactory emf) {
+        JpaTransactionManager jtm = new JpaTransactionManager();
         jtm.setEntityManagerFactory(emf);
         return jtm;
     }

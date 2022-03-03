@@ -69,6 +69,6 @@ cargoStartLocal.dependsOn ':fineract-war:war'
 cargoStartLocal.mustRunAfter 'testClasses'
 
 test {
-    dependsOn cargoStartLocal
-    finalizedBy cargoStopLocal
+//    dependsOn cargoStartLocal
+//    finalizedBy cargoStopLocal
 }

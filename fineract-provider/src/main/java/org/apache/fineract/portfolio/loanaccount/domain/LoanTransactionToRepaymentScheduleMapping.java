@@ -161,4 +161,8 @@ public class LoanTransactionToRepaymentScheduleMapping extends AbstractPersistab
     public BigDecimal getPenaltyChargesPortion() {
         return this.penaltyChargesPortion;
     }
+
+    public void setLoanTransaction(LoanTransaction loanTransaction) {
+        this.loanTransaction = loanTransaction;
+    }
 }

@@ -417,7 +417,9 @@ configure(project.fineractJavaProjects) {
             "-Xlint:varargs",
             "-Xlint:preview",
             "-Xlint:static",
-            "-Werror",
+            // -Werror needs to be disabled because EclipseLink's static weaving doesn't generate warning-free code
+            // and during an IntelliJ recompilation, it fails
+            //"-Werror",
             "-Xmaxwarns",
             1500,
             "-Xmaxerrs",

@@ -792,6 +792,7 @@ public class LoanTransaction extends AbstractPersistableCustom {
             }
         }
         if (!isMappingUpdated) {
+            updatedrepaymentScheduleMapping.setLoanTransaction(this);
             this.loanTransactionToRepaymentScheduleMappings.add(updatedrepaymentScheduleMapping);
             retainMappings.add(updatedrepaymentScheduleMapping);
         }

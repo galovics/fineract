@@ -24,6 +24,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.core.domain.AuditorAwareImpl;
 import org.apache.fineract.infrastructure.core.persistence.EntityScanningPersistenceUnitPostProcessor;
+import org.apache.fineract.infrastructure.core.persistence.ExtendedJpaTransactionManager;
 import org.apache.fineract.useradministration.domain.AppUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -64,7 +65,7 @@ public class PersistenceConfig {
 
     @Bean
     public JpaTransactionManager transactionManager(EntityManagerFactory emf) {
-        JpaTransactionManager jtm = new JpaTransactionManager();
+        ExtendedJpaTransactionManager jtm = new ExtendedJpaTransactionManager();
         jtm.setEntityManagerFactory(emf);
         return jtm;
     }

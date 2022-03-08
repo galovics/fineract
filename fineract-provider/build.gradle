@@ -27,29 +27,21 @@ apply plugin: 'io.swagger.core.v3.swagger-gradle-plugin'
 apply plugin: 'com.google.cloud.tools.jib'
 
 
-task staticWeave(type: JavaExec, dependsOn: [generateGitProperties, compileJava, processResources]) {
-    description = 'Performs EclipseLink static weaving of entity classes'
+compileJava.doLast {
     def mainSS = sourceSets.main
     def source = mainSS.java.classesDirectory.get()
-    def resources = mainSS.output.resourcesDir
-    def target = source
-    inputs.files source, resources
-    outputs.dir target
-    main 'org.eclipse.persistence.tools.weaving.jpa.StaticWeave'
-    args '-persistenceinfo', source, '-classpath', configurations.runtimeClasspath, source, target
-    classpath configurations.runtimeClasspath
-
-    doFirst {
-        // workaround for EclipseLink bug https://bugs.eclipse.org/bugs/show_bug.cgi?id=295031
-        // copy resources into the classesDir
-        copy {
-            from "src/main/resources/"
-            into source
-        }
+    copy {
+        from "src/main/resources/"
+        into source
+    }
+    javaexec {
+        description = 'Performs EclipseLink static weaving of entity classes'
+        def target = source
+        main 'org.eclipse.persistence.tools.weaving.jpa.StaticWeave'
+        args '-persistenceinfo', source, '-classpath', configurations.runtimeClasspath, source, target
+        classpath configurations.runtimeClasspath
     }
 }
-
-classes.dependsOn staticWeave
 
 // Configuration for Swagger documentation generation task
 // https://github.com/swagger-api/swagger-core/tree/master/modules/swagger-gradle-plugin

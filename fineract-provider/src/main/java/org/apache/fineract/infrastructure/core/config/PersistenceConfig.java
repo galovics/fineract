@@ -23,8 +23,10 @@ import java.util.List;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.core.domain.AuditorAwareImpl;
+import org.apache.fineract.infrastructure.core.persistence.DatabaseSelectingPersistenceUnitPostProcessor;
 import org.apache.fineract.infrastructure.core.persistence.EntityScanningPersistenceUnitPostProcessor;
 import org.apache.fineract.infrastructure.core.persistence.ExtendedJpaTransactionManager;
+import org.apache.fineract.infrastructure.core.service.database.DatabaseTypeResolver;
 import org.apache.fineract.useradministration.domain.AppUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -46,6 +48,9 @@ public class PersistenceConfig {
     @Autowired
     DataSource routingDataSource;
 
+    @Autowired
+    private DatabaseTypeResolver databaseTypeResolver;
+
     @Bean
     @DependsOn("tenantDatabaseUpgradeService")
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
@@ -58,7 +63,8 @@ public class PersistenceConfig {
         em.setPersistenceUnitName("jpa-pu");
         EntityScanningPersistenceUnitPostProcessor scanningPostProcessor = new EntityScanningPersistenceUnitPostProcessor();
         scanningPostProcessor.setPackages(List.of("org.apache.fineract"));
-        em.setPersistenceUnitPostProcessors(scanningPostProcessor);
+        DatabaseSelectingPersistenceUnitPostProcessor dbSelectingPostProcessor = new DatabaseSelectingPersistenceUnitPostProcessor(databaseTypeResolver);
+        em.setPersistenceUnitPostProcessors(scanningPostProcessor, dbSelectingPostProcessor);
         em.afterPropertiesSet();
         return em;
     }

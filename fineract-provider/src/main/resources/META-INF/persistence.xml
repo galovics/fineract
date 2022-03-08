@@ -31,10 +31,10 @@
         <properties>
             <property name="eclipselink.weaving" value="static" />
             <property name="eclipselink.persistence-context.close-on-commit" value="true" />
-            <property name="eclipselink.logging.level.sql" value="FINE"/>
-            <property name="eclipselink.logging.parameters" value="true"/>
             <property name="eclipselink.cache.shared.default" value="false" />
-            <property name="eclipselink.target-database" value="PostgreSQL" />
+<!--            Uncomment below lines for SQL logging                         -->
+<!--            <property name="eclipselink.logging.level.sql" value="FINE"/> -->
+<!--            <property name="eclipselink.logging.parameters" value="true"/>-->
         </properties>
     </persistence-unit>
 </persistence>

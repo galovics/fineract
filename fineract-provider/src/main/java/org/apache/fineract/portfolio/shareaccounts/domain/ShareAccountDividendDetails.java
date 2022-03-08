@@ -51,7 +51,8 @@ public class ShareAccountDividendDetails extends AbstractPersistableCustom {
 
     }
 
-    public ShareAccountDividendDetails(final Long shareAccountId, final BigDecimal amount, final ShareProductDividendPayOutDetails productDividentPayOutDetails) {
+    public ShareAccountDividendDetails(final Long shareAccountId, final BigDecimal amount,
+            final ShareProductDividendPayOutDetails productDividentPayOutDetails) {
         this.shareAccountId = shareAccountId;
         this.amount = amount;
         this.productDividentPayOutDetails = productDividentPayOutDetails;

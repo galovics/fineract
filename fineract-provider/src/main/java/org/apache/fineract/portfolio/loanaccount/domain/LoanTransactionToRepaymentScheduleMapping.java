@@ -32,6 +32,7 @@ import org.apache.fineract.organisation.monetary.domain.Money;
 @Entity
 @Table(name = "m_loan_transaction_repayment_schedule_mapping")
 public class LoanTransactionToRepaymentScheduleMapping extends AbstractPersistableCustom {
+
     @ManyToOne(optional = false, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "loan_transaction_id", nullable = false)
     private LoanTransaction loanTransaction;
@@ -59,9 +60,9 @@ public class LoanTransactionToRepaymentScheduleMapping extends AbstractPersistab
 
     }
 
-    private LoanTransactionToRepaymentScheduleMapping(final LoanTransaction loanTransaction, final LoanRepaymentScheduleInstallment installment, final BigDecimal principalPortion,
-            final BigDecimal interestPortion, final BigDecimal feeChargesPortion, final BigDecimal penaltyChargesPortion,
-            final BigDecimal amount) {
+    private LoanTransactionToRepaymentScheduleMapping(final LoanTransaction loanTransaction,
+            final LoanRepaymentScheduleInstallment installment, final BigDecimal principalPortion, final BigDecimal interestPortion,
+            final BigDecimal feeChargesPortion, final BigDecimal penaltyChargesPortion, final BigDecimal amount) {
         this.loanTransaction = loanTransaction;
         this.installment = installment;
         this.principalPortion = principalPortion;
@@ -71,8 +72,9 @@ public class LoanTransactionToRepaymentScheduleMapping extends AbstractPersistab
         this.amount = amount;
     }
 
-    public static LoanTransactionToRepaymentScheduleMapping createFrom(final LoanTransaction loanTransaction, final LoanRepaymentScheduleInstallment installment,
-            final Money principalPortion, final Money interestPortion, final Money feeChargesPortion, final Money penaltyChargesPortion) {
+    public static LoanTransactionToRepaymentScheduleMapping createFrom(final LoanTransaction loanTransaction,
+            final LoanRepaymentScheduleInstallment installment, final Money principalPortion, final Money interestPortion,
+            final Money feeChargesPortion, final Money penaltyChargesPortion) {
         return new LoanTransactionToRepaymentScheduleMapping(loanTransaction, installment, defaultToNullIfZero(principalPortion),
                 defaultToNullIfZero(interestPortion), defaultToNullIfZero(feeChargesPortion), defaultToNullIfZero(penaltyChargesPortion),
                 defaultToNullIfZero(principalPortion.plus(interestPortion).plus(feeChargesPortion).plus(penaltyChargesPortion)));

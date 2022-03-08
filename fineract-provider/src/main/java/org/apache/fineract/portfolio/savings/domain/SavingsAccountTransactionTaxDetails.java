@@ -45,7 +45,8 @@ public class SavingsAccountTransactionTaxDetails extends AbstractPersistableCust
 
     protected SavingsAccountTransactionTaxDetails() {}
 
-    public SavingsAccountTransactionTaxDetails(final SavingsAccountTransaction savingsAccountTransaction, final TaxComponent taxComponent, final BigDecimal amount) {
+    public SavingsAccountTransactionTaxDetails(final SavingsAccountTransaction savingsAccountTransaction, final TaxComponent taxComponent,
+            final BigDecimal amount) {
         this.savingsAccountTransaction = savingsAccountTransaction;
         this.taxComponent = taxComponent;
         this.amount = amount;

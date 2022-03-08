@@ -27,10 +27,9 @@ import org.springframework.orm.jpa.persistenceunit.MutablePersistenceUnitInfo;
 import org.springframework.orm.jpa.persistenceunit.PersistenceUnitPostProcessor;
 
 public class DatabaseSelectingPersistenceUnitPostProcessor implements PersistenceUnitPostProcessor {
-    private static final Map<DatabaseType, String> TARGET_DATABASE_MAP = Map.of(
-            DatabaseType.MYSQL, TargetDatabase.MySQL,
-            DatabaseType.POSTGRESQL, TargetDatabase.PostgreSQL
-    );
+
+    private static final Map<DatabaseType, String> TARGET_DATABASE_MAP = Map.of(DatabaseType.MYSQL, TargetDatabase.MySQL,
+            DatabaseType.POSTGRESQL, TargetDatabase.PostgreSQL);
 
     private final DatabaseTypeResolver databaseTypeResolver;
 

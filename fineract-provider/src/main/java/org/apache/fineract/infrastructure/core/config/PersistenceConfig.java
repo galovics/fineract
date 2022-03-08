@@ -63,7 +63,8 @@ public class PersistenceConfig {
         em.setPersistenceUnitName("jpa-pu");
         EntityScanningPersistenceUnitPostProcessor scanningPostProcessor = new EntityScanningPersistenceUnitPostProcessor();
         scanningPostProcessor.setPackages(List.of("org.apache.fineract"));
-        DatabaseSelectingPersistenceUnitPostProcessor dbSelectingPostProcessor = new DatabaseSelectingPersistenceUnitPostProcessor(databaseTypeResolver);
+        DatabaseSelectingPersistenceUnitPostProcessor dbSelectingPostProcessor = new DatabaseSelectingPersistenceUnitPostProcessor(
+                databaseTypeResolver);
         em.setPersistenceUnitPostProcessors(scanningPostProcessor, dbSelectingPostProcessor);
         em.afterPropertiesSet();
         return em;

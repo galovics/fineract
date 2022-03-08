@@ -1248,7 +1248,8 @@ public class Loan extends AbstractPersistableCustom {
         List<LoanRepaymentScheduleInstallment> existingInstallments = new ArrayList<>(this.repaymentScheduleInstallments);
         repaymentScheduleInstallments.clear();
         for (final LoanRepaymentScheduleInstallment installment : installments) {
-            LoanRepaymentScheduleInstallment existingInstallment = findByInstallmentNumber(existingInstallments, installment.getInstallmentNumber());
+            LoanRepaymentScheduleInstallment existingInstallment = findByInstallmentNumber(existingInstallments,
+                    installment.getInstallmentNumber());
             if (existingInstallment != null) {
                 Set<LoanInstallmentCharge> existingCharges = existingInstallment.getInstallmentCharges();
                 installment.getInstallmentCharges().addAll(existingCharges);
@@ -1263,7 +1264,8 @@ public class Loan extends AbstractPersistableCustom {
 
     }
 
-    private LoanRepaymentScheduleInstallment findByInstallmentNumber(Collection<LoanRepaymentScheduleInstallment> installments, Integer installmentNumber) {
+    private LoanRepaymentScheduleInstallment findByInstallmentNumber(Collection<LoanRepaymentScheduleInstallment> installments,
+            Integer installmentNumber) {
         for (LoanRepaymentScheduleInstallment installment : installments) {
             if (Objects.equals(installment.getInstallmentNumber(), installmentNumber)) {
                 return installment;

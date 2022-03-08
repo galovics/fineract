@@ -42,12 +42,14 @@ public class LoanRescheduleRequestToTermVariationMapping extends AbstractPersist
 
     }
 
-    private LoanRescheduleRequestToTermVariationMapping(final LoanRescheduleRequest loanRescheduleRequest, final LoanTermVariations loanTermVariations) {
+    private LoanRescheduleRequestToTermVariationMapping(final LoanRescheduleRequest loanRescheduleRequest,
+            final LoanTermVariations loanTermVariations) {
         this.loanRescheduleRequest = loanRescheduleRequest;
         this.loanTermVariations = loanTermVariations;
     }
 
-    public static LoanRescheduleRequestToTermVariationMapping createNew(final LoanRescheduleRequest loanRescheduleRequest, final LoanTermVariations loanTermVariation) {
+    public static LoanRescheduleRequestToTermVariationMapping createNew(final LoanRescheduleRequest loanRescheduleRequest,
+            final LoanTermVariations loanTermVariation) {
         return new LoanRescheduleRequestToTermVariationMapping(loanRescheduleRequest, loanTermVariation);
     }
 

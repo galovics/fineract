@@ -51,7 +51,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ShareProductWritePlatformServiceJpaRepositoryImpl implements ShareProductWritePlatformService {
-    private final static Logger LOG = LoggerFactory.getLogger(ShareProductWritePlatformServiceJpaRepositoryImpl.class);
+
+    private static final Logger LOG = LoggerFactory.getLogger(ShareProductWritePlatformServiceJpaRepositoryImpl.class);
 
     private final ShareProductRepositoryWrapper repository;
     private final ShareProductDataSerializer serializer;

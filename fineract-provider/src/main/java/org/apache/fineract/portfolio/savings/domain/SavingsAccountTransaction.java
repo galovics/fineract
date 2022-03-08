@@ -275,7 +275,8 @@ public final class SavingsAccountTransaction extends AbstractPersistableCustom {
             final SavingsAccountTransaction accountTransaction) {
         if (taxDetails != null) {
             for (Map.Entry<TaxComponent, BigDecimal> mapEntry : taxDetails.entrySet()) {
-                accountTransaction.getTaxDetails().add(new SavingsAccountTransactionTaxDetails(accountTransaction, mapEntry.getKey(), mapEntry.getValue()));
+                accountTransaction.getTaxDetails()
+                        .add(new SavingsAccountTransactionTaxDetails(accountTransaction, mapEntry.getKey(), mapEntry.getValue()));
             }
         }
     }

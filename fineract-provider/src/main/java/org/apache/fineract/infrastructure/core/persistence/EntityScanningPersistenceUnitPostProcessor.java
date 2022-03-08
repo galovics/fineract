@@ -33,6 +33,7 @@ import org.springframework.orm.jpa.persistenceunit.MutablePersistenceUnitInfo;
 import org.springframework.orm.jpa.persistenceunit.PersistenceUnitPostProcessor;
 
 public class EntityScanningPersistenceUnitPostProcessor implements PersistenceUnitPostProcessor, InitializingBean {
+
     private static final Logger LOG = LoggerFactory.getLogger(EntityScanningPersistenceUnitPostProcessor.class);
 
     private List<String> packages;

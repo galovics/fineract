@@ -26,7 +26,8 @@ import org.apache.fineract.infrastructure.configuration.domain.GlobalConfigurati
 import org.apache.fineract.infrastructure.core.domain.FineractPlatformTenant;
 import org.apache.fineract.infrastructure.core.service.ThreadLocalContextUtil;
 import org.apache.fineract.organisation.monetary.domain.MoneyHelper;
-import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 
 /**
  * Service to initialize MoneyHelper configurations for multi-tenant environments. This service bridges the gap between
@@ -35,12 +36,14 @@ import org.springframework.stereotype.Service;
  * Note: MoneyHelper rounding mode is immutable once initialized to maintain data integrity. Updates require application
  * restart to take effect.
  */
-@Service
 @Slf4j
 @RequiredArgsConstructor
 public class MoneyHelperInitializationService {
 
-    private final GlobalConfigurationRepositoryWrapper globalConfigurationRepository;
+    // TODO: this is preventing the circular dependency...
+    @Lazy
+    @Autowired
+    private GlobalConfigurationRepositoryWrapper globalConfigurationRepository;
 
     /**
      * Initialize MoneyHelper for a specific tenant. This method should be called during tenant setup and whenever
@@ -56,6 +59,7 @@ public class MoneyHelperInitializationService {
 
         String tenantIdentifier = tenant.getTenantIdentifier();
 
+        FineractPlatformTenant originalTenant = ThreadLocalContextUtil.getTenant();
         try {
             // Set tenant context to read configuration
             ThreadLocalContextUtil.setTenant(tenant);
@@ -69,8 +73,7 @@ public class MoneyHelperInitializationService {
             log.error("Failed to initialize MoneyHelper for tenant '{}'", tenantIdentifier, e);
             throw new RuntimeException("Failed to initialize MoneyHelper for tenant: " + tenantIdentifier, e);
         } finally {
-            // Clear tenant context
-            ThreadLocalContextUtil.clearTenant();
+            ThreadLocalContextUtil.setTenant(originalTenant);
         }
     }
 
@@ -83,6 +86,10 @@ public class MoneyHelperInitializationService {
      */
     public boolean isTenantInitialized(String tenantIdentifier) {
         return MoneyHelper.isTenantInitialized(tenantIdentifier);
+    }
+
+    public boolean isTenantInitialized(FineractPlatformTenant tenant) {
+        return isTenantInitialized(tenant.getTenantIdentifier());
     }
 
     /**

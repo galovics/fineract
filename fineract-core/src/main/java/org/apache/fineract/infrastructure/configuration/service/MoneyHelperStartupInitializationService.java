@@ -24,17 +24,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.infrastructure.core.domain.FineractPlatformTenant;
 import org.apache.fineract.infrastructure.core.service.tenant.TenantDetailsService;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.context.annotation.DependsOn;
-import org.springframework.stereotype.Service;
 
 /**
  * Service to initialize MoneyHelper for all tenants during application startup. This service runs after the application
  * is fully started to ensure all database migrations and tenant configurations are complete.
  */
-@Service
 @Slf4j
 @RequiredArgsConstructor
-@DependsOn({ "tenantDetailsService", "moneyHelperInitializationService", "tenantDatabaseUpgradeService" })
 public class MoneyHelperStartupInitializationService implements InitializingBean {
 
     private final TenantDetailsService tenantDetailsService;
